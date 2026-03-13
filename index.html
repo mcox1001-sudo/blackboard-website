@@ -232,7 +232,7 @@ body::after {
 
 .hero-h1 {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(88px, 12vw, 168px);
+  font-size: clamp(52px, 13vw, 168px);
   line-height: 0.88;
   letter-spacing: 0.015em;
   color: var(--chalk);
@@ -245,7 +245,7 @@ body::after {
 
 .hero-tagline {
   font-family: 'Cormorant Garamond', serif;
-  font-size: clamp(18px, 2.2vw, 28px);
+  font-size: clamp(16px, 2.2vw, 28px);
   font-style: italic;
   font-weight: 300;
   color: rgba(242,242,239,0.45);
@@ -1494,7 +1494,7 @@ body::after {
 }
 @media (max-width: 700px) {
   .nav-links { display: none; }
-  .hero-h1 { font-size: 78px; }
+  .nav-burger { display: flex; }
   .triptych { grid-template-columns: 1fr; height: auto; }
   .triptych-item { height: 200px; display: block !important; }
   .cats-grid { grid-template-columns: 1fr; }
@@ -1505,6 +1505,109 @@ body::after {
   .phones { gap: 10px; }
   .phone.lg { width: 200px; }
   .phone.sm { width: 150px; }
+}
+
+/* ── Hamburger / Mobile Nav ── */
+.nav-burger {
+  display: none;
+  flex-direction: column; justify-content: center; gap: 5px;
+  background: none; border: none; cursor: pointer;
+  padding: 6px; flex-shrink: 0;
+}
+.nav-burger span {
+  display: block; width: 22px; height: 2px;
+  background: var(--chalk);
+  transition: transform 0.28s var(--ease-out), opacity 0.2s;
+  border-radius: 2px;
+}
+.nav-burger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav-burger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.nav-burger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.mobile-nav {
+  display: none;
+  position: fixed;
+  top: 60px; left: 0; right: 0;
+  background: rgba(6,6,8,0.97);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-bottom: 1px solid var(--line-soft);
+  z-index: 799;
+  padding: 8px 0 24px;
+  transform: translateY(-6px);
+  opacity: 0;
+  transition: transform 0.28s var(--ease-out), opacity 0.22s;
+  pointer-events: none;
+}
+.mobile-nav.open {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+.mobile-nav ul { list-style: none; }
+.mobile-nav ul li { border-bottom: 1px solid var(--line-soft); margin: 0 24px; }
+.mobile-nav ul li:last-child { border-bottom: none; margin-top: 16px; padding: 0 24px; }
+.mobile-nav ul li a {
+  display: block; padding: 16px 0;
+  font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--ghost); transition: color 0.2s;
+}
+.mobile-nav ul li a:hover { color: var(--chalk); }
+.mobile-nav-cta {
+  display: block !important;
+  background: var(--chalk); color: var(--void) !important;
+  text-align: center; padding: 14px 0 !important;
+  font-weight: 600 !important; letter-spacing: .14em !important;
+}
+
+/* ── 480px and below — tight mobile ── */
+@media (max-width: 480px) {
+  .nav { padding: 0 20px; }
+  .nav-logo img { height: 28px; }
+
+  .hero-inner { padding: 0 20px; }
+  .hero-copy { font-size: 14px; }
+  .hero-actions { flex-direction: column; align-items: stretch; width: 100%; }
+  .btn-primary, .btn-ghost { width: 100%; justify-content: center; text-align: center; }
+
+  .cats { padding: 60px 20px; }
+  .showcase { padding: 60px 20px; }
+  .showcase-grid { gap: 40px; }
+  .phones { justify-content: center; }
+  .phone.lg { width: 230px; }
+
+  .atmo { padding: 60px 0; }
+  .atmo-content { padding: 0 20px; }
+  .atmo-h { font-size: 44px !important; }
+
+  .how { padding: 60px 20px; }
+  .how-header { gap: 24px; }
+
+  .venues-left { padding: 60px 20px; }
+  .venues-right { padding: 28px 20px; min-height: 280px; }
+
+  .vctrl-inner { padding: 0 20px; }
+  .vctrl-h { font-size: 42px !important; }
+  .vctrl-bottom { padding: 32px 20px; }
+
+  .accel-inner { padding: 0 20px; }
+  .accel-h { font-size: 42px !important; }
+  .accel-cta-content, .accel-brand-logos { padding: 40px 20px; }
+
+  .signup-left, .signup-right { padding: 60px 20px; }
+  .form-tab-row { flex-direction: column; gap: 8px; }
+  .form-tab { width: 100%; text-align: center; padding: 12px; }
+
+  .contact { padding: 60px 20px; }
+
+  .footer { padding: 48px 20px 28px; }
+  .footer-grid { gap: 28px; }
+
+  .s-h2 { font-size: clamp(38px, 10vw, 60px); }
+  .dc-grid { grid-template-columns: 1fr; }
+
+  .stat-n { font-size: 44px; }
+  .step-h { font-size: 18px; }
 }
 </style>
 </head>
@@ -1556,7 +1659,22 @@ body::after {
     <li><a href="#accel">For Brands</a></li>
     <li><a href="#signup" class="nav-cta">Join Waitlist</a></li>
   </ul>
+  <button class="nav-burger" id="nav-burger" aria-label="Open menu" onclick="toggleMobileNav()">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+<!-- Mobile nav drawer -->
+<div class="mobile-nav" id="mobile-nav">
+  <ul>
+    <li><a href="#deals" onclick="closeMobileNav()">Deals</a></li>
+    <li><a href="#app" onclick="closeMobileNav()">The App</a></li>
+    <li><a href="#how" onclick="closeMobileNav()">How It Works</a></li>
+    <li><a href="#venues" onclick="closeMobileNav()">For Venues</a></li>
+    <li><a href="#accel" onclick="closeMobileNav()">For Brands</a></li>
+    <li><a href="#contact" onclick="closeMobileNav()">Contact</a></li>
+    <li><a href="#signup" onclick="closeMobileNav()" class="mobile-nav-cta">Join Waitlist →</a></li>
+  </ul>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -2302,6 +2420,26 @@ async function doContact(e) {
     btn.disabled = false;
     btn.textContent = 'Send Message';
   }
+}
+
+// Mobile nav
+function toggleMobileNav() {
+  const nav = document.getElementById('mobile-nav');
+  const burger = document.getElementById('nav-burger');
+  if (nav.classList.contains('open')) {
+    closeMobileNav();
+  } else {
+    nav.style.display = 'block';
+    requestAnimationFrame(() => nav.classList.add('open'));
+    burger.classList.add('open');
+  }
+}
+function closeMobileNav() {
+  const nav = document.getElementById('mobile-nav');
+  const burger = document.getElementById('nav-burger');
+  nav.classList.remove('open');
+  burger.classList.remove('open');
+  nav.addEventListener('transitionend', () => { nav.style.display = 'none'; }, { once: true });
 }
 
 // Scroll reveal
