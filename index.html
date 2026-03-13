@@ -134,36 +134,13 @@ body::after {
 .nav-logo {
   display: inline-flex;
   align-items: center;
-  gap: 0;
-  position: relative;
-  background: #000000;
-  border: 3px solid #ffffff;
-  border-radius: 6px;
-  padding: 8px 18px 7px;
-  margin: 4px;
   transition: opacity 0.2s;
 }
-.nav-logo::after {
-  content: '';
-  position: absolute;
-  inset: 4px;
-  border: 1.5px solid #ffffff;
-  border-radius: 15px;
-  pointer-events: none;
-}
-.nav-logo:hover { opacity: 0.7; }
-.nav-logo span {
-  font-family: 'Oswald', sans-serif;
-  font-weight: 500;
-  font-size: 21px;
-  letter-spacing: .06em;
-  color: #ffffff;
-  line-height: 1;
-  display: inline-block;
-  transform: scaleX(0.75);
-  transform-origin: center;
-  position: relative;
-  z-index: 1;
+.nav-logo:hover { opacity: 0.65; }
+.nav-logo img {
+  height: 38px;
+  width: auto;
+  display: block;
 }
 .nav-links {
   display: flex; align-items: center; gap: 40px;
@@ -1501,7 +1478,7 @@ body::after {
 
 <!-- NAV -->
 <nav class="nav">
-  <a href="#" class="nav-logo"><span>BLACKBOARD</span></a>
+  <a href="#" class="nav-logo"><img src="logo-white.svg" alt="BLACKBOARD"></a>
   <ul class="nav-links">
     <li><a href="#deals">Deals</a></li>
     <li><a href="#app">The App</a></li>
@@ -2089,7 +2066,7 @@ body::after {
 <footer class="footer">
   <div class="footer-grid">
     <div class="footer-brand">
-      <a href="#" class="nav-logo"><span>BLACKBOARD</span></a>
+      <a href="#" class="nav-logo"><img src="logo-white.svg" alt="BLACKBOARD"></a>
       <p>Deals. Drinks. Nights Out.<br>Launching at boarddeals.com</p>
       <em>“ Where Happy Hour Just Got Smarter ”</em>
     </div>
