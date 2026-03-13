@@ -683,12 +683,50 @@ body::after {
   background: #000; border-radius: 20px;
 }
 .phone-screen {
-  background: var(--void);
-  min-height: 460px;
+  background: #0e1117;
+  overflow: hidden;
 }
 .phone-screen img {
   width: 100%; display: block;
   object-fit: cover;
+}
+
+/* ── App Map UI ── */
+.app-ui {
+  display: flex; flex-direction: column;
+  background: #0e1117; color: #fff;
+  font-family: -apple-system, 'SF Pro Display', BlinkMacSystemFont, sans-serif;
+  overflow: hidden;
+}
+.app-status {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 16px 4px; font-size: 10px; font-weight: 700; letter-spacing: .02em;
+}
+.app-status-icons { display: flex; gap: 5px; align-items: center; }
+.app-status-icons span { font-size: 9px; }
+.app-searchbar {
+  margin: 6px 12px 8px; background: #1c2033;
+  border-radius: 22px; padding: 9px 14px;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: #6b7a99;
+}
+.app-searchbar svg { flex-shrink: 0; }
+.app-map-area { flex: 1; position: relative; }
+.app-map-area svg { width: 100%; display: block; }
+.app-card {
+  background: #0e1117; border-top: 1px solid #1c2033;
+  padding: 12px 14px 18px;
+}
+.app-card-tag {
+  font-size: 9px; font-weight: 800; letter-spacing: .12em;
+  color: #ff4040; margin-bottom: 6px;
+}
+.app-card-name { font-size: 14px; font-weight: 700; margin-bottom: 3px; }
+.app-card-sub { font-size: 11px; color: #5a6680; margin-bottom: 11px; }
+.app-card-btn {
+  background: #ff4040; color: #fff; border-radius: 22px;
+  padding: 9px 0; text-align: center;
+  font-size: 11px; font-weight: 800; letter-spacing: .06em;
 }
 /* Reflection highlight on phone edge */
 .phone::before {
@@ -1735,12 +1773,89 @@ body::after {
       <div class="phone lg">
         <div class="phone-notch"></div>
         <div class="phone-screen">
+          <div class="app-ui">
+            <!-- Status bar -->
+            <div class="app-status">
+              <span>9:41</span>
+              <div class="app-status-icons">
+                <span>▲▲▲</span>
+                <span>WiFi</span>
+                <span>█</span>
+              </div>
+            </div>
+            <!-- Search bar -->
+            <div class="app-searchbar">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="5" cy="5" r="3.5" stroke="#6b7a99" stroke-width="1.4"/><line x1="8" y1="8" x2="11" y2="11" stroke="#6b7a99" stroke-width="1.4" stroke-linecap="round"/></svg>
+              <span>Deals near you</span>
+            </div>
+            <!-- Map -->
+            <div class="app-map-area">
+              <svg viewBox="0 0 222 300" xmlns="http://www.w3.org/2000/svg">
+                <!-- Base -->
+                <rect width="222" height="300" fill="#1a2035"/>
+                <!-- City blocks -->
+                <rect x="0" y="0" width="60" height="45" fill="#1e2540" rx="2"/>
+                <rect x="68" y="0" width="50" height="55" fill="#1e2540" rx="2"/>
+                <rect x="126" y="0" width="96" height="40" fill="#1e2540" rx="2"/>
+                <rect x="0" y="80" width="65" height="55" fill="#1e2540" rx="2"/>
+                <rect x="73" y="72" width="58" height="60" fill="#1e2540" rx="2"/>
+                <rect x="140" y="72" width="82" height="55" fill="#1e2540" rx="2"/>
+                <rect x="0" y="168" width="60" height="55" fill="#1e2540" rx="2"/>
+                <rect x="140" y="160" width="82" height="60" fill="#1e2540" rx="2"/>
+                <rect x="0" y="248" width="65" height="52" fill="#1e2540" rx="2"/>
+                <rect x="73" y="240" width="58" height="60" fill="#1e2540" rx="2"/>
+                <rect x="140" y="248" width="82" height="52" fill="#1e2540" rx="2"/>
+                <!-- Park -->
+                <rect x="73" y="168" width="58" height="52" fill="#1a2d1a" rx="5"/>
+                <rect x="80" y="175" width="14" height="14" fill="#1f3a1f" rx="7"/>
+                <rect x="100" y="180" width="10" height="10" fill="#1f3a1f" rx="5"/>
+                <rect x="114" y="172" width="12" height="12" fill="#1f3a1f" rx="6"/>
+                <!-- River -->
+                <path d="M0,268 Q40,258 90,272 Q140,282 180,265 Q200,258 222,270 L222,300 L0,300 Z" fill="#162440"/>
+                <!-- H streets -->
+                <rect x="0" y="50" width="222" height="7" fill="#242e47"/>
+                <rect x="0" y="135" width="222" height="7" fill="#242e47"/>
+                <rect x="0" y="220" width="222" height="7" fill="#242e47"/>
+                <!-- V streets -->
+                <rect x="63" y="0" width="7" height="300" fill="#242e47"/>
+                <rect x="133" y="0" width="7" height="300" fill="#242e47"/>
+                <!-- Diagonal street -->
+                <line x1="0" y1="140" x2="63" y2="50" stroke="#242e47" stroke-width="5"/>
+                <!-- Pin: 2-for-1 -->
+                <circle cx="32" cy="110" r="13" fill="#e63535"/>
+                <text x="32" y="107" text-anchor="middle" fill="white" font-size="7" font-weight="800">2 FOR</text>
+                <text x="32" y="116" text-anchor="middle" fill="white" font-size="7" font-weight="800">1</text>
+                <!-- Pin: 30% OFF -->
+                <circle cx="100" cy="103" r="13" fill="#e63535"/>
+                <text x="100" y="100" text-anchor="middle" fill="white" font-size="7" font-weight="800">30%</text>
+                <text x="100" y="109" text-anchor="middle" fill="white" font-size="7" font-weight="800">OFF</text>
+                <!-- Pin: Event (purple) -->
+                <circle cx="178" cy="98" r="13" fill="#7c4dff"/>
+                <text x="178" y="95" text-anchor="middle" fill="white" font-size="7" font-weight="800">LIVE</text>
+                <text x="178" y="104" text-anchor="middle" fill="white" font-size="7" font-weight="800">GIG</text>
+                <!-- Pin: selected (larger, with ring) -->
+                <circle cx="32" cy="197" r="15" fill="#e63535" stroke="white" stroke-width="2.5"/>
+                <text x="32" y="194" text-anchor="middle" fill="white" font-size="7" font-weight="800">HH</text>
+                <text x="32" y="203" text-anchor="middle" fill="white" font-size="7" font-weight="800">50%</text>
+                <!-- Pin: food -->
+                <circle cx="178" cy="190" r="11" fill="#ff7b2e" opacity="0.9"/>
+                <text x="178" y="187" text-anchor="middle" fill="white" font-size="7" font-weight="800">25%</text>
+                <text x="178" y="196" text-anchor="middle" fill="white" font-size="7" font-weight="800">OFF</text>
+                <!-- User dot -->
+                <circle cx="100" cy="194" r="11" fill="#1a2035"/>
+                <circle cx="100" cy="194" r="7" fill="#4d9fff"/>
+                <circle cx="100" cy="194" r="14" fill="#4d9fff" opacity="0.15"/>
+              </svg>
+            </div>
+            <!-- Deal card -->
+            <div class="app-card">
+              <div class="app-card-tag">HAPPY HOUR · 0.1 MI AWAY</div>
+              <div class="app-card-name">The Anchor</div>
+              <div class="app-card-sub">All cocktails 50% off · Until 8 PM tonight</div>
+              <div class="app-card-btn">CLAIM DEAL</div>
+            </div>
           </div>
-      </div>
-      <div class="phone sm">
-        <div class="phone-notch"></div>
-        <div class="phone-screen">
-          </div>
+        </div>
       </div>
     </div>
   </div>
