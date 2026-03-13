@@ -1,0 +1,43 @@
+export default async function handler(req, res) {
+  if (req.method !== 'POST') return res.status(405).end();
+
+  const { type, firstName, lastName, email, city, interest, venueName, venueType } = req.body;
+
+  if (!email) return res.status(400).json({ error: 'Email is required' });
+
+  const isVenue = type === 'v';
+  const labelName = isVenue ? 'Venue Waitlist' : 'User Waitlist';
+
+  const payload = {
+    api_key: process.env.APOLLO_API_KEY,
+    first_name: isVenue ? (firstName || venueName) : firstName,
+    last_name: isVenue ? '' : (lastName || ''),
+    email,
+    city,
+    label_names: [labelName],
+  };
+
+  if (isVenue && venueName) payload.organization_name = venueName;
+  if (isVenue && venueType) payload.title = venueType;
+  if (!isVenue && interest) payload.present_raw_address = interest; // store interest as note field
+
+  try {
+    const apolloRes = await fetch('https://api.apollo.io/v1/contacts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
+      body: JSON.stringify(payload),
+    });
+
+    const data = await apolloRes.json();
+
+    if (!apolloRes.ok) {
+      console.error('Apollo error:', data);
+      return res.status(500).json({ error: 'Failed to add to Apollo' });
+    }
+
+    return res.status(200).json({ success: true });
+  } catch (err) {
+    console.error('Waitlist error:', err);
+    return res.status(500).json({ error: 'Server error' });
+  }
+}

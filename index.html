@@ -1395,6 +1395,45 @@ body::after {
 .form-success p { color: var(--ghost); font-size: 14px; line-height: 1.7; }
 
 /* ══════════════════════════════════════════════════
+   CONTACT SECTION
+══════════════════════════════════════════════════ */
+.contact {
+  background: var(--void);
+  padding: 120px 72px;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 80px;
+  align-items: start;
+  border-top: 1px solid var(--line-soft);
+}
+.contact-left { max-width: 360px; }
+.contact-left .s-h2 { margin-bottom: 16px; }
+.contact-left p { font-size: 14px; color: var(--ghost); line-height: 1.85; font-weight: 300; }
+.contact-form { display: flex; flex-direction: column; gap: 16px; max-width: 500px; }
+.contact-form .field label { font-size: 9.5px; letter-spacing: .2em; text-transform: uppercase; color: var(--ghost); }
+.contact-form .field input,
+.contact-form .field textarea {
+  width: 100%; background: transparent;
+  border: none; border-bottom: 1px solid var(--line);
+  color: var(--chalk); font-family: 'DM Sans', sans-serif;
+  font-size: var(--text-base); font-weight: 300;
+  padding: 10px 0; outline: none;
+  transition: border-color 0.2s; resize: none;
+}
+.contact-form .field textarea { min-height: 100px; }
+.contact-form .field input:focus,
+.contact-form .field textarea:focus { border-color: rgba(242,242,239,0.5); }
+.contact-form .field input::placeholder,
+.contact-form .field textarea::placeholder { color: var(--line); }
+.contact-note { font-size: 11px; color: var(--line); margin-top: -4px; }
+.contact-success { display: none; padding: 40px 0; }
+.contact-success h3 { font-family: 'Bebas Neue', sans-serif; font-size: 42px; letter-spacing: .04em; margin-bottom: 8px; }
+.contact-success p { color: var(--ghost); font-size: 14px; line-height: 1.7; }
+@media(max-width:860px) {
+  .contact { grid-template-columns: 1fr; padding: 80px 40px; gap: 48px; }
+}
+
+/* ══════════════════════════════════════════════════
    FOOTER
 ══════════════════════════════════════════════════ */
 .footer {
@@ -2140,37 +2179,59 @@ body::after {
     </div>
     <div id="fp-u" class="form-pane on">
       <div class="form-row-2">
-        <div class="field"><label>First Name</label><input type="text" placeholder="First name"></div>
-        <div class="field"><label>Last Name</label><input type="text" placeholder="Last name"></div>
+        <div class="field"><label>First Name</label><input id="u-first" type="text" placeholder="First name"></div>
+        <div class="field"><label>Last Name</label><input id="u-last" type="text" placeholder="Last name"></div>
       </div>
-      <div class="field"><label>Email</label><input type="email" placeholder="you@example.com"></div>
+      <div class="field"><label>Email</label><input id="u-email" type="email" placeholder="you@example.com"></div>
       <div class="form-row-2">
-        <div class="field"><label>City</label><input type="text" placeholder="e.g. London"></div>
+        <div class="field"><label>City</label><input id="u-city" type="text" placeholder="e.g. London"></div>
         <div class="field"><label>I'm most into…</label>
-          <select><option value="">Pick one</option><option>Food Deals</option><option>Drink Offers</option><option>Events &amp; Nights Out</option><option>All of the above</option></select>
+          <select id="u-interest"><option value="">Pick one</option><option>Food Deals</option><option>Drink Offers</option><option>Events &amp; Nights Out</option><option>All of the above</option></select>
         </div>
       </div>
-      <button class="form-submit" onclick="doSubmit(event)">Secure My Spot on the Waitlist</button>
-      <p class="form-note">No spam. Just your launch invite from boarddeals.com</p>
+      <button class="form-submit" onclick="doSubmit(event,'u')">Secure My Spot on the Waitlist</button>
+      <p class="form-note" id="u-note">No spam. Just your launch invite from boarddeals.com</p>
     </div>
     <div id="fp-v" class="form-pane">
-      <div class="field"><label>Venue Name</label><input type="text" placeholder="Your venue"></div>
+      <div class="field"><label>Venue Name</label><input id="v-venue" type="text" placeholder="Your venue"></div>
       <div class="form-row-2">
-        <div class="field"><label>Your Name</label><input type="text" placeholder="Contact name"></div>
-        <div class="field"><label>Email</label><input type="email" placeholder="you@venue.com"></div>
+        <div class="field"><label>Your Name</label><input id="v-name" type="text" placeholder="Contact name"></div>
+        <div class="field"><label>Email</label><input id="v-email" type="email" placeholder="you@venue.com"></div>
       </div>
       <div class="form-row-2">
-        <div class="field"><label>City</label><input type="text" placeholder="e.g. London"></div>
+        <div class="field"><label>City</label><input id="v-city" type="text" placeholder="e.g. London"></div>
         <div class="field"><label>Venue Type</label>
-          <select><option value="">Select type</option><option>Restaurant</option><option>Bar / Cocktail Bar</option><option>Pub</option><option>Nightclub</option><option>Live Music Venue</option><option>Café</option><option>Rooftop / Terrace</option><option>Other</option></select>
+          <select id="v-type"><option value="">Select type</option><option>Restaurant</option><option>Bar / Cocktail Bar</option><option>Pub</option><option>Nightclub</option><option>Live Music Venue</option><option>Café</option><option>Rooftop / Terrace</option><option>Other</option></select>
         </div>
       </div>
-      <button class="form-submit" onclick="doSubmit(event)">Register My Venue</button>
-      <p class="form-note">We'll be in touch before launch.</p>
+      <button class="form-submit" onclick="doSubmit(event,'v')">Register My Venue</button>
+      <p class="form-note" id="v-note">We'll be in touch before launch.</p>
     </div>
     <div class="form-success" id="form-success">
       <h3>YOU'RE ON THE LIST.</h3>
       <p>We'll send your launch invite when BlackBoard goes live<br>at boarddeals.com 🖤</p>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="contact">
+  <div class="contact-left">
+    <div class="s-label reveal">Get In Touch</div>
+    <h2 class="s-h2 reveal">REACH<br><span class="dim">OUT TO US.</span></h2>
+    <p class="reveal">Have a question, a partnership idea, or just want to say hello? Drop us a message and we'll get back to you.</p>
+  </div>
+  <div>
+    <div class="contact-form reveal" id="contact-form">
+      <div class="field"><label>Your Name</label><input id="c-name" type="text" placeholder="John Smith"></div>
+      <div class="field"><label>Email</label><input id="c-email" type="email" placeholder="you@example.com"></div>
+      <div class="field"><label>Message</label><textarea id="c-message" placeholder="What's on your mind…"></textarea></div>
+      <button class="form-submit" onclick="doContact(event)">Send Message</button>
+      <p class="contact-note" id="c-note"></p>
+    </div>
+    <div class="contact-success" id="contact-success">
+      <h3>MESSAGE SENT.</h3>
+      <p>Thanks for reaching out — we'll be back in touch shortly.</p>
     </div>
   </div>
 </section>
@@ -2203,7 +2264,7 @@ body::after {
       <h4>Company</h4>
       <ul>
         <li><a href="#">About</a></li>
-        <li><a href="#">Contact</a></li>
+        <li><a href="#contact">Contact</a></li>
         <li><a href="#">Privacy</a></li>
         <li><a href="#">Terms</a></li>
       </ul>
@@ -2249,14 +2310,86 @@ function setForm(id) {
   });
 }
 
-// Form submit
-function doSubmit(e) {
+// Waitlist submit
+async function doSubmit(e, type) {
   e.preventDefault();
-  document.querySelector('.form-tab-row').style.visibility = 'hidden';
-  document.querySelectorAll('.form-pane').forEach(p => p.style.display='none');
-  const s = document.getElementById('form-success');
-  s.style.display = 'block';
-  s.scrollIntoView({behavior:'smooth',block:'center'});
+  const btn = e.target;
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+
+  let body;
+  if (type === 'u') {
+    body = {
+      type,
+      firstName: document.getElementById('u-first').value.trim(),
+      lastName:  document.getElementById('u-last').value.trim(),
+      email:     document.getElementById('u-email').value.trim(),
+      city:      document.getElementById('u-city').value.trim(),
+      interest:  document.getElementById('u-interest').value,
+    };
+  } else {
+    body = {
+      type,
+      venueName: document.getElementById('v-venue').value.trim(),
+      firstName: document.getElementById('v-name').value.trim(),
+      email:     document.getElementById('v-email').value.trim(),
+      city:      document.getElementById('v-city').value.trim(),
+      venueType: document.getElementById('v-type').value,
+    };
+  }
+
+  const noteId = type === 'u' ? 'u-note' : 'v-note';
+  try {
+    const res = await fetch('/api/waitlist', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) throw new Error();
+    document.querySelector('.form-tab-row').style.visibility = 'hidden';
+    document.querySelectorAll('.form-pane').forEach(p => p.style.display = 'none');
+    const s = document.getElementById('form-success');
+    s.style.display = 'block';
+    s.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  } catch {
+    document.getElementById(noteId).textContent = 'Something went wrong — please try again.';
+    document.getElementById(noteId).style.color = '#ff6b6b';
+    btn.disabled = false;
+    btn.textContent = type === 'u' ? 'Secure My Spot on the Waitlist' : 'Register My Venue';
+  }
+}
+
+// Contact form submit
+async function doContact(e) {
+  e.preventDefault();
+  const btn = e.target;
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+  const note = document.getElementById('c-note');
+
+  const body = {
+    name:    document.getElementById('c-name').value.trim(),
+    email:   document.getElementById('c-email').value.trim(),
+    message: document.getElementById('c-message').value.trim(),
+  };
+
+  try {
+    const res = await fetch('/api/contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+    if (!res.ok) throw new Error();
+    document.getElementById('contact-form').style.display = 'none';
+    const s = document.getElementById('contact-success');
+    s.style.display = 'block';
+    s.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  } catch {
+    note.textContent = 'Something went wrong — please try again.';
+    note.style.color = '#ff6b6b';
+    btn.disabled = false;
+    btn.textContent = 'Send Message';
+  }
 }
 
 // Scroll reveal
