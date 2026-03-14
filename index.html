@@ -629,8 +629,8 @@ body::after {
 }
 .showcase-grid {
   display: grid;
-  grid-template-columns: 1fr 1.05fr;
-  gap: 80px; align-items: center;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 60px; align-items: center;
 }
 .feature-row {
   border-top: 1px solid var(--line-soft);
@@ -673,8 +673,8 @@ body::after {
   flex-shrink: 0;
   position: relative;
 }
-.phone.lg { width: 260px; }
-.phone.sm { width: 196px; transform: translateY(44px); }
+.phone.lg { width: 210px; }
+.phone.sm { width: 168px; transform: translateY(32px); }
 .phone-screen {
   background: #000;
   overflow: hidden;
@@ -1502,9 +1502,9 @@ body::after {
   .form-row-2 { grid-template-columns: 1fr; }
   .stats-grid { grid-template-columns: 1fr; }
   .footer-grid { grid-template-columns: 1fr; gap: 36px; }
-  .phones { gap: 10px; }
-  .phone.lg { width: 200px; }
-  .phone.sm { width: 150px; }
+  .phones { gap: 8px; }
+  .phone.lg { width: 155px; }
+  .phone.sm { width: 125px; transform: translateY(24px); }
 }
 
 /* ── Hamburger / Mobile Nav ── */
@@ -1573,8 +1573,9 @@ body::after {
   .cats { padding: 60px 20px; }
   .showcase { padding: 60px 20px; }
   .showcase-grid { gap: 40px; }
-  .phones { justify-content: center; }
-  .phone.lg { width: 230px; }
+  .phones { justify-content: center; gap: 6px; }
+  .phone.lg { width: 145px; }
+  .phone.sm { width: 115px; transform: translateY(20px); }
 
   .atmo { padding: 60px 0; }
   .atmo-content { padding: 0 20px; }
@@ -1921,9 +1922,19 @@ body::after {
       </div>
     </div>
     <div class="phones reveal d1">
+      <div class="phone sm">
+        <div class="phone-screen">
+          <img src="simulator_screenshot_6A6BF3F7-99E2-4FCE-A11A-F2F9755F9D2E (1).png" alt="Blackboard app — screen 2">
+        </div>
+      </div>
       <div class="phone lg">
         <div class="phone-screen">
           <img src="simulator_screenshot_6A6BF3F7-99E2-4FCE-A11A-F2F9755F9D2E.png" alt="Blackboard app — deals map view">
+        </div>
+      </div>
+      <div class="phone sm">
+        <div class="phone-screen">
+          <img src="simulator_screenshot_EECE8A60-5240-4F09-8517-A275E85E3C17.png" alt="Blackboard app — screen 3">
         </div>
       </div>
     </div>
