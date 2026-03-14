@@ -20,7 +20,7 @@
   --raised:    #1e1e22;
   --line:      #2c2c30;
   --line-soft: #242428;
-  --ghost:     #505056;
+  --ghost:     #8c8c94;
   --smoke:     #a0a0a6;
   --chalk:     #f2f2ef;
   --white:     #ffffff;
@@ -248,7 +248,7 @@ body::after {
   font-size: clamp(16px, 2.2vw, 28px);
   font-style: italic;
   font-weight: 300;
-  color: rgba(242,242,239,0.45);
+  color: rgba(242,242,239,0.82);
   letter-spacing: 0.04em;
   margin-bottom: 36px;
   animation: fade-up 1s 0.16s var(--ease-out) both;
@@ -257,7 +257,7 @@ body::after {
 .hero-copy {
   font-size: 15px;
   line-height: 1.85;
-  color: rgba(242,242,239,0.42);
+  color: rgba(242,242,239,0.78);
   max-width: 460px;
   font-weight: 300;
   margin-bottom: 48px;
@@ -408,7 +408,7 @@ body::after {
 }
 .triptych-tag {
   font-size: 9px; letter-spacing: .24em; text-transform: uppercase;
-  color: rgba(242,242,239,0.45); margin-bottom: 5px;
+  color: rgba(242,242,239,0.75); margin-bottom: 5px;
 }
 .triptych-title {
   font-family: 'Bebas Neue', sans-serif;
@@ -502,7 +502,7 @@ body::after {
 }
 .cat-meta {
   font-size: 9.5px; letter-spacing: .15em; text-transform: uppercase;
-  color: var(--line); margin-top: 16px;
+  color: var(--ghost); margin-top: 16px;
 }
 
 /* ══════════════════════════════════════════════════
@@ -549,7 +549,7 @@ body::after {
 }
 .q-attr {
   font-size: var(--text-xs); letter-spacing: .32em;
-  text-transform: uppercase; color: rgba(242,242,239,0.38);
+  text-transform: uppercase; color: rgba(242,242,239,0.68);
 }
 
 /* ══════════════════════════════════════════════════
@@ -865,7 +865,7 @@ body::after {
 }
 .atmo-label {
   font-size: var(--text-xs); letter-spacing: .32em; text-transform: uppercase;
-  color: rgba(242,242,239,0.32); margin-bottom: 20px;
+  color: rgba(242,242,239,0.68); margin-bottom: 20px;
   display: flex; align-items: center; gap: 12px;
 }
 .atmo-label::before { content: ''; width: 20px; height: 1px; background: rgba(242,242,239,0.25); }
@@ -878,7 +878,7 @@ body::after {
 .atmo-h .atmo-dim { color: var(--ghost); }
 .atmo-body {
   font-size: 15px; line-height: 1.85;
-  color: rgba(242,242,239,0.45); font-weight: 300;
+  color: rgba(242,242,239,0.80); font-weight: 300;
   max-width: 400px; margin-bottom: 36px;
 }
 @media (max-width: 700px) {
@@ -905,7 +905,7 @@ body::after {
 }
 .stat-l {
   font-size: var(--text-xs); letter-spacing: .16em; text-transform: uppercase;
-  color: rgba(242,242,239,0.38);
+  color: rgba(242,242,239,0.72);
 }
 
 
@@ -938,7 +938,7 @@ body::after {
 .vctrl-sub {
   font-size: 16px;
   line-height: 1.8;
-  color: rgba(242,242,239,0.42);
+  color: rgba(242,242,239,0.78);
   font-weight: 300;
   max-width: 600px;
 }
@@ -1100,7 +1100,7 @@ body::after {
 .accel-sub {
   font-size: 16px;
   line-height: 1.8;
-  color: rgba(242,242,239,0.45);
+  color: rgba(242,242,239,0.80);
   max-width: 580px;
   font-weight: 300;
 }
@@ -1192,7 +1192,7 @@ body::after {
 .accel-pillar-p {
   font-size: 14px;
   line-height: 1.85;
-  color: rgba(242,242,239,0.42);
+  color: rgba(242,242,239,0.78);
   font-weight: 300;
   margin-bottom: 24px;
 }
@@ -1205,7 +1205,7 @@ body::after {
 .accel-pillar-list li {
   font-size: 12px;
   letter-spacing: .06em;
-  color: rgba(242,242,239,0.35);
+  color: rgba(242,242,239,0.70);
   padding: 6px 0;
   padding-left: 16px;
   position: relative;
@@ -1257,7 +1257,7 @@ body::after {
 .accel-cta-body {
   font-size: 14px;
   line-height: 1.85;
-  color: rgba(242,242,239,0.4);
+  color: rgba(242,242,239,0.78);
   margin-bottom: 32px;
   max-width: 400px;
   font-weight: 300;
@@ -1271,7 +1271,7 @@ body::after {
   font-size: 10px;
   letter-spacing: .28em;
   text-transform: uppercase;
-  color: rgba(242,242,239,0.25);
+  color: rgba(242,242,239,0.62);
   margin-bottom: 32px;
 }
 .accel-stages {
@@ -1319,7 +1319,7 @@ body::after {
 .signup-left .s-label { color: #888; }
 .signup-left .s-label::before { background: #888; }
 .signup-left .s-h2 { color: var(--void); }
-.signup-copy { font-size: var(--text-base); color: #555; line-height: 1.85; max-width: 340px; margin-bottom: 36px; font-weight: 300; }
+.signup-copy { font-size: var(--text-base); color: #333; line-height: 1.85; max-width: 340px; margin-bottom: 36px; font-weight: 300; }
 .perk {
   display: flex; gap: 14px; align-items: flex-start;
   padding: 16px 0; border-bottom: 1px solid rgba(0,0,0,0.08);
@@ -1332,7 +1332,7 @@ body::after {
   font-size: 13px; flex-shrink: 0;
 }
 .perk strong { display: block; font-size: 12px; font-weight: 500; color: var(--void); margin-bottom: 2px; }
-.perk span { font-size: 12px; color: #666; font-weight: 300; }
+.perk span { font-size: 12px; color: #444; font-weight: 300; }
 
 .signup-right {
   background: var(--surface);
@@ -2000,7 +2000,7 @@ body::after {
   <div class="vctrl-inner">
 
     <div class="vctrl-header">
-      <div class="s-label reveal" style="color:rgba(242,242,239,0.35)">Your Venue. Your Rules.</div>
+      <div class="s-label reveal" style="color:rgba(242,242,239,0.68)">Your Venue. Your Rules.</div>
       <h2 class="vctrl-h reveal">STOP WAITING.<br><span class="vctrl-h-dim">START FILLING SEATS.</span></h2>
       <p class="vctrl-sub reveal">No account managers. No 6-week turnarounds. No minimum spend. BlackBoard puts you in direct control of your deals, your timing, and your quiet nights — from your phone, right now.</p>
     </div>
@@ -2104,7 +2104,7 @@ body::after {
 
     <!-- Header -->
     <div class="accel-header reveal">
-      <div class="s-label" style="color:rgba(242,242,239,0.35)">For Drinks Brands</div>
+      <div class="s-label" style="color:rgba(242,242,239,0.68)">For Drinks Brands</div>
       <h2 class="accel-h">THE BLACKBOARD<br><span class="accel-h-dim">LAB.</span></h2>
       <p class="accel-sub">A structured programme for emerging spirits, craft beers, and independent drinks brands ready to study their audience — and graduate to real, measurable growth.</p>
     </div>
