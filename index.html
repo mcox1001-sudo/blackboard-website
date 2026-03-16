@@ -2239,18 +2239,27 @@ body::after {
       <p class="form-note" id="u-note">No spam. Just your launch invite from blackboarddeals.com</p>
     </div>
     <div id="fp-v" class="form-pane">
-      <div class="field"><label>Venue Name</label><input id="v-venue" type="text" placeholder="Your venue"></div>
       <div class="form-row-2">
-        <div class="field"><label>Your Name</label><input id="v-name" type="text" placeholder="Contact name"></div>
-        <div class="field"><label>Email</label><input id="v-email" type="email" placeholder="you@venue.com"></div>
+        <div class="field"><label>Venue Name</label><input id="v-venue" type="text" placeholder="Your venue"></div>
+        <div class="field"><label>Company Name <span class="optional">(if different)</span></label><input id="v-company" type="text" placeholder="Parent company"></div>
       </div>
+      <div class="field"><label>Venue Address</label><input id="v-address" type="text" placeholder="Street address"></div>
       <div class="form-row-2">
         <div class="field"><label>City</label><div class="city-input-wrap"><input id="v-city" type="text" placeholder="e.g. London"><button type="button" class="city-detect" onclick="detectCity('v-city')" title="Detect my location">📍</button></div></div>
         <div class="field"><label>Venue Type</label>
           <select id="v-type"><option value="">Select type</option><option>Restaurant</option><option>Bar / Cocktail Bar</option><option>Pub</option><option>Nightclub</option><option>Live Music Venue</option><option>Café</option><option>Rooftop / Terrace</option><option>Other</option></select>
         </div>
       </div>
-      <div class="field"><label>Phone <span class="optional">(optional)</span></label><input id="v-phone" type="tel" placeholder="+44 7700 000000"></div>
+      <div class="form-row-2">
+        <div class="field"><label>Your Name</label><input id="v-name" type="text" placeholder="Contact name"></div>
+        <div class="field"><label>Your Role</label>
+          <select id="v-role"><option value="">Select role</option><option>Owner</option><option>Manager</option><option>Other</option></select>
+        </div>
+      </div>
+      <div class="form-row-2">
+        <div class="field"><label>Email</label><input id="v-email" type="email" placeholder="you@venue.com"></div>
+        <div class="field"><label>Phone <span class="optional">(optional)</span></label><input id="v-phone" type="tel" placeholder="+44 7700 000000"></div>
+      </div>
       <button class="form-submit" onclick="doSubmit(event,'v')">Register My Venue</button>
       <p class="form-note" id="v-note">We'll be in touch before launch.</p>
     </div>
@@ -2400,12 +2409,15 @@ async function doSubmit(e, type) {
   } else {
     body = {
       type,
-      venueName: document.getElementById('v-venue').value.trim(),
-      firstName: document.getElementById('v-name').value.trim(),
-      email:     document.getElementById('v-email').value.trim(),
-      city:      document.getElementById('v-city').value.trim(),
-      venueType: document.getElementById('v-type').value,
-      phone:     document.getElementById('v-phone').value.trim(),
+      venueName:   document.getElementById('v-venue').value.trim(),
+      companyName: document.getElementById('v-company').value.trim(),
+      address:     document.getElementById('v-address').value.trim(),
+      firstName:   document.getElementById('v-name').value.trim(),
+      email:       document.getElementById('v-email').value.trim(),
+      city:        document.getElementById('v-city').value.trim(),
+      venueType:   document.getElementById('v-type').value,
+      role:        document.getElementById('v-role').value,
+      phone:       document.getElementById('v-phone').value.trim(),
     };
   }
 
