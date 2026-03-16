@@ -9,7 +9,6 @@ export default async function handler(req, res) {
   const labelName = isVenue ? 'Venue Waitlist' : 'User Waitlist';
 
   const payload = {
-    api_key: process.env.APOLLO_API_KEY,
     first_name: isVenue ? (firstName || venueName) : firstName,
     last_name: isVenue ? '' : (lastName || ''),
     email,
@@ -24,7 +23,11 @@ export default async function handler(req, res) {
   try {
     const apolloRes = await fetch('https://api.apollo.io/v1/contacts', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Cache-Control': 'no-cache' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
+        'x-api-key': process.env.APOLLO_API_KEY,
+      },
       body: JSON.stringify(payload),
     });
 
