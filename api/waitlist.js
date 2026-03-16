@@ -47,15 +47,15 @@ export default async function handler(req, res) {
 
     // 2. Add to the correct list
     if (contactId) {
-      const listRes = await fetch(`https://api.apollo.io/v1/lists/${listId}/add_contact_ids`, {
+      const listRes = await fetch(`https://api.apollo.io/v1/contact_lists/${listId}/add_contact_ids`, {
         method: 'POST',
         headers,
         body: JSON.stringify({ contact_ids: [contactId] }),
       });
 
       if (!listRes.ok) {
-        const listErr = await listRes.json();
-        console.error('Apollo list error:', listErr);
+        const text = await listRes.text();
+        console.error('Apollo list error:', text);
         // Don't fail the whole request — contact was created successfully
       }
     }
