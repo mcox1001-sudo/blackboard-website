@@ -1,6 +1,3 @@
-const VENUE_LIST_ID = '69b84b8a6602c60011f98246';
-const USER_LIST_ID  = '69b84b9790f07a00118df3c3';
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
@@ -9,19 +6,14 @@ export default async function handler(req, res) {
   if (!email) return res.status(400).json({ error: 'Email is required' });
 
   const isVenue = type === 'v';
-  const listId  = isVenue ? VENUE_LIST_ID : USER_LIST_ID;
-
-  const headers = {
-    'Content-Type': 'application/json',
-    'Cache-Control': 'no-cache',
-    'x-api-key': process.env.APOLLO_API_KEY,
-  };
+  const labelName = isVenue ? 'Blackboard Venue Waitlist' : 'Blackboard User Waitlist';
 
   const payload = {
     first_name: isVenue ? (firstName || venueName) : firstName,
     last_name: isVenue ? '' : (lastName || ''),
     email,
     city,
+    label_names: [labelName],
   };
 
   if (isVenue && venueName) payload.organization_name = venueName;
@@ -29,33 +21,21 @@ export default async function handler(req, res) {
   if (!isVenue && interest) payload.present_raw_address = interest;
 
   try {
-    // 1. Create the contact
-    const contactRes = await fetch('https://api.apollo.io/v1/contacts', {
+    const apolloRes = await fetch('https://api.apollo.io/v1/contacts', {
       method: 'POST',
-      headers,
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache',
+        'x-api-key': process.env.APOLLO_API_KEY,
+      },
       body: JSON.stringify(payload),
     });
 
-    const contactData = await contactRes.json();
+    const data = await apolloRes.json();
 
-    if (!contactRes.ok) {
-      console.error('Apollo contact error:', contactData);
+    if (!apolloRes.ok) {
+      console.error('Apollo error:', data);
       return res.status(500).json({ error: 'Failed to add to Apollo' });
-    }
-
-    const contactId = contactData.contact?.id;
-
-    // 2. Add to the correct list
-    if (contactId) {
-      const listRes = await fetch(`https://api.apollo.io/v1/contacts/${contactId}`, {
-        method: 'PUT',
-        headers,
-        body: JSON.stringify({ list_ids: [listId] }),
-      });
-
-      const listStatus = listRes.status;
-      const listText = await listRes.text();
-      console.log(`Apollo list update status: ${listStatus}`, listText.slice(0, 200));
     }
 
     return res.status(200).json({ success: true });
