@@ -16,7 +16,7 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         from: 'website@blackboarddeals.com',
-        to: [process.env.CONTACT_EMAIL || 'hello@blackboarddeals.com'],
+        to: ['support@blackboarddeals.com'],
         reply_to: email,
         subject: `New message from ${name} — blackboarddeals.com`,
         html: `
