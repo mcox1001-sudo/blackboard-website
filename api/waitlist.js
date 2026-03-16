@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { type, firstName, lastName, email, city, interest, venueName, venueType } = req.body;
+  const { type, firstName, lastName, email, city, interest, venueName, venueType, phone } = req.body;
 
   if (!email) return res.status(400).json({ error: 'Email is required' });
 
@@ -19,6 +19,7 @@ export default async function handler(req, res) {
   if (isVenue && venueName) payload.organization_name = venueName;
   if (isVenue && venueType) payload.title = venueType;
   if (!isVenue && interest) payload.present_raw_address = interest;
+  if (phone) payload.direct_phone = phone;
 
   try {
     const apolloRes = await fetch('https://api.apollo.io/v1/contacts', {

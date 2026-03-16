@@ -1366,6 +1366,11 @@ body::after {
 .field input:focus, .field select:focus { border-color: rgba(242,242,239,0.5); }
 .field input::placeholder { color: var(--line); }
 .field select option { background: var(--raised); }
+.field label .optional { font-size: 8.5px; opacity: 0.5; text-transform: none; letter-spacing: 0; margin-left: 4px; }
+.city-input-wrap { position: relative; display: flex; }
+.city-input-wrap input { flex: 1; }
+.city-detect { position: absolute; right: 0; top: 0; bottom: 0; width: 42px; background: var(--line); border: none; color: var(--chalk); cursor: pointer; font-size: 15px; display: flex; align-items: center; justify-content: center; opacity: 0.7; transition: opacity 0.2s; }
+.city-detect:hover { opacity: 1; }
 .form-submit {
   background: var(--chalk); color: var(--void);
   padding: 15px; width: 100%;
@@ -2224,11 +2229,12 @@ body::after {
       </div>
       <div class="field"><label>Email</label><input id="u-email" type="email" placeholder="you@example.com"></div>
       <div class="form-row-2">
-        <div class="field"><label>City</label><input id="u-city" type="text" placeholder="e.g. London"></div>
+        <div class="field"><label>City</label><div class="city-input-wrap"><input id="u-city" type="text" placeholder="e.g. London"><button type="button" class="city-detect" onclick="detectCity('u-city')" title="Detect my location">📍</button></div></div>
         <div class="field"><label>I'm most into…</label>
           <select id="u-interest"><option value="">Pick one</option><option>Food Deals</option><option>Drink Offers</option><option>Events &amp; Nights Out</option><option>All of the above</option></select>
         </div>
       </div>
+      <div class="field"><label>Phone <span class="optional">(optional)</span></label><input id="u-phone" type="tel" placeholder="+44 7700 000000"></div>
       <button class="form-submit" onclick="doSubmit(event,'u')">Secure My Spot on the Waitlist</button>
       <p class="form-note" id="u-note">No spam. Just your launch invite from blackboarddeals.com</p>
     </div>
@@ -2239,11 +2245,12 @@ body::after {
         <div class="field"><label>Email</label><input id="v-email" type="email" placeholder="you@venue.com"></div>
       </div>
       <div class="form-row-2">
-        <div class="field"><label>City</label><input id="v-city" type="text" placeholder="e.g. London"></div>
+        <div class="field"><label>City</label><div class="city-input-wrap"><input id="v-city" type="text" placeholder="e.g. London"><button type="button" class="city-detect" onclick="detectCity('v-city')" title="Detect my location">📍</button></div></div>
         <div class="field"><label>Venue Type</label>
           <select id="v-type"><option value="">Select type</option><option>Restaurant</option><option>Bar / Cocktail Bar</option><option>Pub</option><option>Nightclub</option><option>Live Music Venue</option><option>Café</option><option>Rooftop / Terrace</option><option>Other</option></select>
         </div>
       </div>
+      <div class="field"><label>Phone <span class="optional">(optional)</span></label><input id="v-phone" type="tel" placeholder="+44 7700 000000"></div>
       <button class="form-submit" onclick="doSubmit(event,'v')">Register My Venue</button>
       <p class="form-note" id="v-note">We'll be in touch before launch.</p>
     </div>
@@ -2350,6 +2357,28 @@ function setForm(id) {
   });
 }
 
+// City auto-detect
+async function detectCity(inputId) {
+  const input = document.getElementById(inputId);
+  const btn = input.parentElement.querySelector('.city-detect');
+  btn.textContent = '⏳';
+  btn.disabled = true;
+  try {
+    const pos = await new Promise((resolve, reject) =>
+      navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 8000 })
+    );
+    const { latitude, longitude } = pos.coords;
+    const r = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`);
+    const d = await r.json();
+    input.value = d.address?.city || d.address?.town || d.address?.village || d.address?.county || '';
+  } catch {
+    input.placeholder = 'Could not detect — type manually';
+  } finally {
+    btn.textContent = '📍';
+    btn.disabled = false;
+  }
+}
+
 // Waitlist submit
 async function doSubmit(e, type) {
   e.preventDefault();
@@ -2366,6 +2395,7 @@ async function doSubmit(e, type) {
       email:     document.getElementById('u-email').value.trim(),
       city:      document.getElementById('u-city').value.trim(),
       interest:  document.getElementById('u-interest').value,
+      phone:     document.getElementById('u-phone').value.trim(),
     };
   } else {
     body = {
@@ -2375,6 +2405,7 @@ async function doSubmit(e, type) {
       email:     document.getElementById('v-email').value.trim(),
       city:      document.getElementById('v-city').value.trim(),
       venueType: document.getElementById('v-type').value,
+      phone:     document.getElementById('v-phone').value.trim(),
     };
   }
 
