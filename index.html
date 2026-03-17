@@ -20,8 +20,8 @@
   --raised:    #1e1e22;
   --line:      #2c2c30;
   --line-soft: #242428;
-  --ghost:     #8c8c94;
-  --smoke:     #a0a0a6;
+  --ghost:     #b8b8c2;
+  --smoke:     #cacace;
   --chalk:     #f2f2ef;
   --white:     #ffffff;
   --cream:     #f8f7f4;
@@ -223,7 +223,7 @@ body::after {
   font-size: var(--text-xs);
   letter-spacing: .36em;
   text-transform: uppercase;
-  color: rgba(242,242,239,0.4);
+  color: rgba(242,242,239,0.95);
   margin-bottom: 32px;
   animation: fade-up 1s var(--ease-out) both;
 }
@@ -243,15 +243,15 @@ body::after {
   animation: fade-up 1s 0.08s var(--ease-out) both;
 }
 /* Split line visual rhythm */
-.hero-h1 .line-2 { display: block; opacity: 0.82; }
-.hero-h1 .line-3 { display: block; opacity: 0.64; }
+.hero-h1 .line-2 { display: block; opacity: 0.95; }
+.hero-h1 .line-3 { display: block; opacity: 0.85; }
 
 .hero-tagline {
   font-family: 'Cormorant Garamond', serif;
   font-size: clamp(16px, 2.2vw, 28px);
   font-style: italic;
   font-weight: 300;
-  color: rgba(242,242,239,0.82);
+  color: rgba(242,242,239,0.95);
   letter-spacing: 0.04em;
   margin-bottom: 36px;
   animation: fade-up 1s 0.16s var(--ease-out) both;
@@ -260,7 +260,7 @@ body::after {
 .hero-copy {
   font-size: 15px;
   line-height: 1.85;
-  color: rgba(242,242,239,0.78);
+  color: rgba(242,242,239,0.94);
   max-width: 460px;
   font-weight: 300;
   margin-bottom: 48px;
@@ -306,7 +306,7 @@ body::after {
   transition: border-color 0.2s, transform 0.25s var(--ease-out);
 }
 .btn-ghost:hover {
-  border-color: rgba(242,242,239,0.7);
+  border-color: rgba(242,242,239,0.92);
   transform: translateY(-3px);
 }
 .btn-dark {
@@ -334,7 +334,7 @@ body::after {
 }
 .hero-scroll span {
   font-size: 9px; letter-spacing: .3em; text-transform: uppercase;
-  color: rgba(242,242,239,0.28);
+  color: rgba(242,242,239,0.65);
 }
 .scroll-line {
   width: 1px; height: 48px;
@@ -411,7 +411,7 @@ body::after {
 }
 .triptych-tag {
   font-size: 9px; letter-spacing: .24em; text-transform: uppercase;
-  color: rgba(242,242,239,0.75); margin-bottom: 5px;
+  color: rgba(242,242,239,0.93); margin-bottom: 5px;
 }
 .triptych-title {
   font-family: 'Oswald', sans-serif;
@@ -552,7 +552,7 @@ body::after {
 }
 .q-attr {
   font-size: var(--text-xs); letter-spacing: .32em;
-  text-transform: uppercase; color: rgba(242,242,239,0.68);
+  text-transform: uppercase; color: rgba(242,242,239,0.90);
 }
 
 /* ══════════════════════════════════════════════════
@@ -868,7 +868,7 @@ body::after {
 }
 .atmo-label {
   font-size: var(--text-xs); letter-spacing: .32em; text-transform: uppercase;
-  color: rgba(242,242,239,0.68); margin-bottom: 20px;
+  color: rgba(242,242,239,0.90); margin-bottom: 20px;
   display: flex; align-items: center; gap: 12px;
 }
 .atmo-label::before { content: ''; width: 20px; height: 1px; background: rgba(242,242,239,0.25); }
@@ -881,7 +881,7 @@ body::after {
 .atmo-h .atmo-dim { color: var(--ghost); }
 .atmo-body {
   font-size: 15px; line-height: 1.85;
-  color: rgba(242,242,239,0.80); font-weight: 300;
+  color: rgba(242,242,239,0.94); font-weight: 300;
   max-width: 400px; margin-bottom: 36px;
 }
 @media (max-width: 700px) {
@@ -908,7 +908,7 @@ body::after {
 }
 .stat-l {
   font-size: var(--text-xs); letter-spacing: .16em; text-transform: uppercase;
-  color: rgba(242,242,239,0.72);
+  color: rgba(242,242,239,0.93);
 }
 
 
@@ -941,7 +941,7 @@ body::after {
 .vctrl-sub {
   font-size: 16px;
   line-height: 1.8;
-  color: rgba(242,242,239,0.78);
+  color: rgba(242,242,239,0.94);
   font-weight: 300;
   max-width: 600px;
 }
@@ -983,13 +983,13 @@ body::after {
 .vctrl-icon {
   width: 40px;
   height: 40px;
-  color: rgba(242,242,239,0.3);
+  color: rgba(242,242,239,0.90);
   margin-bottom: 24px;
   transition: color 0.3s;
   flex-shrink: 0;
 }
 .vctrl-card:hover .vctrl-icon {
-  color: rgba(242,242,239,0.7);
+  color: rgba(242,242,239,0.92);
 }
 .vctrl-icon svg {
   width: 100%;
@@ -1006,7 +1006,7 @@ body::after {
 .vctrl-card-p {
   font-size: 13.5px;
   line-height: 1.85;
-  color: rgba(242,242,239,0.4);
+  color: rgba(242,242,239,0.95);
   font-weight: 300;
   margin-bottom: 24px;
   flex: 1;
@@ -1024,7 +1024,7 @@ body::after {
   transition: color 0.3s, border-color 0.3s;
 }
 .vctrl-card:hover .vctrl-tag {
-  color: rgba(242,242,239,0.55);
+  color: rgba(242,242,239,0.95);
   border-color: rgba(242,242,239,0.25);
 }
 
@@ -1042,7 +1042,7 @@ body::after {
   font-size: clamp(17px, 2vw, 24px);
   font-style: italic;
   font-weight: 300;
-  color: rgba(242,242,239,0.6);
+  color: rgba(242,242,239,0.88);
   line-height: 1.5;
   max-width: 640px;
   margin: 0;
@@ -1103,7 +1103,7 @@ body::after {
 .accel-sub {
   font-size: 16px;
   line-height: 1.8;
-  color: rgba(242,242,239,0.80);
+  color: rgba(242,242,239,0.94);
   max-width: 580px;
   font-weight: 300;
 }
@@ -1195,7 +1195,7 @@ body::after {
 .accel-pillar-p {
   font-size: 14px;
   line-height: 1.85;
-  color: rgba(242,242,239,0.78);
+  color: rgba(242,242,239,0.94);
   font-weight: 300;
   margin-bottom: 24px;
 }
@@ -1208,7 +1208,7 @@ body::after {
 .accel-pillar-list li {
   font-size: 12px;
   letter-spacing: .06em;
-  color: rgba(242,242,239,0.70);
+  color: rgba(242,242,239,0.92);
   padding: 6px 0;
   padding-left: 16px;
   position: relative;
@@ -1260,7 +1260,7 @@ body::after {
 .accel-cta-body {
   font-size: 14px;
   line-height: 1.85;
-  color: rgba(242,242,239,0.78);
+  color: rgba(242,242,239,0.94);
   margin-bottom: 32px;
   max-width: 400px;
   font-weight: 300;
@@ -1274,7 +1274,7 @@ body::after {
   font-size: 10px;
   letter-spacing: .28em;
   text-transform: uppercase;
-  color: rgba(242,242,239,0.62);
+  color: rgba(242,242,239,0.88);
   margin-bottom: 32px;
 }
 .accel-stages {
@@ -1286,7 +1286,7 @@ body::after {
   font-family: 'Oswald', sans-serif;
   font-size: 28px;
   letter-spacing: 0.06em;
-  color: rgba(242,242,239,0.55);
+  color: rgba(242,242,239,0.95);
   line-height: 1.1;
   padding: 16px 0;
   border-bottom: 1px solid rgba(242,242,239,0.06);
@@ -2008,7 +2008,7 @@ body::after {
   <div class="vctrl-inner">
 
     <div class="vctrl-header">
-      <div class="s-label reveal" style="color:rgba(242,242,239,0.68)">Your Venue. Your Rules.</div>
+      <div class="s-label reveal" style="color:rgba(242,242,239,0.90)">Your Venue. Your Rules.</div>
       <h2 class="vctrl-h reveal">STOP WAITING.<br><span class="vctrl-h-dim">START FILLING SEATS.</span></h2>
       <p class="vctrl-sub reveal">No account managers. No 6-week turnarounds. No minimum spend. BlackBoard puts you in direct control of your deals, your timing, and your quiet nights — from your phone, right now.</p>
     </div>
@@ -2112,7 +2112,7 @@ body::after {
 
     <!-- Header -->
     <div class="accel-header reveal">
-      <div class="s-label" style="color:rgba(242,242,239,0.68)">For Drinks Brands</div>
+      <div class="s-label" style="color:rgba(242,242,239,0.90)">For Drinks Brands</div>
       <h2 class="accel-h">THE BLACKBOARD<br><span class="accel-h-dim">LAB.</span></h2>
       <p class="accel-sub">A structured programme for emerging spirits, craft beers, and independent drinks brands ready to study their audience — and graduate to real, measurable growth.</p>
     </div>
