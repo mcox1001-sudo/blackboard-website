@@ -6,7 +6,7 @@
 <meta name="description" content="BlackBoard finds the best food deals, drink offers, and events near you. Launching at blackboarddeals.com.">
 <link rel="preconnect" href="https://fonts.googleapis.com/">
 <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&family=Oswald:wght@500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
 /* ══════════════════════════════════════════════════
@@ -26,6 +26,9 @@
   --white:     #ffffff;
   --cream:     #f8f7f4;
   --warm:      #ede9e0;
+  /* Brand accent colours */
+  --purple:    #4B0082;
+  --gold:      #DAA520;
 
   /* Typography scale */
   --text-xs:   10px;
@@ -49,7 +52,7 @@ html { scroll-behavior:smooth; }
 body {
   background: var(--void);
   color: var(--chalk);
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-weight: 300;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -88,7 +91,7 @@ body::after {
   padding-left: 100vw;
 }
 .ticker-item {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-size: 13px;
   letter-spacing: .18em;
   padding: 0 28px;
@@ -107,7 +110,7 @@ body::after {
   color: var(--void);
 }
 .ticker-countdown {
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: 10px;
   font-weight: 500;
   letter-spacing: .08em;
@@ -231,7 +234,7 @@ body::after {
 }
 
 .hero-h1 {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-size: clamp(52px, 13vw, 168px);
   line-height: 0.88;
   letter-spacing: 0.015em;
@@ -275,7 +278,7 @@ body::after {
   background: var(--chalk);
   color: var(--void);
   padding: 14px 32px;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: var(--text-xs);
   font-weight: 500;
   letter-spacing: .18em;
@@ -293,7 +296,7 @@ body::after {
   background: transparent;
   color: var(--chalk);
   padding: 13px 32px;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: var(--text-xs);
   font-weight: 400;
   letter-spacing: .18em;
@@ -311,7 +314,7 @@ body::after {
   background: var(--void);
   color: var(--chalk);
   padding: 13px 30px;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: var(--text-xs);
   font-weight: 500;
   letter-spacing: .18em;
@@ -411,7 +414,7 @@ body::after {
   color: rgba(242,242,239,0.75); margin-bottom: 5px;
 }
 .triptych-title {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-size: 24px; letter-spacing: .06em;
   color: var(--chalk); line-height: 1;
 }
@@ -429,7 +432,8 @@ body::after {
   content: ''; width: 18px; height: 1px; background: var(--ghost);
 }
 .s-h2 {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 600;
   font-size: clamp(52px, 7vw, 96px);
   line-height: 0.9;
   letter-spacing: 0.02em;
@@ -492,7 +496,7 @@ body::after {
 }
 .cat-body { padding: 22px 26px 28px; flex: 1; display: flex; flex-direction: column; }
 .cat-name {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-size: 28px; letter-spacing: .05em;
   color: var(--chalk); margin-bottom: 10px; line-height: 1;
 }
@@ -599,8 +603,8 @@ body::after {
 }
 .dc-badge {
   position: absolute; top: 9px; left: 9px;
-  background: var(--chalk); color: var(--void);
-  font-family: 'DM Sans', sans-serif;
+  background: var(--gold); color: var(--void);
+  font-family: 'Roboto', sans-serif;
   font-size: 9px; font-weight: 500; letter-spacing: .1em;
   padding: 3px 8px;
 }
@@ -610,7 +614,7 @@ body::after {
 }
 .dc-body { padding: 13px 14px 15px; }
 .dc-name {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-size: 20px; letter-spacing: .05em;
   color: var(--chalk); margin-bottom: 5px; line-height: 1;
 }
@@ -641,13 +645,13 @@ body::after {
   border-bottom: 1px solid var(--line-soft);
 }
 .fi-num {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-size: 13px; letter-spacing: .08em;
   color: var(--line); flex-shrink: 0; padding-top: 2px;
   min-width: 28px;
 }
 .fi-label {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-size: 22px; letter-spacing: .04em;
   color: var(--chalk); margin-bottom: 5px; line-height: 1;
 }
@@ -747,7 +751,7 @@ body::after {
 .tab-btn {
   padding: 9px 24px;
   background: transparent; border: none;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: var(--text-xs); font-weight: 500;
   letter-spacing: .14em; text-transform: uppercase;
   color: var(--ghost); cursor: pointer;
@@ -775,13 +779,13 @@ body::after {
 }
 .step:hover::before { transform: scaleX(1); }
 .step-n {
-  font-family: 'Bebas Neue', sans-serif; font-size: 96px;
+  font-family: 'Oswald', sans-serif; font-size: 96px;
   color: var(--line-soft); line-height: 1; margin-bottom: 20px;
   transition: color 0.28s;
 }
 .step:hover .step-n { color: #303036; }
 .step-h {
-  font-family: 'Bebas Neue', sans-serif; font-size: 27px;
+  font-family: 'Oswald', sans-serif; font-size: 27px;
   letter-spacing: .03em; color: var(--chalk);
   margin-bottom: 12px; line-height: 1.05;
 }
@@ -869,7 +873,7 @@ body::after {
 }
 .atmo-label::before { content: ''; width: 20px; height: 1px; background: rgba(242,242,239,0.25); }
 .atmo-h {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-size: clamp(56px, 7.5vw, 104px);
   line-height: 0.9; letter-spacing: 0.02em;
   color: var(--chalk); margin-bottom: 22px;
@@ -899,8 +903,8 @@ body::after {
 }
 .stat:hover { background: rgba(6,6,8,0.7); }
 .stat-n {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 60px; color: var(--chalk); line-height: 1; margin-bottom: 3px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 60px; color: var(--gold); line-height: 1; margin-bottom: 3px;
 }
 .stat-l {
   font-size: var(--text-xs); letter-spacing: .16em; text-transform: uppercase;
@@ -926,7 +930,7 @@ body::after {
   margin-bottom: 72px;
 }
 .vctrl-h {
-  font-family: "Bebas Neue", sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-size: clamp(52px, 7vw, 88px);
   line-height: 0.9;
   letter-spacing: 0.02em;
@@ -993,7 +997,7 @@ body::after {
 }
 
 .vctrl-card-h {
-  font-family: "Bebas Neue", sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-size: 20px;
   letter-spacing: 0.08em;
   color: var(--chalk);
@@ -1088,7 +1092,7 @@ body::after {
   margin-bottom: 72px;
 }
 .accel-h {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-size: clamp(52px, 7vw, 96px);
   line-height: 0.9;
   letter-spacing: 0.02em;
@@ -1124,10 +1128,10 @@ body::after {
   flex-shrink: 0;
 }
 .accel-stat-n {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-size: 52px;
   letter-spacing: 0.02em;
-  color: var(--chalk);
+  color: var(--gold);
   line-height: 1;
   margin-bottom: 6px;
 }
@@ -1157,7 +1161,7 @@ body::after {
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 2px;
-  background: var(--chalk);
+  background: var(--purple);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.4s var(--ease-io);
@@ -1165,7 +1169,7 @@ body::after {
 .accel-pillar:hover::before { transform: scaleX(1); }
 .accel-pillar:hover { background: var(--raised); }
 .accel-pillar-num {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-size: 80px;
   color: rgba(242,242,239,0.04);
   line-height: 1;
@@ -1176,12 +1180,12 @@ body::after {
 }
 .accel-pillar-icon {
   font-size: 24px;
-  color: rgba(242,242,239,0.2);
+  color: var(--purple);
   margin-bottom: 20px;
   display: block;
 }
 .accel-pillar-h {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-size: 22px;
   letter-spacing: 0.08em;
   color: var(--chalk);
@@ -1214,7 +1218,7 @@ body::after {
   content: '→';
   position: absolute;
   left: 0;
-  color: rgba(242,242,239,0.2);
+  color: var(--purple);
   font-size: 10px;
 }
 
@@ -1279,7 +1283,7 @@ body::after {
   gap: 0;
 }
 .accel-stage {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-size: 28px;
   letter-spacing: 0.06em;
   color: rgba(242,242,239,0.55);
@@ -1344,7 +1348,7 @@ body::after {
 }
 .form-tab {
   padding: 9px 24px; background: transparent; border: none;
-  font-family: 'DM Sans', sans-serif;
+  font-family: 'Roboto', sans-serif;
   font-size: var(--text-xs); font-weight: 500;
   letter-spacing: .14em; text-transform: uppercase;
   color: var(--ghost); cursor: pointer; transition: all 0.22s;
@@ -1358,7 +1362,7 @@ body::after {
 .field input, .field select {
   background: var(--raised); border: 1px solid var(--line);
   color: var(--chalk); padding: 13px 15px;
-  font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 300;
+  font-family: 'Roboto', sans-serif; font-size: 13px; font-weight: 300;
   outline: none; width: 100%; appearance: none;
   -webkit-appearance: none; border-radius: 0;
   transition: border-color 0.22s;
@@ -1374,7 +1378,7 @@ body::after {
 .form-submit {
   background: var(--chalk); color: var(--void);
   padding: 15px; width: 100%;
-  font-family: 'DM Sans', sans-serif; font-size: var(--text-xs); font-weight: 500;
+  font-family: 'Roboto', sans-serif; font-size: var(--text-xs); font-weight: 500;
   letter-spacing: .18em; text-transform: uppercase;
   border: none; cursor: pointer;
   transition: background 0.2s, box-shadow 0.25s;
@@ -1387,7 +1391,7 @@ body::after {
   border: 1px solid var(--line); text-align: center; max-width: 460px;
 }
 .form-success h3 {
-  font-family: 'Bebas Neue', sans-serif;
+  font-family: 'Oswald', sans-serif;
   font-size: 50px; letter-spacing: .04em; margin-bottom: 10px;
 }
 .form-success p { color: var(--ghost); font-size: 14px; line-height: 1.7; }
@@ -1413,7 +1417,7 @@ body::after {
 .contact-form .field textarea {
   width: 100%; background: transparent;
   border: none; border-bottom: 1px solid var(--line);
-  color: var(--chalk); font-family: 'DM Sans', sans-serif;
+  color: var(--chalk); font-family: 'Roboto', sans-serif;
   font-size: var(--text-base); font-weight: 300;
   padding: 10px 0; outline: none;
   transition: border-color 0.2s; resize: none;
@@ -1425,7 +1429,7 @@ body::after {
 .contact-form .field textarea::placeholder { color: var(--line); }
 .contact-note { font-size: 11px; color: var(--line); margin-top: -4px; }
 .contact-success { display: none; padding: 40px 0; }
-.contact-success h3 { font-family: 'Bebas Neue', sans-serif; font-size: 42px; letter-spacing: .04em; margin-bottom: 8px; }
+.contact-success h3 { font-family: 'Oswald', sans-serif; font-size: 42px; letter-spacing: .04em; margin-bottom: 8px; }
 .contact-success p { color: var(--ghost); font-size: 14px; line-height: 1.7; }
 @media(max-width:860px) {
   .contact { grid-template-columns: 1fr; padding: 80px 40px; gap: 48px; }
@@ -1734,7 +1738,7 @@ body::after {
     <div class="atmo-label reveal">The Vibe</div>
     <h2 class="atmo-h reveal">DARK BARS.<br><span class="atmo-dim">GREAT DEALS.</span><br>TONIGHT.</h2>
     <p class="atmo-body reveal">From low-lit cocktail lounges to underground clubs and candlelit restaurants — BlackBoard finds the best offers at the most atmospheric venues near you.</p>
-    <a href="#signup" class="btn-primary reveal">Find Deals Near Me</a>
+    <a href="#signup" class="btn-primary reveal">Find The Win Near You</a>
   </div>
 </div>
 
@@ -1921,7 +1925,7 @@ body::after {
         </div>
         <div class="feature-item reveal d2">
           <div class="fi-num">03</div>
-          <div><div class="fi-label">RATED BY LOCALS</div><div class="fi-desc">Real ratings from real BlackBoard users. Find the best spots, not just the nearest ones.</div></div>
+          <div><div class="fi-label">RATED BY LOCALS</div><div class="fi-desc">Real ratings from real BlackBoard Insiders. Find the best spots, not just the nearest ones.</div></div>
         </div>
       </div>
     </div>
@@ -1967,7 +1971,7 @@ body::after {
   <div id="tp-v" class="tab-pane">
     <div class="steps">
       <div class="step reveal"><div class="step-n">01</div><div class="step-h">LIST FREE</div><p class="step-p">Register your bar, restaurant, or venue. Post your first deal or event in minutes. No costs up front — you only pay when it performs.</p></div>
-      <div class="step reveal d1"><div class="step-n">02</div><div class="step-h">REACH HUNGRY LOCALS</div><p class="step-p">Your deals push directly to BlackBoard users nearby who are actively looking for somewhere to eat, drink, or go out tonight.</p></div>
+      <div class="step reveal d1"><div class="step-n">02</div><div class="step-h">REACH HUNGRY LOCALS</div><p class="step-p">Your deals push directly to BlackBoard Insiders nearby who are actively looking for somewhere to eat, drink, or go out tonight.</p></div>
       <div class="step reveal d2"><div class="step-n">03</div><div class="step-h">FILL SEATS YOUR WAY</div><p class="step-p">Run a Monday special, boost a Friday event, reward loyal customers. Track every claim and footfall impact live in your dashboard.</p></div>
     </div>
   </div>
@@ -1991,7 +1995,7 @@ body::after {
   <div class="venues-right">
     <div class="venues-right-bg"></div>
     <div class="stats-grid">
-      <div class="stat reveal"><div class="stat-n">10K+</div><div class="stat-l">Users Waiting</div></div>
+      <div class="stat reveal"><div class="stat-n">10K+</div><div class="stat-l">Insiders Waiting</div></div>
       <div class="stat reveal d1"><div class="stat-n">50+</div><div class="stat-l">Partner Venues</div></div>
       <div class="stat reveal d2"><div class="stat-n">3×</div><div class="stat-l">More Return Visits</div></div>
       <div class="stat reveal"><div class="stat-n">0%</div><div class="stat-l">Commission to Start</div></div>
@@ -2062,8 +2066,8 @@ body::after {
           </svg>
         </div>
         <h3 class="vctrl-card-h">Reach People Right Now</h3>
-        <p class="vctrl-card-p">Your deal goes live on a map in front of thousands of local users actively searching for somewhere to go tonight. Not a newsletter opened next week. Not a post the algorithm buries. Right now, on their phone, near you.</p>
-        <div class="vctrl-tag">Live map · Active users tonight</div>
+        <p class="vctrl-card-p">Your deal goes live on a map in front of thousands of local Insiders actively searching for somewhere to go tonight. Not a newsletter opened next week. Not a post the algorithm buries. Right now, on their phone, near you.</p>
+        <div class="vctrl-tag">Live map · Active Insiders tonight</div>
       </div>
 
       <div class="vctrl-card reveal d1">
@@ -2117,7 +2121,7 @@ body::after {
     <div class="accel-stats reveal">
       <div class="accel-stat">
         <div class="accel-stat-n">10K+</div>
-        <div class="accel-stat-l">Millennial &amp; Gen-Z users</div>
+        <div class="accel-stat-l">Millennial &amp; Gen-Z Insiders</div>
       </div>
       <div class="accel-stat-div"></div>
       <div class="accel-stat">
