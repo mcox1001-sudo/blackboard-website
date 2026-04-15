@@ -7,7 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com/">
 <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-<script>if(sessionStorage.getItem('bb-door-seen')){document.documentElement.classList.add('door-seen');}</script>
 
 <style>
 /* ══════════════════════════════════════════════════
@@ -1620,91 +1619,10 @@ body::after {
   .step-h { font-size: 18px; }
 }
 
-/* ══════════════════════════════════════════════════
-   SALOON DOOR INTRO
-══════════════════════════════════════════════════ */
-.door-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  perspective: 1200px;
-  perspective-origin: 50% 50%;
-}
-.door-panel {
-  position: absolute;
-  top: 0; bottom: 0;
-  width: 50%;
-  overflow: hidden;
-  background: var(--void);
-  transition: transform 1.2s cubic-bezier(0.55, 0.05, 0.9, 0.5);
-  will-change: transform;
-}
-.door-left  { left: 0;  transform-origin: left center; }
-.door-right { right: 0; transform-origin: right center; }
-/* subtle wood grain lines */
-.door-panel::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: repeating-linear-gradient(
-    1deg,
-    transparent 0px, transparent 9px,
-    rgba(255,255,255,0.018) 9px, rgba(255,255,255,0.018) 10px
-  );
-  pointer-events: none;
-}
-/* gold seam line at center join */
-.door-left::after {
-  content: '';
-  position: absolute;
-  top: 0; right: 0; bottom: 0; width: 1px;
-  background: linear-gradient(to bottom, transparent 0%, rgba(218,165,32,0.55) 35%, rgba(218,165,32,0.55) 65%, transparent 100%);
-}
-.door-right::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; bottom: 0; width: 1px;
-  background: linear-gradient(to bottom, transparent 0%, rgba(218,165,32,0.55) 35%, rgba(218,165,32,0.55) 65%, transparent 100%);
-}
-/* logo — each panel shows its half via overflow:hidden */
-.door-logo {
-  position: absolute;
-  top: 50%;
-  width: 220px;
-  transform: translateY(-50%);
-  opacity: 0;
-  transition: opacity 0.9s ease;
-  display: block;
-  pointer-events: none;
-  user-select: none;
-}
-.door-left  .door-logo { left:  calc(100% - 110px); }
-.door-right .door-logo { right: calc(100% - 110px); }
-.door-overlay.logo-visible .door-logo { opacity: 1; }
-/* swing open */
-.door-overlay.open .door-left  { transform: rotateY(-92deg); }
-.door-overlay.open .door-right { transform: rotateY(92deg); }
-/* gone — skip on repeat visit */
-.door-seen .door-overlay,
-.door-overlay.gone { display: none; }
 
-@media (max-width: 600px) {
-  .door-logo { width: 150px; }
-  .door-left  .door-logo { left:  calc(100% - 75px); }
-  .door-right .door-logo { right: calc(100% - 75px); }
-}
 </style>
 </head>
 <body>
-
-<!-- SALOON DOOR INTRO -->
-<div class="door-overlay" id="doorOverlay">
-  <div class="door-panel door-left">
-    <img class="door-logo" src="Blackboard Logo White PNG.png" alt="Blackboard">
-  </div>
-  <div class="door-panel door-right">
-    <img class="door-logo" src="Blackboard Logo White PNG.png" alt="">
-  </div>
-</div>
 
 
 <!-- TICKER BAR -->
@@ -2589,21 +2507,6 @@ const io = new IntersectionObserver(entries => {
   entries.forEach(e => { if(e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
 }, { threshold: 0.07 });
 document.querySelectorAll('.reveal').forEach(el => io.observe(el));
-
-// Saloon door intro
-(function() {
-  var overlay = document.getElementById('doorOverlay');
-  if (!overlay) return;
-  // Fade logo in after brief pause
-  setTimeout(function() { overlay.classList.add('logo-visible'); }, 500);
-  // Swing doors open
-  setTimeout(function() { overlay.classList.add('open'); }, 2000);
-  // Remove overlay entirely after animation completes
-  setTimeout(function() {
-    overlay.classList.add('gone');
-    sessionStorage.setItem('bb-door-seen', '1');
-  }, 3400);
-})();
 </script>
 
 <div class="x_BJJxg" data-disable-focus-trap="true"></div><div class="x_KfhZL" aria-live="polite" aria-atomic="true" data-disable-focus-trap="true" data-testid="toast-container-top"></div><span data-name="tooltip-listener" aria-hidden="true" style="display: none;"></span></div> </div></div></div></body></html>
