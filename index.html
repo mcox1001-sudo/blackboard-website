@@ -223,6 +223,45 @@ body::after {
   max-width: 980px;
 }
 
+/* ── Countdown ── */
+.hero-countdown {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 28px;
+  animation: fade-up 1s var(--ease-out) both;
+}
+.cd-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 64px;
+}
+.cd-num {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(32px, 5vw, 52px);
+  font-weight: 500;
+  line-height: 1;
+  color: var(--gold);
+  letter-spacing: 0.04em;
+  transition: opacity 0.2s;
+}
+.cd-label {
+  font-size: 9px;
+  letter-spacing: .28em;
+  text-transform: uppercase;
+  color: rgba(242,242,239,0.70);
+  margin-top: 6px;
+}
+.cd-sep {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(28px, 4vw, 44px);
+  color: rgba(242,242,239,0.25);
+  line-height: 1;
+  margin-bottom: 16px;
+  letter-spacing: 0;
+}
+
 .hero-eyebrow {
   display: flex;
   align-items: center;
@@ -1702,6 +1741,15 @@ body::after {
   </div>
   <div class="hero-inner">
     <div class="hero-eyebrow">blackboarddeals.com — Launching Soon</div>
+    <div class="hero-countdown" id="hero-countdown">
+      <div class="cd-unit"><span class="cd-num" id="cd-days">--</span><span class="cd-label">Days</span></div>
+      <span class="cd-sep">:</span>
+      <div class="cd-unit"><span class="cd-num" id="cd-hours">--</span><span class="cd-label">Hours</span></div>
+      <span class="cd-sep">:</span>
+      <div class="cd-unit"><span class="cd-num" id="cd-mins">--</span><span class="cd-label">Minutes</span></div>
+      <span class="cd-sep">:</span>
+      <div class="cd-unit"><span class="cd-num" id="cd-secs">--</span><span class="cd-label">Seconds</span></div>
+    </div>
     <h1 class="hero-h1">
       DEALS.<span class="line-2">DRINKS.</span><span class="line-3">NIGHTS OUT.</span>
     </h1>
@@ -2508,6 +2556,34 @@ function closeMobileNav() {
   burger.classList.remove('open');
   nav.addEventListener('transitionend', () => { nav.style.display = 'none'; }, { once: true });
 }
+
+// Countdown to June 1 2026
+(function() {
+  var launch = new Date('2026-06-01T00:00:00').getTime();
+  var days  = document.getElementById('cd-days');
+  var hours = document.getElementById('cd-hours');
+  var mins  = document.getElementById('cd-mins');
+  var secs  = document.getElementById('cd-secs');
+  function pad(n) { return n < 10 ? '0' + n : '' + n; }
+  function tick() {
+    var now  = Date.now();
+    var diff = launch - now;
+    if (diff <= 0) {
+      days.textContent = hours.textContent = mins.textContent = secs.textContent = '00';
+      return;
+    }
+    var d = Math.floor(diff / 86400000);
+    var h = Math.floor((diff % 86400000) / 3600000);
+    var m = Math.floor((diff % 3600000)  / 60000);
+    var s = Math.floor((diff % 60000)    / 1000);
+    days.textContent  = pad(d);
+    hours.textContent = pad(h);
+    mins.textContent  = pad(m);
+    secs.textContent  = pad(s);
+  }
+  tick();
+  setInterval(tick, 1000);
+})();
 
 // Scroll reveal
 const io = new IntersectionObserver(entries => {
