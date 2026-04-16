@@ -187,13 +187,20 @@ body::after {
   position: absolute; inset: 0; z-index: 0;
 }
 /* Hero: dark mysterious bar interior — low-lit, atmospheric */
+@keyframes hero-ken-burns {
+  0%   { transform: scale(1.08) translate(0%, 0%); }
+  35%  { transform: scale(1.14) translate(-1.5%, 0.8%); }
+  70%  { transform: scale(1.10) translate(1%, -0.5%); }
+  100% { transform: scale(1.08) translate(0%, 0%); }
+}
 .hero-bg-img {
   position: absolute; inset: 0;
   background-image: url('https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=1920&q=92&auto=format&fit=crop&crop=entropy');
   background-size: cover;
   background-position: center 35%;
   filter: brightness(0.55) contrast(1.1) saturate(0.75);
-  transform: scale(1.04); /* slight zoom to avoid white edges */
+  animation: hero-ken-burns 18s ease-in-out infinite;
+  will-change: transform;
 }
 /* Deep, layered editorial overlay */
 .hero-bg::after {
