@@ -73,49 +73,6 @@ body::after {
 /* ══════════════════════════════════════════════════
    TICKER BAR
 ══════════════════════════════════════════════════ */
-.ticker {
-  height: 34px;
-  background: var(--chalk);
-  color: var(--void);
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-}
-.ticker-inner {
-  display: inline-flex;
-  align-items: center;
-  gap: 0;
-  animation: ticker-scroll 36s linear infinite;
-  white-space: nowrap;
-  padding-left: 100vw;
-}
-.ticker-item {
-  font-family: 'Oswald', sans-serif;
-  font-size: 13px;
-  letter-spacing: .18em;
-  padding: 0 28px;
-  opacity: 0.75;
-  flex-shrink: 0;
-}
-.ticker-dot {
-  width: 3px; height: 3px;
-  background: var(--void);
-  border-radius: 50%;
-  opacity: 0.2;
-  flex-shrink: 0;
-}
-.ticker-highlight {
-  opacity: 1;
-  color: var(--void);
-}
-.ticker-countdown {
-  font-family: 'Roboto', sans-serif;
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: .08em;
-  opacity: 0.5;
-}
 @keyframes ticker-scroll { to { transform: translateX(-50%); } }
 
 /* ══════════════════════════════════════════════════
@@ -1566,12 +1523,12 @@ body::after {
 /* ── Hamburger / Mobile Nav ── */
 .nav-burger {
   display: none;
-  flex-direction: column; justify-content: center; gap: 5px;
+  flex-direction: column; justify-content: center; gap: 6px;
   background: none; border: none; cursor: pointer;
-  padding: 6px; flex-shrink: 0;
+  padding: 10px; flex-shrink: 0;
 }
 .nav-burger span {
-  display: block; width: 22px; height: 2px;
+  display: block; width: 26px; height: 2px;
   background: var(--chalk);
   transition: transform 0.28s var(--ease-out), opacity 0.2s;
   border-radius: 2px;
@@ -1602,18 +1559,21 @@ body::after {
 }
 .mobile-nav ul { list-style: none; }
 .mobile-nav ul li { border-bottom: 1px solid var(--line-soft); margin: 0 24px; }
-.mobile-nav ul li:last-child { border-bottom: none; margin-top: 16px; padding: 0 24px; }
+.mobile-nav ul li:last-child { border-bottom: none; margin-top: 20px; padding: 0 24px; }
 .mobile-nav ul li a {
-  display: block; padding: 16px 0;
-  font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
-  color: var(--ghost); transition: color 0.2s;
+  display: block; padding: 18px 0;
+  font-family: 'Oswald', sans-serif;
+  font-size: 16px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--chalk); transition: color 0.2s;
 }
-.mobile-nav ul li a:hover { color: var(--chalk); }
+.mobile-nav ul li a:hover { color: var(--gold); }
 .mobile-nav-cta {
   display: block !important;
   background: var(--chalk); color: var(--void) !important;
-  text-align: center; padding: 14px 0 !important;
+  text-align: center; padding: 16px 0 !important;
+  font-size: 15px !important;
   font-weight: 600 !important; letter-spacing: .14em !important;
+  border-radius: 2px;
 }
 
 /* ── 480px and below — tight mobile ── */
@@ -1621,8 +1581,9 @@ body::after {
   .nav { padding: 0 20px; }
   .nav-logo img { height: 28px; }
 
+  .hero { padding-top: 60px; padding-bottom: 40px; }
   .hero-inner { padding: 0 20px; }
-  .hero-copy { font-size: 14px; }
+  .hero-copy { font-size: 15px; }
   .hero-actions { flex-direction: column; align-items: stretch; width: 100%; }
   .btn-primary, .btn-ghost { width: 100%; justify-content: center; text-align: center; }
 
@@ -1674,40 +1635,6 @@ body::after {
 
 
 <!-- TICKER BAR -->
-<div class="ticker">
-  <div class="ticker-inner" id="ticker-inner">
-    <span class="ticker-item ticker-highlight">BLACKBOARD</span>
-    <span class="ticker-dot"></span>
-    <span class="ticker-item">Food Deals</span>
-    <span class="ticker-dot"></span>
-    <span class="ticker-item">Drink Offers</span>
-    <span class="ticker-dot"></span>
-    <span class="ticker-item">Events Near You</span>
-    <span class="ticker-dot"></span>
-    <span class="ticker-item ticker-highlight">blackboarddeals.com</span>
-    <span class="ticker-dot"></span>
-    <span class="ticker-item">Where Happy Hour Just Got Smarter</span>
-    <span class="ticker-dot"></span>
-    <span class="ticker-item ticker-countdown" id="cta">89d 23h 43m 51s</span>
-    <span class="ticker-dot"></span>
-    <!-- duplicate -->
-    <span class="ticker-item ticker-highlight">BLACKBOARD</span>
-    <span class="ticker-dot"></span>
-    <span class="ticker-item">Food Deals</span>
-    <span class="ticker-dot"></span>
-    <span class="ticker-item">Drink Offers</span>
-    <span class="ticker-dot"></span>
-    <span class="ticker-item">Events Near You</span>
-    <span class="ticker-dot"></span>
-    <span class="ticker-item ticker-highlight">blackboarddeals.com</span>
-    <span class="ticker-dot"></span>
-    <span class="ticker-item">Where Happy Hour Just Got Smarter</span>
-    <span class="ticker-dot"></span>
-    <span class="ticker-item ticker-countdown" id="ctb">89d 23h 43m 51s</span>
-    <span class="ticker-dot"></span>
-  </div>
-</div>
-
 <!-- NAV -->
 <nav class="nav">
   <a href="#" class="nav-logo"><img src="Blackboard Logo White PNG.png" alt="BLACKBOARD"></a>
