@@ -825,7 +825,8 @@ body::after {
 ══════════════════════════════════════════════════ */
 .atmo {
   position: relative;
-  height: 540px;
+  min-height: 540px;
+  padding: 96px 0;
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -868,7 +869,7 @@ body::after {
   max-width: 400px; margin-bottom: 36px;
 }
 @media (max-width: 700px) {
-  .atmo { height: auto; padding: 72px 0; }
+  .atmo { min-height: 0; padding: 72px 0; }
   .atmo-content { padding: 0 32px; }
   .atmo-h { font-size: 52px; }
 }
@@ -1861,7 +1862,7 @@ body::after {
 </div>
 
 <!-- SECOND ATMOSPHERE — Events / Nightlife -->
-<div class="atmo" style="height:480px">
+<div class="atmo">
   <div class="atmo-bg" style="background-image:url(&#39;https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=1920&amp;q=92&amp;auto=format&amp;fit=crop&amp;crop=entropy&#39;);background-position:center 35%;filter:brightness(0.50) contrast(1.05) saturate(0.65)"></div>
   <div class="atmo-content" style="max-width:720px">
     <div class="atmo-label reveal">Events &amp; Nights Out</div>
