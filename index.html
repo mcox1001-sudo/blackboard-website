@@ -320,28 +320,6 @@ body::after {
 }
 .btn-dark:hover { background: #111116; transform: translateY(-2px); }
 
-/* Scroll prompt */
-.hero-scroll {
-  position: absolute; bottom: 40px; left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
-  animation: fade-up 1s 0.5s var(--ease-out) both;
-}
-.hero-scroll span {
-  font-size: 9px; letter-spacing: .3em; text-transform: uppercase;
-  color: rgba(242,242,239,0.65);
-}
-.scroll-line {
-  width: 1px; height: 48px;
-  background: linear-gradient(to bottom, rgba(242,242,239,0.35), transparent);
-  animation: scroll-pulse 2.4s ease-in-out infinite;
-}
-@keyframes scroll-pulse {
-  0%,100% { transform: scaleY(1); opacity:1; }
-  50%      { transform: scaleY(0.6); opacity:0.4; }
-}
-
 /* ══════════════════════════════════════════════════
    MARQUEE
 ══════════════════════════════════════════════════ */
@@ -1573,13 +1551,18 @@ body::after {
   .hero-copy { font-size: 15px; }
   .hero-actions { flex-direction: column; align-items: stretch; width: 100%; }
   .btn-primary, .btn-ghost { width: 100%; justify-content: center; text-align: center; }
+  .hero-countdown { gap: 4px; }
+  .cd-unit { min-width: 56px; }
+  .cd-num { font-size: 34px; }
+  .cd-label { font-size: 8px; letter-spacing: .22em; }
+  .cd-sep { font-size: 26px; }
 
   .cats { padding: 60px 20px; }
   .showcase { padding: 60px 20px; }
   .showcase-grid { gap: 40px; }
-  .phones { justify-content: center; gap: 6px; }
-  .phone.lg { width: 145px; }
-  .phone.sm { width: 115px; transform: translateY(20px); }
+  .phones { justify-content: center; gap: 6px; flex-wrap: nowrap; }
+  .phone.lg { width: 130px; }
+  .phone.sm { width: 100px; transform: translateY(20px); }
 
   .atmo { padding: 60px 0; }
   .atmo-content { padding: 0 20px; }
@@ -1587,6 +1570,8 @@ body::after {
 
   .how { padding: 60px 20px; }
   .how-header { gap: 24px; }
+  .step { padding: 32px 24px; }
+  .step-n { font-size: 64px; margin-bottom: 12px; }
 
   .venues-left { padding: 60px 20px; }
   .venues-right { padding: 28px 20px; min-height: 280px; }
@@ -1613,6 +1598,20 @@ body::after {
 
   .stat-n { font-size: 44px; }
   .step-h { font-size: 18px; }
+
+  .quote-block { height: auto; min-height: 360px; padding: 80px 20px; }
+
+  .vctrl-card { padding: 28px 22px; }
+  .accel-pillar { padding: 32px 24px; }
+}
+
+/* ── 360px and below — very narrow ── */
+@media (max-width: 360px) {
+  .cd-unit { min-width: 48px; }
+  .cd-num { font-size: 28px; }
+  .cd-sep { font-size: 22px; }
+  .phone.lg { width: 110px; }
+  .phone.sm { width: 86px; }
 }
 
 
@@ -1675,10 +1674,6 @@ body::after {
       <a href="#signup" class="btn-primary">Become a Founding Member</a>
       <a href="#how" class="btn-ghost">How It Works</a>
     </div>
-  </div>
-  <div class="hero-scroll">
-    <span>Scroll</span>
-    <div class="scroll-line"></div>
   </div>
 </section>
 
