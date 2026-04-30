@@ -183,6 +183,14 @@ body::after {
 }
 
 /* ── Countdown ── */
+.hero-countdown-label {
+  font-size: var(--text-xs);
+  letter-spacing: .36em;
+  text-transform: uppercase;
+  color: rgba(242,242,239,0.95);
+  margin-bottom: 14px;
+  animation: fade-up 1s var(--ease-out) both;
+}
 .hero-countdown {
   display: flex;
   align-items: center;
@@ -1648,6 +1656,7 @@ body::after {
     <div class="hero-bg-img"></div>
   </div>
   <div class="hero-inner">
+    <div class="hero-countdown-label">Launching</div>
     <div class="hero-countdown" id="hero-countdown">
       <div class="cd-unit"><span class="cd-num" id="cd-days">--</span><span class="cd-label">Days</span></div>
       <span class="cd-sep">:</span>
