@@ -2,579 +2,448 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BLACKBOARD — Email Signature Generator</title>
-<meta name="description" content="Generate your personalised BLACKBOARD email signature. Fill in your details and copy the HTML into Gmail or Outlook.">
-<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Email Signature Builder &mdash; Blackboard</title>
+<meta name="description" content="Generate your Blackboard email signature in 30 seconds. Built for the team. Outlook, Gmail and Apple Mail safe.">
+<meta name="robots" content="noindex, follow">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
-  body {
-    background: #1a1a1d;
-    padding: 48px 24px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    color: #f2f2ef;
-    min-height: 100vh;
-  }
-  .preview-wrap { max-width: 1040px; margin: 0 auto; }
+:root{
+  --void:#060608;--deep:#0d0d10;--surface:#141418;--raised:#1e1e22;
+  --line:#2c2c30;--line-soft:#242428;--ghost:#b8b8c2;--smoke:#cacace;
+  --chalk:#f2f2ef;--white:#ffffff;--gold:#DAA520;--purple:#4B0082;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);color:var(--chalk);
+  font-family:'Roboto',Helvetica,Arial,sans-serif;font-weight:300;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  min-height:100vh;
+}
+a{color:inherit;}
 
-  .preview-label {
-    font-size: 11px;
-    letter-spacing: 0.28em;
-    text-transform: uppercase;
-    color: #b8b8c2;
-    margin: 0 0 14px;
-    font-weight: 500;
-  }
+/* HEADER */
+.site-header{
+  border-bottom:1px solid var(--line-soft);padding:18px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--void);
+}
+.site-header .brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--chalk);}
+.site-header .brand img{height:22px;width:auto;display:block;}
+.site-header .brand .label{
+  font-family:'Roboto',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:3px;color:var(--ghost);text-transform:uppercase;
+  padding-left:14px;border-left:1px solid var(--line);
+}
+.site-header .home{
+  font-family:'Roboto',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:2px;color:var(--ghost);text-transform:uppercase;
+  text-decoration:none;
+}
+.site-header .home:hover{color:var(--gold);}
 
-  .preview-fakebody {
-    background: #ffffff;
-    padding: 36px 32px;
-    border-radius: 4px;
-    box-shadow: 0 4px 28px rgba(0, 0, 0, 0.5);
-    margin-bottom: 32px;
-  }
-  .fake-msg { font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 1.55; color: #222; }
-  .fake-msg p { margin: 0 0 12px; }
-  .sig-divider { border: 0; border-top: 1px solid #e6e6e6; margin: 24px 0 18px; }
+/* HERO */
+.hero{padding:64px 32px 32px;max-width:1200px;margin:0 auto;}
+.hero .eyebrow{
+  font-size:10px;letter-spacing:3px;color:var(--gold);
+  text-transform:uppercase;font-weight:700;margin-bottom:14px;
+}
+.hero h1{
+  font-family:'Oswald',Impact,sans-serif;font-weight:700;
+  font-size:clamp(36px,5vw,60px);line-height:1;letter-spacing:-0.5px;
+  text-transform:uppercase;color:var(--white);margin-bottom:18px;
+}
+.hero h1 .gold{color:var(--gold);}
+.hero p.lede{font-size:16px;line-height:1.6;color:var(--ghost);max-width:560px;}
 
-  .copy-block {
-    background: #0d0d10;
-    border: 1px solid #242428;
-    padding: 20px;
-    border-radius: 4px;
-  }
-  .copy-row { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
-  .copy-block code {
-    display: block;
-    white-space: pre-wrap;
-    word-break: break-all;
-    color: #cacace;
-    font-family: 'SF Mono', Menlo, Consolas, monospace;
-    font-size: 11px;
-    line-height: 1.55;
-    max-height: 280px;
-    overflow: auto;
-  }
-  .copy-btn {
-    display: inline-block;
-    background: #DAA520;
-    color: #060608;
-    padding: 11px 20px;
-    font-family: Arial, sans-serif;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    text-decoration: none;
-    cursor: pointer;
-    border: 0;
-  }
-  .copy-btn:hover { background: #f2f2ef; }
-  .copy-btn.ghost { background: transparent; color: #b8b8c2; border: 1px solid #242428; }
-  .copy-btn.ghost:hover { background: #060608; color: #f2f2ef; }
+/* LAYOUT */
+.builder{
+  max-width:1200px;margin:0 auto;padding:32px 32px 80px;
+  display:grid;grid-template-columns:1fr 1fr;gap:32px;align-items:start;
+}
+@media (max-width:960px){.builder{grid-template-columns:1fr;}}
 
-  .notes {
-    font-size: 12px;
-    line-height: 1.65;
-    color: #b8b8c2;
-    margin-top: 18px;
-  }
-  .notes strong { color: #f2f2ef; }
-  .notes code {
-    background: #0d0d10;
-    padding: 1px 6px;
-    border-radius: 2px;
-    color: #DAA520;
-    font-size: 11px;
-  }
-  .notes ol { padding-left: 18px; margin: 8px 0; }
-  .notes li { margin-bottom: 4px; }
+/* PANELS */
+.panel{
+  background:var(--deep);border:1px solid var(--line-soft);
+  padding:28px 28px 24px;
+}
+.panel h2{
+  font-family:'Oswald',Impact,sans-serif;font-weight:600;
+  font-size:18px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--white);margin-bottom:6px;
+}
+.panel .panel-sub{
+  font-size:12px;color:var(--ghost);margin-bottom:24px;line-height:1.5;
+}
 
-  /* Tweaks panel — floating bottom right, draggable feel */
-  .tweaks-panel {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 320px;
-    max-height: calc(100vh - 40px);
-    background: #0d0d10;
-    border: 1px solid #242428;
-    border-radius: 6px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-    color: #f2f2ef;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    z-index: 100;
-  }
-  .tweaks-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 16px;
-    background: #060608;
-    border-bottom: 1px solid #242428;
-    cursor: pointer;
-    user-select: none;
-  }
-  .tweaks-head h3 {
-    margin: 0;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: #DAA520;
-  }
-  .tweaks-toggle {
-    background: none;
-    border: 0;
-    color: #b8b8c2;
-    font-size: 14px;
-    cursor: pointer;
-    padding: 0 4px;
-  }
-  .tweaks-body {
-    padding: 14px 16px 18px;
-    overflow-y: auto;
-  }
-  .tweaks-panel.collapsed .tweaks-body { display: none; }
-  .tweak-section {
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: #b8b8c2;
-    margin: 14px 0 8px;
-    padding-bottom: 6px;
-    border-bottom: 1px solid #242428;
-  }
-  .tweak-section:first-child { margin-top: 0; }
-  .tweak-row { display: flex; flex-direction: column; margin-bottom: 10px; }
-  .tweak-row label {
-    font-size: 11px;
-    color: #b8b8c2;
-    margin-bottom: 4px;
-  }
-  .tweak-row input {
-    background: #060608;
-    border: 1px solid #242428;
-    border-radius: 3px;
-    color: #f2f2ef;
-    font-family: inherit;
-    font-size: 12px;
-    padding: 7px 10px;
-    outline: none;
-  }
-  .tweak-row input:focus { border-color: #DAA520; }
-  .tweak-reset {
-    margin-top: 8px;
-    width: 100%;
-    background: transparent;
-    border: 1px solid #242428;
-    color: #b8b8c2;
-    padding: 8px 10px;
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    cursor: pointer;
-    border-radius: 3px;
-  }
-  .tweak-reset:hover { color: #f2f2ef; border-color: #DAA520; }
+/* FORM */
+.field{margin-bottom:18px;}
+.field label{
+  display:block;font-size:10px;letter-spacing:2px;text-transform:uppercase;
+  font-weight:700;color:var(--ghost);margin-bottom:8px;
+}
+.field input{
+  width:100%;background:var(--surface);border:1px solid var(--line);
+  color:var(--chalk);padding:13px 14px;font-family:'Roboto',sans-serif;
+  font-size:14px;font-weight:400;outline:none;
+  transition:border-color .2s ease,background .2s ease;
+}
+.field input:focus{border-color:var(--gold);background:var(--raised);}
+.field input::placeholder{color:#5a5a64;}
+
+.section-divide{
+  margin:8px 0 20px;padding-top:18px;border-top:1px solid var(--line-soft);
+}
+.section-divide .label{
+  font-size:10px;letter-spacing:2.5px;text-transform:uppercase;
+  font-weight:700;color:var(--gold);margin-bottom:14px;display:block;
+}
+
+/* PREVIEW */
+.preview-wrap{
+  background:var(--deep);border:1px solid var(--line-soft);padding:20px;
+  overflow-x:auto;
+}
+.preview-frame{min-width:760px;}
+@media (max-width:820px){.preview-frame{transform-origin:top left;transform:scale(0.85);}}
+
+/* ACTIONS */
+.actions{
+  display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;
+}
+.btn{
+  flex:1;min-width:140px;padding:14px 18px;
+  font-family:'Roboto',sans-serif;font-weight:700;font-size:11px;
+  letter-spacing:2px;text-transform:uppercase;text-align:center;
+  cursor:pointer;border:none;text-decoration:none;display:inline-block;
+  transition:transform .15s ease,opacity .15s ease;
+}
+.btn-primary{background:var(--gold);color:var(--void);}
+.btn-primary:hover{transform:translateY(-1px);}
+.btn-secondary{background:transparent;color:var(--chalk);border:1px solid var(--line);}
+.btn-secondary:hover{border-color:var(--gold);color:var(--gold);}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(120%);
+  background:var(--gold);color:var(--void);padding:14px 26px;
+  font-family:'Roboto',sans-serif;font-weight:700;font-size:11px;
+  letter-spacing:2px;text-transform:uppercase;
+  transition:transform .3s cubic-bezier(0.16,1,0.3,1);
+  z-index:1000;box-shadow:0 8px 32px rgba(0,0,0,.6);
+}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* INSTRUCTIONS */
+.instructions{
+  max-width:1200px;margin:0 auto 80px;padding:0 32px;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:18px;
+}
+@media (max-width:820px){.instructions{grid-template-columns:1fr;}}
+.instructions .card{
+  background:var(--deep);border:1px solid var(--line-soft);padding:24px;
+}
+.instructions .card .num{
+  font-family:'Oswald',Impact,sans-serif;font-weight:700;
+  font-size:32px;color:var(--gold);line-height:1;margin-bottom:12px;
+}
+.instructions .card h3{
+  font-family:'Oswald',Impact,sans-serif;font-weight:600;
+  font-size:14px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--white);margin-bottom:10px;
+}
+.instructions .card p{font-size:13px;line-height:1.6;color:var(--ghost);}
+.instructions .card p strong{color:var(--chalk);font-weight:500;}
+
+/* FOOTER */
+footer{
+  border-top:1px solid var(--line-soft);padding:28px 32px;
+  text-align:center;font-size:11px;letter-spacing:2px;
+  color:#5a5a64;text-transform:uppercase;font-weight:700;
+}
 </style>
 </head>
 <body>
 
-<div class="preview-wrap">
+<header class="site-header">
+  <a href="https://blackboarddeals.com" class="brand">
+    <img src="https://blackboarddeals.com/Blackboard%20Logo%20White%20PNG.png" alt="Blackboard">
+    <span class="label">Signature Builder</span>
+  </a>
+  <a href="https://blackboarddeals.com" class="home">&larr; Back to site</a>
+</header>
 
-  <p class="preview-label">— Email Signature Preview (in a typical reply) —</p>
+<section class="hero">
+  <p class="eyebrow">&#9733; For the Blackboard team</p>
+  <h1>Build your<br><span class="gold">email signature</span>.</h1>
+  <p class="lede">Drop in your name, role and contact details. Live preview updates as you type. Hit copy, paste into Gmail, Outlook or Apple Mail. Done in under a minute.</p>
+</section>
 
-  <div class="preview-fakebody">
-    <div class="fake-msg">
-      <p>Hi Sarah,</p>
-      <p>Great chatting earlier — I've attached the partner deck and venue onboarding pack. Happy to jump on a call next week to walk through the rollout plan.</p>
-      <p>Best,<br><span id="tw-firstname-preview">Adam</span></p>
-      <hr class="sig-divider">
+<section class="builder">
 
-      <!-- ============================================================
-           BLACKBOARD EMAIL SIGNATURE  ·  v3
-           ============================================================
-           Pure HTML, table based, inline styles only (Outlook safe).
-           Width 760px (logo 250 / contact 280 / hero 230).
-           Live preview uses /sig/* (assets hosted on this domain).
-           Copy block emits absolute https://blackboarddeals.com/sig/* URLs.
-           ============================================================ -->
-      <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="760" style="width:760px; max-width:100%; border-collapse:collapse; background:#0a0a0c; font-family: Arial, Helvetica, sans-serif; mso-table-lspace:0; mso-table-rspace:0;">
+  <!-- LEFT: FORM -->
+  <div class="panel">
+    <h2>Your details</h2>
+    <p class="panel-sub">All fields are optional except name and email. The signature updates live on the right.</p>
 
-        <tr>
+    <div class="field">
+      <label for="f-name">Full name</label>
+      <input type="text" id="f-name" placeholder="e.g. Michael Cox" autocomplete="name" value="Michael Cox">
+    </div>
 
-          <!-- COL 1: logo + strapline + app badges -->
-          <td valign="middle" width="250" style="width:250px; background:#0a0a0c; padding:30px 18px 30px 24px; vertical-align:middle;">
-            <a href="https://blackboarddeals.com" style="text-decoration:none; display:block;">
-              <img src="sig/logo-white.png" alt="BLACKBOARD" width="208" height="75" style="display:block; margin:0 auto; width:208px; height:auto; max-width:100%; border:0; outline:none; -ms-interpolation-mode:bicubic;">
-            </a>
-            <p style="margin:14px 0 18px; font-family: Arial, Helvetica, sans-serif; font-weight:700; font-size:13px; letter-spacing:0.22em; color:#ffffff; text-align:center; text-transform:uppercase; line-height:1;">
-              Spontaneity on Tap!
-            </p>
-            <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" style="margin:0 auto; border-collapse:collapse;">
-              <tr>
-                <td style="padding:0 4px 0 0;">
-                  <a href="https://apps.apple.com/app/blackboard" style="text-decoration:none; display:block; line-height:0;">
-                    <img src="sig/appstore.png" alt="Download on the App Store" width="100" height="34" style="display:block; width:100px; height:34px; border:0; outline:none; -ms-interpolation-mode:bicubic;">
-                  </a>
-                </td>
-                <td style="padding:0 0 0 4px;">
-                  <a href="https://play.google.com/store/apps/details?id=com.blackboard" style="text-decoration:none; display:block; line-height:0;">
-                    <img src="sig/googleplay.png" alt="Get it on Google Play" width="100" height="34" style="display:block; width:100px; height:34px; border:0; outline:none; -ms-interpolation-mode:bicubic;">
-                  </a>
-                </td>
-              </tr>
-            </table>
-          </td>
+    <div class="field">
+      <label for="f-role">Role</label>
+      <input type="text" id="f-role" placeholder="e.g. Co-Founder" value="Co-Founder">
+    </div>
 
-          <!-- COL 2: name / role / contact / social -->
-          <td valign="middle" width="280" style="width:280px; background:#0a0a0c; padding:30px 22px 30px 14px; vertical-align:middle;">
-            <p id="tw-name" style="margin:0 0 5px; font-family: 'Arial Narrow', 'Helvetica Neue Condensed', 'Helvetica Neue', Arial, sans-serif; font-weight:900; font-size:23px; letter-spacing:0.07em; color:#ffffff; line-height:1; text-transform:uppercase;">
-              Adam Green
-            </p>
-            <p id="tw-role" style="margin:0 0 12px; font-family: Arial, Helvetica, sans-serif; font-weight:700; font-size:11px; letter-spacing:0.28em; color:#DAA520; line-height:1; text-transform:uppercase;">
-              Co-Founder
-            </p>
-            <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="border-collapse:collapse; margin:0 0 14px;">
-              <tr>
-                <td height="2" style="background:#ffffff; line-height:2px; font-size:1px; height:2px;">&nbsp;</td>
-              </tr>
-            </table>
-            <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
-              <tr>
-                <td valign="top" width="20" style="padding:0 6px 7px 0; font-family: Arial, Helvetica, sans-serif; font-weight:700; font-size:12px; color:#DAA520; line-height:1.3;">P:</td>
-                <td valign="top" style="padding:0 0 7px; font-family: Arial, Helvetica, sans-serif; font-weight:400; font-size:12px; color:#ffffff; line-height:1.3;">
-                  <a id="tw-phone-link" href="tel:+447791588188" style="color:#ffffff; text-decoration:none;">(+44)&nbsp;7791&nbsp;588&nbsp;188</a>
-                </td>
-              </tr>
-              <tr>
-                <td valign="top" width="20" style="padding:0 6px 7px 0; font-family: Arial, Helvetica, sans-serif; font-weight:700; font-size:12px; color:#DAA520; line-height:1.3;">E:</td>
-                <td valign="top" style="padding:0 0 7px; font-family: Arial, Helvetica, sans-serif; font-weight:400; font-size:12px; color:#ffffff; line-height:1.3;">
-                  <a id="tw-email-link" href="mailto:admin@blackboarddeals.com" style="color:#ffffff; text-decoration:none;">admin@blackboarddeals.com</a>
-                </td>
-              </tr>
-              <tr>
-                <td valign="top" width="20" style="padding:0 6px 14px 0; font-family: Arial, Helvetica, sans-serif; font-weight:700; font-size:12px; color:#DAA520; line-height:1.3;">W:</td>
-                <td valign="top" style="padding:0 0 14px; font-family: Arial, Helvetica, sans-serif; font-weight:700; font-size:12px; color:#ffffff; line-height:1.3;">
-                  <a href="https://blackboarddeals.com" style="color:#ffffff; text-decoration:none;">blackboarddeals.com</a>
-                </td>
-              </tr>
-            </table>
-            <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
-              <tr>
-                <td style="padding:0 6px 0 0;">
-                  <a id="tw-fb-link" href="https://facebook.com/blackboarddeals" style="text-decoration:none; display:block;">
-                    <img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20fill%3D%22%234B0082%22/%3E%3Cpath%20d%3D%22M18.6%2026v-9.1h3.05l.46-3.55h-3.51v-2.27c0-1.03.29-1.73%201.76-1.73h1.88V6.18c-.33-.04-1.45-.14-2.76-.14-2.73%200-4.6%201.67-4.6%204.73v2.64h-3.07v3.55h3.07V26h3.72z%22%20fill%3D%22%23ffffff%22/%3E%3C/svg%3E" alt="Facebook" width="32" height="32" style="display:block; width:32px; height:32px; border:0; outline:none;">
-                  </a>
-                </td>
-                <td style="padding:0 6px 0 0;">
-                  <a id="tw-ig-link" href="https://www.instagram.com/blackboarddeals/" style="text-decoration:none; display:block;">
-                    <img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20fill%3D%22%234B0082%22/%3E%3Cpath%20d%3D%22M16%208.6c2.4%200%202.7%200%203.6.05%202.5.11%203.65%201.28%203.76%203.76.04.9.05%201.17.05%203.59s0%202.7-.05%203.59c-.11%202.48-1.26%203.65-3.76%203.76-.9.04-1.16.05-3.6.05s-2.7%200-3.59-.05c-2.5-.11-3.65-1.29-3.76-3.76C8.6%2018.7%208.6%2018.42%208.6%2016s0-2.7.05-3.59C8.76%209.93%209.91%208.76%2012.4%208.65c.9-.04%201.16-.05%203.6-.05zm0-1.6c-2.45%200-2.75.01-3.71.05-3.34.15-5.2%202.01-5.35%205.35-.04.96-.05%201.27-.05%203.71%200%202.45.01%202.75.05%203.71.15%203.34%202.01%205.2%205.35%205.35.96.04%201.27.05%203.71.05s2.75-.01%203.71-.05c3.34-.15%205.2-2.01%205.35-5.35.04-.96.05-1.27.05-3.71%200-2.45-.01-2.75-.05-3.71-.15-3.34-2.01-5.2-5.35-5.35C18.75%207.01%2018.45%207%2016%207zm0%204.32c-2.58%200-4.68%202.1-4.68%204.68s2.1%204.68%204.68%204.68%204.68-2.1%204.68-4.68-2.1-4.68-4.68-4.68zm0%207.72c-1.68%200-3.04-1.36-3.04-3.04S14.32%2012.96%2016%2012.96s3.04%201.36%203.04%203.04S17.68%2019.04%2016%2019.04zm4.86-9c-.6%200-1.09.49-1.09%201.09s.49%201.09%201.09%201.09%201.09-.49%201.09-1.09-.48-1.09-1.09-1.09z%22%20fill%3D%22%23ffffff%22/%3E%3C/svg%3E" alt="Instagram" width="32" height="32" style="display:block; width:32px; height:32px; border:0; outline:none;">
-                  </a>
-                </td>
-                <td style="padding:0;">
-                  <a id="tw-li-link" href="https://www.linkedin.com/company/blackboarddeals/?viewAsMember=true" style="text-decoration:none; display:block;">
-                    <img src="data:image/svg+xml;utf8,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2032%2032%22%3E%3Crect%20width%3D%2232%22%20height%3D%2232%22%20fill%3D%22%234B0082%22/%3E%3Cpath%20d%3D%22M11.06%2024h-3.1V13.98h3.1V24zM9.51%2012.62a1.8%201.8%200%201%201%200-3.6%201.8%201.8%200%200%201%200%203.6zM24%2024h-3.1v-4.87c0-1.16-.02-2.65-1.62-2.65-1.62%200-1.87%201.27-1.87%202.57V24H14.3V13.98h2.97v1.37h.04c.42-.78%201.42-1.61%202.93-1.61%203.13%200%203.71%202.06%203.71%204.74V24z%22%20fill%3D%22%23ffffff%22/%3E%3C/svg%3E" alt="LinkedIn" width="32" height="32" style="display:block; width:32px; height:32px; border:0; outline:none;">
-                  </a>
-                </td>
-              </tr>
-            </table>
-          </td>
+    <div class="field">
+      <label for="f-phone">Phone</label>
+      <input type="text" id="f-phone" placeholder="e.g. +44 7840 150 912" value="+44 7840 150 912">
+    </div>
 
-          <!-- COL 3: hero image -->
-          <td valign="top" width="230" style="width:230px; padding:0; vertical-align:top; background:#0a0a0c; line-height:0; font-size:0;">
-            <a href="https://blackboarddeals.com" style="text-decoration:none; display:block; line-height:0;">
-              <img src="sig/hero.png" alt="Blackboard — bar atmosphere" width="230" height="220" style="display:block; width:230px; height:220px; max-width:100%; border:0; outline:none; -ms-interpolation-mode:bicubic; object-fit:cover;">
-            </a>
-          </td>
-        </tr>
+    <div class="field">
+      <label for="f-email">Email</label>
+      <input type="email" id="f-email" placeholder="e.g. michael@blackboarddeals.com" value="michael@blackboarddeals.com">
+    </div>
 
-        <!-- ROW 2 — full-width legal strip -->
-        <tr>
-          <td colspan="3" style="background:#0a0a0c; padding:14px 24px 16px;">
-            <p style="margin:0 0 4px; font-family: Arial, Helvetica, sans-serif; font-weight:400; font-size:11px; line-height:1.5; color:#b8b8c2;">
-              Enjoy your night responsibly, for the facts visit <a href="https://www.drinkaware.co.uk" style="color:#b8b8c2; text-decoration:none; border-bottom:1px solid #2c2c30;">drinkaware.co.uk</a>
-            </p>
-            <p style="margin:0; font-family: Arial, Helvetica, sans-serif; font-weight:400; font-size:11px; line-height:1.5; color:#5a5a64;">
-              &copy; Blackboard Deals Ltd 2026
-            </p>
-          </td>
-        </tr>
+    <div class="section-divide">
+      <span class="label">Social links (optional)</span>
 
-      </table>
-      <!-- END SIGNATURE -->
+      <div class="field">
+        <label for="f-fb">Facebook URL</label>
+        <input type="url" id="f-fb" placeholder="https://facebook.com/blackboarddeals" value="https://facebook.com/blackboarddeals">
+      </div>
 
+      <div class="field">
+        <label for="f-ig">Instagram URL</label>
+        <input type="url" id="f-ig" placeholder="https://instagram.com/blackboard.uk" value="https://www.instagram.com/blackboarddeals/">
+      </div>
+
+      <div class="field">
+        <label for="f-li">LinkedIn URL</label>
+        <input type="url" id="f-li" placeholder="https://linkedin.com/company/blackboarddeals" value="https://www.linkedin.com/company/blackboarddeals/?viewAsMember=true">
+      </div>
     </div>
   </div>
 
-  <p class="preview-label">— Copy &amp; Paste HTML —</p>
-  <div class="copy-block">
-    <div class="copy-row">
-      <button class="copy-btn" type="button" id="copy-html-btn" onclick="copySigHtml()">Copy signature HTML</button>
-      <button class="copy-btn ghost" type="button" id="copy-rich-btn" onclick="copySigRich()">Copy as rich text (recommended)</button>
+  <!-- RIGHT: PREVIEW -->
+  <div>
+    <div class="panel" style="padding:0;">
+      <div style="padding:24px 24px 12px;">
+        <h2>Live preview</h2>
+        <p class="panel-sub" style="margin-bottom:0;">This is exactly what your recipients will see in their inbox.</p>
+      </div>
+      <div class="preview-wrap" id="preview-wrap">
+        <div class="preview-frame" id="preview"></div>
+      </div>
     </div>
-    <code id="sig-code"></code>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="btn-copy">Copy HTML</button>
+      <button class="btn btn-secondary" id="btn-download">Download .html</button>
+    </div>
   </div>
 
-  <p class="notes">
-    <strong>How to install in Gmail</strong>
-    <ol>
-      <li>Click <strong>Copy as rich text (recommended)</strong> above.</li>
-      <li>Open Gmail → cog icon → <strong>See all settings</strong> → <strong>General</strong>.</li>
-      <li>Scroll to <strong>Signature</strong> → <strong>Create new</strong>, name it BLACKBOARD.</li>
-      <li>Click into the editor and paste (Cmd/Ctrl + V).</li>
-      <li>Set the new signature as default for new emails and replies, then <strong>Save changes</strong> at the bottom.</li>
-    </ol>
-    <strong>How to install in Outlook (web)</strong>
-    <ol>
-      <li>Click <strong>Copy as rich text (recommended)</strong>.</li>
-      <li>Open Outlook → settings cog → <strong>Mail</strong> → <strong>Compose and reply</strong>.</li>
-      <li>Under Email signature, paste into the editor.</li>
-      <li>Tick the auto include options for new messages and replies, then <strong>Save</strong>.</li>
-    </ol>
-    <strong>How to install in Outlook (desktop, Windows)</strong>
-    <ol>
-      <li>Click <strong>Copy signature HTML</strong> above.</li>
-      <li>In Outlook, File → Options → Mail → <strong>Signatures</strong> → <strong>New</strong>.</li>
-      <li>The classic signature editor doesn't take HTML, so on Windows save the HTML to <code>%APPDATA%\Microsoft\Signatures\BLACKBOARD.htm</code> with your details, then close and reopen Outlook and select it.</li>
-    </ol>
-    <strong>How to install in Apple Mail</strong>
-    <ol>
-      <li>Click <strong>Copy as rich text (recommended)</strong>.</li>
-      <li>Mail → Settings → Signatures → <strong>+</strong>.</li>
-      <li>Untick <em>Always match my default message font</em>, then paste.</li>
-    </ol>
-    <strong>Heads up:</strong> Outlook desktop on Windows uses Word to render signatures and won't show the SVG social icons. Everything else (Gmail, Outlook web, Apple Mail, Outlook iOS/Android, Gmail iOS/Android) renders the icons fine.
-  </p>
+</section>
 
-</div>
+<section class="instructions">
 
-<aside class="tweaks-panel" id="tweaks-panel" aria-label="Signature tweaks">
-  <div class="tweaks-head" id="tweaks-head">
-    <h3>Your details</h3>
-    <button class="tweaks-toggle" type="button" id="tweaks-toggle" aria-label="Collapse panel">−</button>
+  <div class="card">
+    <div class="num">01</div>
+    <h3>Gmail</h3>
+    <p>Hit <strong>Copy HTML</strong>. In Gmail go to <strong>Settings &rarr; See all settings &rarr; Signature</strong>. Click <strong>Create new</strong> or your existing signature, then paste. Save changes at the bottom.</p>
   </div>
-  <div class="tweaks-body">
-    <div class="tweak-section">Identity</div>
-    <div class="tweak-row"><label for="tw-in-name">Name</label><input id="tw-in-name" type="text"></div>
-    <div class="tweak-row"><label for="tw-in-role">Role</label><input id="tw-in-role" type="text"></div>
 
-    <div class="tweak-section">Contact</div>
-    <div class="tweak-row"><label for="tw-in-phone">Phone (display)</label><input id="tw-in-phone" type="text"></div>
-    <div class="tweak-row"><label for="tw-in-phone-href">Phone (tel: link)</label><input id="tw-in-phone-href" type="text"></div>
-    <div class="tweak-row"><label for="tw-in-email">Email</label><input id="tw-in-email" type="email"></div>
-
-    <div class="tweak-section">Social links</div>
-    <div class="tweak-row"><label for="tw-in-fb">Facebook URL</label><input id="tw-in-fb" type="url"></div>
-    <div class="tweak-row"><label for="tw-in-ig">Instagram URL</label><input id="tw-in-ig" type="url"></div>
-    <div class="tweak-row"><label for="tw-in-li">LinkedIn URL</label><input id="tw-in-li" type="url"></div>
-
-    <button class="tweak-reset" type="button" id="tweak-reset">Reset to defaults</button>
+  <div class="card">
+    <div class="num">02</div>
+    <h3>Outlook</h3>
+    <p>Hit <strong>Copy HTML</strong>. In Outlook go to <strong>Settings &rarr; Mail &rarr; Compose and reply</strong>. Paste into the signature box. Tick the boxes to apply to new and reply emails. Save.</p>
   </div>
-</aside>
 
-<script type="application/json" id="tweak-defaults">
-{
-  "name": "Adam Green",
-  "role": "Co-Founder",
-  "phone": "(+44) 7791 588 188",
-  "phoneHref": "tel:+447791588188",
-  "email": "admin@blackboarddeals.com",
-  "facebookUrl": "https://facebook.com/blackboarddeals",
-  "instagramUrl": "https://www.instagram.com/blackboarddeals/",
-  "linkedinUrl": "https://www.linkedin.com/company/blackboarddeals/?viewAsMember=true"
-}
-</script>
+  <div class="card">
+    <div class="num">03</div>
+    <h3>Apple Mail</h3>
+    <p>Use <strong>Download .html</strong>. Open the file in Safari, select all, copy. In Mail go to <strong>Settings &rarr; Signatures</strong>, create a new one, paste. Untick "Always match my default font".</p>
+  </div>
+
+</section>
+
+<footer>
+  Blackboard &middot; Spontaneity on tap &middot; <a href="https://blackboarddeals.com" style="color:#5a5a64;text-decoration:none;border-bottom:1px solid var(--line);">blackboarddeals.com</a>
+</footer>
+
+<div class="toast" id="toast">Copied to clipboard</div>
 
 <script>
-  // ============================================================
-  // Asset URL strategy
-  // ----------------------------------------------------------
-  // The live preview on this page uses /sig/<filename> so it
-  // works on any host that has a /sig/ folder. The copy block
-  // ALWAYS swaps in the absolute production URL because email
-  // clients won't load relative paths.
-  // ============================================================
-  var PROD_HOST = 'https://blackboarddeals.com';
+const $ = id => document.getElementById(id);
 
-  function getSigTable() {
-    var src = document.querySelector('.preview-fakebody');
-    if (!src) return null;
-    var tables = src.querySelectorAll('table[role="presentation"]');
-    var sigTable = null;
-    tables.forEach(function (t) { if (t.getAttribute('width') === '760') sigTable = t; });
-    return sigTable;
-  }
+const els = {
+  name: $('f-name'), role: $('f-role'), phone: $('f-phone'), email: $('f-email'),
+  fb: $('f-fb'), ig: $('f-ig'), li: $('f-li'),
+  preview: $('preview'), copy: $('btn-copy'), download: $('btn-download'), toast: $('toast')
+};
 
-  function buildSigHtml() {
-    var sigTable = getSigTable();
-    if (!sigTable) return '';
-    // Remove the id="tw-..." attributes so the produced HTML is clean,
-    // then absolutise the asset URLs.
-    var clone = sigTable.cloneNode(true);
-    clone.querySelectorAll('[id^="tw-"]').forEach(function (n) { n.removeAttribute('id'); });
-    return clone.outerHTML
-      .replace(/src="sig\/logo-white\.png"/g,  'src="' + PROD_HOST + '/sig/logo-white.png"')
-      .replace(/src="sig\/hero\.png"/g,        'src="' + PROD_HOST + '/sig/hero.png"')
-      .replace(/src="sig\/appstore\.png"/g,    'src="' + PROD_HOST + '/sig/appstore.png"')
-      .replace(/src="sig\/googleplay\.png"/g,  'src="' + PROD_HOST + '/sig/googleplay.png"');
-  }
+function escapeHtml(str){
+  return String(str || '').replace(/[&<>"']/g, m => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[m]);
+}
 
-  function refreshSigCode() {
-    var code = document.getElementById('sig-code');
-    if (code) code.textContent = buildSigHtml();
-  }
+function escapeAttr(str){
+  return escapeHtml(str);
+}
 
-  function flashButton(btn, label) {
-    var orig = btn.textContent;
-    btn.textContent = label;
-    setTimeout(function () { btn.textContent = orig; }, 1400);
-  }
+function buildSocialTile(href, label, fontSize){
+  if(!href) return '';
+  return `<td style="padding:0 6px 0 0;">
+    <a href="${escapeAttr(href)}" style="text-decoration:none; display:block;">
+      <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="32" height="32" style="width:32px; height:32px; background:#DAA520; border-collapse:collapse; mso-table-lspace:0; mso-table-rspace:0;">
+        <tr>
+          <td align="center" valign="middle" width="32" height="32" style="width:32px; height:32px; font-family:Arial,Helvetica,sans-serif; font-weight:900; font-size:${fontSize}px; letter-spacing:0.5px; color:#0a0a0c; line-height:32px; text-align:center;">${label}</td>
+        </tr>
+      </table>
+    </a>
+  </td>`;
+}
 
-  function copySigHtml() {
-    var btn = document.getElementById('copy-html-btn');
-    var txt = buildSigHtml();
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(txt).then(function () { flashButton(btn, 'Copied!'); }, function () {
-        legacyCopy(txt); flashButton(btn, 'Copied!');
-      });
+function buildSignature(){
+  const name = els.name.value.trim() || 'Your Name';
+  const role = els.role.value.trim() || 'Role';
+  const phone = els.phone.value.trim();
+  const email = els.email.value.trim() || 'you@blackboarddeals.com';
+  const fb = els.fb.value.trim();
+  const ig = els.ig.value.trim();
+  const li = els.li.value.trim();
+
+  const phoneClean = phone.replace(/[^+\d]/g, '');
+
+  const phoneRow = phone ? `<tr>
+    <td valign="top" width="20" style="padding:0 6px 7px 0; font-family: Arial, Helvetica, sans-serif; font-weight:700; font-size:12px; color:#DAA520; line-height:1.3;">P:</td>
+    <td valign="top" style="padding:0 0 7px; font-family: Arial, Helvetica, sans-serif; font-weight:400; font-size:12px; color:#ffffff; line-height:1.3;">
+      <a href="tel:${escapeAttr(phoneClean)}" style="color:#ffffff; text-decoration:none;">${escapeHtml(phone)}</a>
+    </td>
+  </tr>` : '';
+
+  const social = [
+    buildSocialTile(fb, 'f', 20),
+    buildSocialTile(ig, 'IG', 13),
+    buildSocialTile(li, 'in', 13)
+  ].filter(Boolean).join('\n');
+
+  const socialBlock = social ? `<table role="presentation" border="0" cellspacing="0" cellpadding="0" style="border-collapse:collapse;"><tr>${social}</tr></table>` : '';
+
+  return `<table role="presentation" border="0" cellspacing="0" cellpadding="0" width="760" style="width:760px; max-width:100%; border-collapse:collapse; background:#0a0a0c; font-family: Arial, Helvetica, sans-serif; mso-table-lspace:0; mso-table-rspace:0;">
+  <tr>
+    <td valign="middle" width="250" style="width:250px; background:#0a0a0c; padding:30px 18px 30px 24px; vertical-align:middle;">
+      <a href="https://blackboarddeals.com" style="text-decoration:none; display:block;">
+        <img src="https://blackboarddeals.com/sig/logo-white.png" alt="BLACKBOARD" width="208" height="75" style="display:block; margin:0 auto; width:208px; height:auto; max-width:100%; border:0; outline:none; -ms-interpolation-mode:bicubic;">
+      </a>
+      <p style="margin:14px 0 18px; font-family: Arial, Helvetica, sans-serif; font-weight:700; font-size:13px; letter-spacing:0.22em; color:#ffffff; text-align:center; text-transform:uppercase; line-height:1;">Spontaneity on Tap!</p>
+      <table role="presentation" border="0" cellspacing="0" cellpadding="0" align="center" style="margin:0 auto; border-collapse:collapse;">
+        <tr>
+          <td style="padding:0 4px 0 0;">
+            <a href="https://apps.apple.com/app/blackboard" style="text-decoration:none; display:block; line-height:0;">
+              <img src="https://blackboarddeals.com/sig/appstore.png" alt="Download on the App Store" width="100" height="34" style="display:block; width:100px; height:34px; border:0; outline:none; -ms-interpolation-mode:bicubic;">
+            </a>
+          </td>
+          <td style="padding:0 0 0 4px;">
+            <a href="https://play.google.com/store/apps/details?id=com.blackboard" style="text-decoration:none; display:block; line-height:0;">
+              <img src="https://blackboarddeals.com/sig/googleplay.png" alt="Get it on Google Play" width="100" height="34" style="display:block; width:100px; height:34px; border:0; outline:none; -ms-interpolation-mode:bicubic;">
+            </a>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td valign="middle" width="280" style="width:280px; background:#0a0a0c; padding:30px 22px 30px 14px; vertical-align:middle;">
+      <p style="margin:0 0 5px; font-family: 'Arial Narrow', 'Helvetica Neue Condensed', 'Helvetica Neue', Arial, sans-serif; font-weight:900; font-size:23px; letter-spacing:0.07em; color:#ffffff; line-height:1; text-transform:uppercase;">${escapeHtml(name)}</p>
+      <p style="margin:0 0 12px; font-family: Arial, Helvetica, sans-serif; font-weight:700; font-size:11px; letter-spacing:0.28em; color:#DAA520; line-height:1; text-transform:uppercase;">${escapeHtml(role)}</p>
+      <table role="presentation" border="0" cellspacing="0" cellpadding="0" width="100%" style="border-collapse:collapse; margin:0 0 14px;">
+        <tr><td height="2" style="background:#ffffff; line-height:2px; font-size:1px; height:2px;">&nbsp;</td></tr>
+      </table>
+      <table role="presentation" border="0" cellspacing="0" cellpadding="0" style="border-collapse:collapse;">
+        ${phoneRow}
+        <tr>
+          <td valign="top" width="20" style="padding:0 6px 7px 0; font-family: Arial, Helvetica, sans-serif; font-weight:700; font-size:12px; color:#DAA520; line-height:1.3;">E:</td>
+          <td valign="top" style="padding:0 0 7px; font-family: Arial, Helvetica, sans-serif; font-weight:400; font-size:12px; color:#ffffff; line-height:1.3;">
+            <a href="mailto:${escapeAttr(email)}" style="color:#ffffff; text-decoration:none;">${escapeHtml(email)}</a>
+          </td>
+        </tr>
+        <tr>
+          <td valign="top" width="20" style="padding:0 6px 14px 0; font-family: Arial, Helvetica, sans-serif; font-weight:700; font-size:12px; color:#DAA520; line-height:1.3;">W:</td>
+          <td valign="top" style="padding:0 0 14px; font-family: Arial, Helvetica, sans-serif; font-weight:700; font-size:12px; color:#ffffff; line-height:1.3;">
+            <a href="https://blackboarddeals.com" style="color:#ffffff; text-decoration:none;">blackboarddeals.com</a>
+          </td>
+        </tr>
+      </table>
+      ${socialBlock}
+    </td>
+    <td valign="top" width="230" style="width:230px; padding:0; vertical-align:top; background:#0a0a0c; line-height:0; font-size:0;">
+      <a href="https://blackboarddeals.com" style="text-decoration:none; display:block; line-height:0;">
+        <img src="https://blackboarddeals.com/sig/hero.jpg" alt="Blackboard atmosphere" width="230" height="220" style="display:block; width:230px; height:220px; max-width:100%; border:0; outline:none; -ms-interpolation-mode:bicubic; object-fit:cover;">
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="3" style="background:#0a0a0c; padding:14px 24px 16px;">
+      <p style="margin:0 0 4px; font-family: Arial, Helvetica, sans-serif; font-weight:400; font-size:11px; line-height:1.5; color:#b8b8c2;">
+        Enjoy your night responsibly, for the facts visit <a href="https://www.drinkaware.co.uk" style="color:#b8b8c2; text-decoration:none; border-bottom:1px solid #2c2c30;">drinkaware.co.uk</a>
+      </p>
+      <p style="margin:0; font-family: Arial, Helvetica, sans-serif; font-weight:400; font-size:11px; line-height:1.5; color:#5a5a64;">&copy; Blackboard Deals Ltd 2026</p>
+    </td>
+  </tr>
+</table>`;
+}
+
+function render(){
+  els.preview.innerHTML = buildSignature();
+}
+
+['name','role','phone','email','fb','ig','li'].forEach(k => {
+  els[k].addEventListener('input', render);
+});
+
+function showToast(msg){
+  els.toast.textContent = msg;
+  els.toast.classList.add('show');
+  setTimeout(() => els.toast.classList.remove('show'), 2200);
+}
+
+els.copy.addEventListener('click', async () => {
+  const html = buildSignature();
+  try{
+    if(navigator.clipboard && window.ClipboardItem){
+      const blob = new Blob([html], {type:'text/html'});
+      const plainBlob = new Blob([html], {type:'text/plain'});
+      await navigator.clipboard.write([new ClipboardItem({'text/html':blob, 'text/plain':plainBlob})]);
     } else {
-      legacyCopy(txt); flashButton(btn, 'Copied!');
+      await navigator.clipboard.writeText(html);
     }
+    showToast('Copied to clipboard');
+  } catch(err){
+    const ta = document.createElement('textarea');
+    ta.value = html; document.body.appendChild(ta); ta.select();
+    document.execCommand('copy'); document.body.removeChild(ta);
+    showToast('Copied to clipboard');
   }
+});
 
-  // Rich text copy — puts the rendered signature on the clipboard so it
-  // pastes as a real signature into Gmail/Outlook/Apple Mail compose
-  // editors instead of as raw markup.
-  function copySigRich() {
-    var btn = document.getElementById('copy-rich-btn');
-    var html = buildSigHtml();
-    var plain = (function () {
-      var d = document.createElement('div'); d.innerHTML = html; return d.textContent || '';
-    })();
-    try {
-      if (navigator.clipboard && window.ClipboardItem) {
-        var item = new ClipboardItem({
-          'text/html': new Blob([html], { type: 'text/html' }),
-          'text/plain': new Blob([plain], { type: 'text/plain' })
-        });
-        navigator.clipboard.write([item]).then(function () { flashButton(btn, 'Copied!'); }, function () {
-          legacyCopyRich(html); flashButton(btn, 'Copied!');
-        });
-      } else {
-        legacyCopyRich(html); flashButton(btn, 'Copied!');
-      }
-    } catch (e) {
-      legacyCopyRich(html); flashButton(btn, 'Copied!');
-    }
-  }
+els.download.addEventListener('click', () => {
+  const html = '<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Blackboard Signature</title></head><body>' + buildSignature() + '</body></html>';
+  const name = (els.name.value.trim() || 'blackboard').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+  const blob = new Blob([html], {type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = `signature-${name}.html`;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Downloaded');
+});
 
-  function legacyCopy(txt) {
-    var ta = document.createElement('textarea');
-    ta.value = txt; document.body.appendChild(ta); ta.select();
-    try { document.execCommand('copy'); } catch (e) {}
-    document.body.removeChild(ta);
-  }
-
-  // contenteditable copy fallback that preserves rich formatting
-  function legacyCopyRich(html) {
-    var holder = document.createElement('div');
-    holder.contentEditable = 'true';
-    holder.style.position = 'fixed';
-    holder.style.opacity = '0';
-    holder.style.pointerEvents = 'none';
-    holder.innerHTML = html;
-    document.body.appendChild(holder);
-    var range = document.createRange();
-    range.selectNodeContents(holder);
-    var sel = window.getSelection();
-    sel.removeAllRanges();
-    sel.addRange(range);
-    try { document.execCommand('copy'); } catch (e) {}
-    sel.removeAllRanges();
-    document.body.removeChild(holder);
-  }
-
-  // ============================================================
-  // Tweaks panel — wires the eight per staff fields to the live
-  // signature DOM and persists them in localStorage.
-  // ============================================================
-  (function initTweaks() {
-    var defaultsEl = document.getElementById('tweak-defaults');
-    var defaults = JSON.parse(defaultsEl.textContent);
-    var STORAGE_KEY = 'bb-sig-tweaks-v1';
-
-    var bindings = [
-      { input: 'tw-in-name',       key: 'name',         set: function (v) { document.getElementById('tw-name').textContent = v; var fp = document.getElementById('tw-firstname-preview'); if (fp) fp.textContent = (v || '').split(' ')[0] || ''; } },
-      { input: 'tw-in-role',       key: 'role',         set: function (v) { document.getElementById('tw-role').textContent = v; } },
-      { input: 'tw-in-phone',      key: 'phone',        set: function (v) { document.getElementById('tw-phone-link').textContent = v; } },
-      { input: 'tw-in-phone-href', key: 'phoneHref',    set: function (v) { document.getElementById('tw-phone-link').setAttribute('href', v); } },
-      { input: 'tw-in-email',      key: 'email',        set: function (v) { var a = document.getElementById('tw-email-link'); a.textContent = v; a.setAttribute('href', 'mailto:' + v); } },
-      { input: 'tw-in-fb',         key: 'facebookUrl',  set: function (v) { document.getElementById('tw-fb-link').setAttribute('href', v); } },
-      { input: 'tw-in-ig',         key: 'instagramUrl', set: function (v) { document.getElementById('tw-ig-link').setAttribute('href', v); } },
-      { input: 'tw-in-li',         key: 'linkedinUrl',  set: function (v) { document.getElementById('tw-li-link').setAttribute('href', v); } }
-    ];
-
-    function readStored() {
-      try {
-        var raw = window.localStorage && window.localStorage.getItem(STORAGE_KEY);
-        return raw ? JSON.parse(raw) : null;
-      } catch (e) { return null; }
-    }
-    function writeStored(state) {
-      try { window.localStorage && window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
-    }
-
-    var stored = readStored() || {};
-    var state = {};
-    bindings.forEach(function (b) {
-      state[b.key] = stored[b.key] != null ? stored[b.key] : defaults[b.key];
-    });
-
-    bindings.forEach(function (b) {
-      var el = document.getElementById(b.input);
-      if (!el) return;
-      el.value = state[b.key];
-      b.set(state[b.key]);
-      el.addEventListener('input', function () {
-        state[b.key] = el.value;
-        b.set(el.value);
-        writeStored(state);
-        refreshSigCode();
-      });
-    });
-
-    // collapse / expand
-    var panel = document.getElementById('tweaks-panel');
-    var head = document.getElementById('tweaks-head');
-    var toggle = document.getElementById('tweaks-toggle');
-    head.addEventListener('click', function (e) {
-      if (e.target.tagName === 'INPUT' || e.target.tagName === 'BUTTON') return;
-      panel.classList.toggle('collapsed');
-      toggle.textContent = panel.classList.contains('collapsed') ? '+' : '−';
-    });
-
-    // reset
-    document.getElementById('tweak-reset').addEventListener('click', function () {
-      bindings.forEach(function (b) {
-        state[b.key] = defaults[b.key];
-        var el = document.getElementById(b.input);
-        if (el) el.value = defaults[b.key];
-        b.set(defaults[b.key]);
-      });
-      try { window.localStorage && window.localStorage.removeItem(STORAGE_KEY); } catch (e) {}
-      refreshSigCode();
-    });
-  })();
-
-  // initial render of the copy block
-  refreshSigCode();
+render();
 </script>
 
 </body>
