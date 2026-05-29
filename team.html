@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meet the Founders | BlackBoard</title>
+<meta name="description" content="The team building BlackBoard, the real time deals app for bars, pubs, restaurants and the people who go to them.">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Roboto:wght@300;400;500&family=Cormorant+Garamond:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="legal.css">
+<style>
+.team-body { max-width: 1180px; margin: 0 auto; padding: 80px 60px 96px; }
+
+.founders-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  margin-bottom: 96px;
+}
+
+.founder-card {
+  background: linear-gradient(180deg, var(--surface) 0%, var(--raised) 100%);
+  border: 1px solid var(--line-soft);
+  padding: 36px 32px 32px;
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 28px;
+  align-items: start;
+  transition: border-color 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+}
+.founder-card:hover { border-color: var(--gold-soft); transform: translateY(-3px); }
+
+.founder-photo {
+  width: 140px;
+  height: 140px;
+  background: linear-gradient(135deg, rgba(75,0,130,0.55) 0%, rgba(218,165,32,0.18) 100%);
+  border: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Oswald', sans-serif;
+  font-size: 44px;
+  font-weight: 500;
+  letter-spacing: .02em;
+  color: var(--white);
+  position: relative;
+  overflow: hidden;
+}
+.founder-photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.founder-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.founder-role {
+  font-family: 'Oswald', sans-serif;
+  font-size: var(--text-xs);
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+  font-weight: 500;
+}
+.founder-name {
+  font-family: 'Oswald', sans-serif;
+  font-size: 26px;
+  font-weight: 500;
+  color: var(--white);
+  margin-bottom: 4px;
+  letter-spacing: -0.005em;
+  line-height: 1.15;
+}
+.founder-prev {
+  font-size: var(--text-sm);
+  color: var(--smoke);
+  font-style: italic;
+  margin-bottom: 12px;
+}
+.founder-bio {
+  font-size: var(--text-base);
+  color: var(--chalk);
+  line-height: 1.7;
+  margin-bottom: 18px;
+}
+.founder-links {
+  display: flex;
+  gap: 14px;
+  margin-top: auto;
+}
+.founder-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Oswald', sans-serif;
+  font-size: var(--text-xs);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--smoke);
+  border: 1px solid var(--line-soft);
+  padding: 9px 14px;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+.founder-link:hover { color: var(--white); border-color: var(--gold-soft); background: rgba(218,165,32,0.06); }
+.founder-link svg { width: 14px; height: 14px; flex-shrink: 0; }
+
+/* Mission block */
+.mission {
+  background: linear-gradient(135deg, var(--surface) 0%, var(--raised) 100%);
+  border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--gold);
+  padding: 56px 48px;
+  margin-bottom: 80px;
+}
+.mission p {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 24px;
+  color: var(--white);
+  line-height: 1.55;
+  max-width: 760px;
+  margin: 0;
+}
+.mission .signoff {
+  display: block;
+  margin-top: 22px;
+  font-family: 'Oswald', sans-serif;
+  font-style: normal;
+  font-size: var(--text-xs);
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+  font-weight: 500;
+}
+
+.join-block {
+  text-align: center;
+  padding: 72px 32px;
+  border: 1px dashed var(--line-soft);
+}
+.join-block h3 {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+  font-size: clamp(24px, 3vw, 32px);
+  color: var(--white);
+  margin-bottom: 14px;
+  letter-spacing: -0.005em;
+}
+.join-block p {
+  color: var(--chalk);
+  max-width: 540px;
+  margin: 0 auto 28px;
+  line-height: 1.7;
+}
+.join-block a {
+  display: inline-block;
+  font-family: 'Oswald', sans-serif;
+  font-size: var(--text-xs);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--void);
+  background: var(--gold-soft);
+  padding: 14px 30px;
+  font-weight: 500;
+  transition: background 0.2s, transform 0.25s var(--ease-out);
+}
+.join-block a:hover { background: var(--white); transform: translateY(-2px); }
+
+@media (max-width: 900px) {
+  .team-body { padding: 56px 24px 72px; }
+  .founders-grid { grid-template-columns: 1fr; gap: 24px; margin-bottom: 64px; }
+  .founder-card { grid-template-columns: 100px 1fr; gap: 20px; padding: 28px 22px; }
+  .founder-photo { width: 100px; height: 100px; font-size: 32px; }
+  .founder-name { font-size: 22px; }
+  .mission { padding: 40px 24px; }
+  .mission p { font-size: 19px; }
+}
+@media (max-width: 480px) {
+  .founder-card { grid-template-columns: 1fr; }
+  .founder-photo { width: 88px; height: 88px; font-size: 28px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo"><img src="Blackboard Logo White PNG.png" alt="BLACKBOARD"></a>
+  <a href="/" class="nav-back">← Back to Home</a>
+</nav>
+
+<section class="legal-hero">
+  <div class="legal-hero-inner">
+    <p class="legal-eyebrow">The Team</p>
+    <h1>Meet the founders.</h1>
+    <p class="lede">Four founders, one floor we keep showing up on. BlackBoard is built by people who actually go out, run rooms and have spent years thinking about how venues and customers find each other in the next 90 minutes.</p>
+  </div>
+</section>
+
+<main class="team-body">
+
+  <div class="mission">
+    <p>“ We're building BlackBoard because the best night out is never the one you planned three weeks ago. It's the one you decided on in the last forty minutes. We want to make that decision easier for customers and worth more to the venues they walk into. ”</p>
+    <span class="signoff">— The Founders</span>
+  </div>
+
+  <div class="founders-grid">
+
+    <!-- Michael Cox -->
+    <div class="founder-card">
+      <div class="founder-photo">
+        <!-- Replace with: <img src="team/michael.jpg" alt="Michael Cox"> -->
+        MC
+      </div>
+      <div class="founder-info">
+        <div class="founder-role">Co-founder · Product</div>
+        <h2 class="founder-name">Michael Cox</h2>
+        <p class="founder-prev">Previously RoboMercato</p>
+        <p class="founder-bio">Michael leads product and engineering at BlackBoard. He's spent the last decade building consumer and operator tooling at the intersection of marketplaces, location and live data — the unglamorous infrastructure that makes "what's on right now near me" actually work.</p>
+        <div class="founder-links">
+          <a class="founder-link" href="https://www.linkedin.com/in/michael-a-r-cox/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Adam Roy Green -->
+    <div class="founder-card">
+      <div class="founder-photo">
+        <!-- Replace with: <img src="team/adam.jpg" alt="Adam Roy Green"> -->
+        AG
+      </div>
+      <div class="founder-info">
+        <div class="founder-role">Co-founder · Venues & Hospitality</div>
+        <h2 class="founder-name">Adam Roy Green</h2>
+        <p class="founder-prev">12+ years across hospitality, interiors & operations</p>
+        <p class="founder-bio">Adam runs venue strategy at BlackBoard. He's spent over a decade working with bars, restaurants and hospitality operators across the UK, Europe and the US — driving growth, design and operational change. He's why the platform is built for the floor, not the slide deck.</p>
+        <div class="founder-links">
+          <a class="founder-link" href="https://www.linkedin.com/in/adamroygreen/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Robin Ajder -->
+    <div class="founder-card">
+      <div class="founder-photo">
+        <!-- Replace with: <img src="team/robin.jpg" alt="Robin Ajder"> -->
+        RA
+      </div>
+      <div class="founder-info">
+        <div class="founder-role">Co-founder · Growth & Partnerships</div>
+        <h2 class="founder-name">Robin Ajder</h2>
+        <p class="founder-prev">Bid, tender and partnership lead, previously Mer & Pod</p>
+        <p class="founder-bio">Robin leads partnerships and venue growth. He's spent years building long-term relationships with operators and managing complex stakeholder rollouts at scale. At BlackBoard, he's making sure every venue on the platform feels listened to and gets value back.</p>
+        <div class="founder-links">
+          <a class="founder-link" href="https://www.linkedin.com/in/robin-ajder/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Anthony Rough -->
+    <div class="founder-card">
+      <div class="founder-photo">
+        <!-- Replace with: <img src="team/anthony.jpg" alt="Anthony Rough"> -->
+        AR
+      </div>
+      <div class="founder-info">
+        <div class="founder-role">Co-founder · Operations</div>
+        <h2 class="founder-name">Anthony Rough</h2>
+        <p class="founder-prev">Previously Quest Global</p>
+        <p class="founder-bio">Anthony leads operations and rollout. With a background spanning engineering programmes, delivery and complex multi-stakeholder systems, he keeps BlackBoard's pilot moving from sign up to live on the board without anything dropping between the cracks.</p>
+        <div class="founder-links">
+          <a class="founder-link" href="https://www.linkedin.com/in/anthony-rough-539331a4/" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19a.66.66 0 000 .14V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z"/></svg>
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="join-block">
+    <h3>Want to build with us?</h3>
+    <p>We're hiring across product, venue partnerships and operations as we scale beyond the West London pilot. Drop us a line and tell us what you'd want to work on.</p>
+    <a href="/#contact">Get in touch</a>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="/" class="nav-logo"><img src="Blackboard Logo White PNG.png" alt="BLACKBOARD"></a>
+      <p>Deals. Drinks. Nights Out.<br>Launching at blackboarddeals.com</p>
+      <em>" Where Happy Hour Just Got Smarter "</em>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="/#deals">Browse Deals</a></li>
+        <li><a href="/#how">How It Works</a></li>
+        <li><a href="/#signup">Join Waitlist</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="/team">The Team</a></li>
+        <li><a href="/news">News</a></li>
+        <li><a href="/venue-signup">For Venues</a></li>
+        <li><a href="/faqs">FAQs</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="/gdpr">GDPR</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="/cookies">Cookies</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Blackboard Deals Ltd</p>
+    <div class="footer-socials">
+      <a href="#">Instagram</a>
+      <a href="#">TikTok</a>
+      <a href="#">X</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
