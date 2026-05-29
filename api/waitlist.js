@@ -20,7 +20,7 @@ export default async function handler(req, res) {
   if (isVenue && venueType) payload.title = venueType;
   if (isVenue && role) payload.seniority = role;
   if (isVenue && address) payload.street_address = address;
-  if (!isVenue && interest) payload.present_raw_address = interest;
+  if (interest) payload.present_raw_address = interest;
   if (phone) payload.direct_phone = phone;
 
   try {
