@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>News & Field Notes | BlackBoard</title>
+<meta name="description" content="Updates, field notes and stories from BlackBoard. New venues, product changes, and what we're learning building the city's deals app.">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Roboto:wght@300;400;500&family=Cormorant+Garamond:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="legal.css">
+<style>
+/* NEWS PAGE */
+.news-body {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 72px 60px 96px;
+}
+
+/* Filter chips */
+.news-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 56px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--line-soft);
+}
+.news-filter {
+  font-family: 'Oswald', sans-serif;
+  font-size: var(--text-xs);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--smoke);
+  padding: 8px 16px;
+  border: 1px solid var(--line-soft);
+  background: transparent;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.news-filter:hover { color: var(--white); border-color: var(--gold-soft); }
+.news-filter.on { color: var(--void); background: var(--gold-soft); border-color: var(--gold-soft); }
+
+/* Featured (first) post — compound selector wins over .news-card */
+.news-feature.news-card {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 48px;
+  align-items: center;
+  margin-bottom: 80px;
+  padding-bottom: 80px;
+  border-bottom: 1px solid var(--line-soft);
+  flex-direction: initial;
+}
+.news-feature .card-img {
+  aspect-ratio: 4/3;
+  min-height: 320px;
+}
+.news-feature h2 {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+  font-size: clamp(28px, 3.4vw, 42px);
+  line-height: 1.12;
+  color: var(--white);
+  margin: 18px 0 18px;
+  letter-spacing: -0.01em;
+}
+.news-feature .excerpt {
+  font-size: var(--text-md);
+  color: var(--chalk);
+  line-height: 1.7;
+  margin-bottom: 26px;
+  max-width: 540px;
+}
+
+/* Card grid */
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 40px;
+}
+.news-card {
+  display: flex;
+  flex-direction: column;
+  background: transparent;
+  border: none;
+  transition: transform 0.3s var(--ease-out);
+}
+.news-card:hover { transform: translateY(-4px); }
+.news-card:hover h3 { color: var(--gold-soft); }
+.news-card:hover .card-img::after { opacity: 0.18; }
+
+.card-img {
+  position: relative;
+  aspect-ratio: 16/10;
+  overflow: hidden;
+  border: 1px solid var(--line-soft);
+  margin-bottom: 22px;
+  background-size: cover;
+  background-position: center;
+}
+.card-img::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(75,0,130,0.55) 0%, rgba(6,6,8,0.85) 70%);
+  mix-blend-mode: multiply;
+  z-index: 1;
+}
+.card-img::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(218,165,32,0.0);
+  transition: opacity 0.3s var(--ease-out);
+  z-index: 2;
+  opacity: 0;
+}
+.card-img-label {
+  position: absolute;
+  bottom: 18px; left: 20px;
+  z-index: 3;
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+  font-size: clamp(20px, 2.2vw, 32px);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--white);
+  line-height: 1.05;
+  max-width: 78%;
+}
+.card-img-label em {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--gold-soft);
+  letter-spacing: 0;
+}
+
+/* Variants — distinct gradient + pattern per category */
+.tone-updates    { background-color: #1a0a2e; }
+.tone-updates::before { background: linear-gradient(135deg, rgba(75,0,130,0.7) 0%, rgba(6,6,8,0.9) 70%); }
+.tone-venues     { background-color: #2e1a0a; }
+.tone-venues::before { background: linear-gradient(135deg, rgba(218,165,32,0.45) 0%, rgba(6,6,8,0.92) 70%); }
+.tone-community  { background-color: #0a1e2e; }
+.tone-community::before { background: linear-gradient(135deg, rgba(80,120,200,0.45) 0%, rgba(6,6,8,0.9) 70%); }
+.tone-product    { background-color: #0a2e1c; }
+.tone-product::before { background: linear-gradient(135deg, rgba(50,160,120,0.4) 0%, rgba(6,6,8,0.92) 70%); }
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: 'Oswald', sans-serif;
+  font-size: var(--text-xs);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--smoke);
+  margin-bottom: 12px;
+}
+.card-meta .dot { color: var(--line); }
+.card-meta .pill {
+  color: var(--gold-soft);
+  font-weight: 500;
+}
+.news-card h3 {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1.25;
+  color: var(--white);
+  margin-bottom: 10px;
+  letter-spacing: -0.005em;
+  transition: color 0.2s;
+}
+.news-card .excerpt {
+  font-size: var(--text-base);
+  color: var(--smoke);
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+.news-card .read-on {
+  margin-top: auto;
+  font-family: 'Oswald', sans-serif;
+  font-size: var(--text-xs);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  transition: color 0.2s;
+}
+.news-card:hover .read-on { color: var(--white); }
+
+/* Subscribe block */
+.news-subscribe {
+  margin-top: 96px;
+  padding: 56px 48px;
+  background: linear-gradient(135deg, var(--surface) 0%, var(--raised) 100%);
+  border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--gold);
+  text-align: center;
+}
+.news-subscribe h3 {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+  font-size: 26px;
+  color: var(--white);
+  margin-bottom: 12px;
+  letter-spacing: -0.005em;
+}
+.news-subscribe p {
+  color: var(--chalk);
+  max-width: 520px;
+  margin: 0 auto 24px;
+  line-height: 1.7;
+}
+.news-subscribe a {
+  display: inline-block;
+  font-family: 'Oswald', sans-serif;
+  font-size: var(--text-xs);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--void);
+  background: var(--gold-soft);
+  padding: 14px 30px;
+  transition: background 0.2s, transform 0.25s var(--ease-out);
+}
+.news-subscribe a:hover {
+  background: var(--white);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 900px) {
+  .news-body { padding: 56px 24px 72px; }
+  .news-feature {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    margin-bottom: 56px;
+    padding-bottom: 56px;
+  }
+  .news-feature .card-img { min-height: 240px; }
+  .news-grid { gap: 32px; }
+  .news-subscribe { padding: 40px 24px; margin-top: 64px; }
+  .news-subscribe h3 { font-size: 22px; }
+}
+@media (max-width: 560px) {
+  .card-img-label { font-size: 18px; bottom: 14px; left: 16px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo"><img src="Blackboard Logo White PNG.png" alt="BLACKBOARD"></a>
+  <a href="/" class="nav-back">← Back to Home</a>
+</nav>
+
+<section class="legal-hero">
+  <div class="legal-hero-inner">
+    <p class="legal-eyebrow">News & Field Notes</p>
+    <h1>Stories from the<br>BlackBoard floor.</h1>
+    <p class="lede">Pilot updates, venue spotlights, product changes, and notes from the team. Short reads on what's working, what isn't, and where we're heading next.</p>
+    <div class="legal-meta">
+      <span><strong>Latest</strong>Pilot launch in West London</span>
+      <span><strong>Updated</strong>Weekly during pilot</span>
+    </div>
+  </div>
+</section>
+
+<main class="news-body">
+
+  <div class="news-filters">
+    <button class="news-filter on" data-tag="all">All</button>
+    <button class="news-filter" data-tag="updates">Updates</button>
+    <button class="news-filter" data-tag="venues">For Venues</button>
+    <button class="news-filter" data-tag="community">Community</button>
+  </div>
+
+  <!-- Featured -->
+  <a href="/news/pilot-launch" class="news-feature news-card" data-tag="updates">
+    <div class="card-img tone-updates">
+      <div class="card-img-label">Pilot is<br><em>live.</em></div>
+    </div>
+    <div>
+      <div class="card-meta"><span class="pill">Updates</span><span class="dot">·</span><span>2 May 2026</span><span class="dot">·</span><span>4 min read</span></div>
+      <h2>BlackBoard's West London pilot just went live.</h2>
+      <p class="excerpt">We've opened the doors on the first phase of BlackBoard across Surbiton, Kingston, Teddington, New Malden, Hampton Wick and Twickenham. Here's what's running, who's on board, and how we're measuring success during the pilot window.</p>
+      <span class="read-on">Read the update →</span>
+    </div>
+  </a>
+
+  <!-- Grid -->
+  <div class="news-grid">
+
+    <a href="/news/built-for-venues" class="news-card" data-tag="venues">
+      <div class="card-img tone-venues">
+        <div class="card-img-label">Built <em>for</em><br>venues.</div>
+      </div>
+      <div class="card-meta"><span class="pill">For Venues</span><span class="dot">·</span><span>24 Apr 2026</span><span class="dot">·</span><span>5 min read</span></div>
+      <h3>Why BlackBoard works for venues, not against them.</h3>
+      <p class="excerpt">Most deal apps train customers to wait for the cheapest hour. We're trying something different: real time, venue controlled offers that fill the empty seats without devaluing the busy ones.</p>
+      <span class="read-on">Read the piece →</span>
+    </a>
+
+    <a href="/news/founding-members" class="news-card" data-tag="community">
+      <div class="card-img tone-community">
+        <div class="card-img-label">Founding<br><em>members.</em></div>
+      </div>
+      <div class="card-meta"><span class="pill">Community</span><span class="dot">·</span><span>11 Apr 2026</span><span class="dot">·</span><span>3 min read</span></div>
+      <h3>What being a founding member actually means.</h3>
+      <p class="excerpt">No vague promises. We're spelling out what early supporters get from day one, why we're treating launch differently, and how your feedback shapes the venues we list.</p>
+      <span class="read-on">Read the piece →</span>
+    </a>
+
+    <a href="/news/pilot-launch" class="news-card" data-tag="product" style="opacity:0.7;pointer-events:none">
+      <div class="card-img tone-product">
+        <div class="card-img-label">More<br><em>soon.</em></div>
+      </div>
+      <div class="card-meta"><span class="pill">Product</span><span class="dot">·</span><span>Coming soon</span></div>
+      <h3>Behind the redemption flow we shipped on day one.</h3>
+      <p class="excerpt">A short post on the staff assisted redemption design we settled on for the pilot, and what we're watching before we move to QR or PIN based flows.</p>
+      <span class="read-on">Coming soon →</span>
+    </a>
+
+  </div>
+
+  <div class="news-subscribe">
+    <h3>Get field notes in your inbox.</h3>
+    <p>Join the waitlist and we'll send you launch updates, venue spotlights, and the occasional behind the scenes from the BlackBoard team.</p>
+    <a href="/#signup">Join the waitlist</a>
+  </div>
+
+</main>
+
+<footer class="footer">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="/" class="nav-logo"><img src="Blackboard Logo White PNG.png" alt="BLACKBOARD"></a>
+      <p>Deals. Drinks. Nights Out.<br>Launching at blackboarddeals.com</p>
+      <em>" Where Happy Hour Just Got Smarter "</em>
+    </div>
+    <div class="footer-col">
+      <h4>Product</h4>
+      <ul>
+        <li><a href="/#deals">Browse Deals</a></li>
+        <li><a href="/#how">How It Works</a></li>
+        <li><a href="/#signup">Join Waitlist</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul>
+        <li><a href="/news">News</a></li>
+        <li><a href="/venue-signup">For Venues</a></li>
+        <li><a href="/faqs">FAQs</a></li>
+        <li><a href="/#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <ul>
+        <li><a href="/privacy">Privacy</a></li>
+        <li><a href="/gdpr">GDPR</a></li>
+        <li><a href="/terms">Terms</a></li>
+        <li><a href="/cookies">Cookies</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Blackboard Deals Ltd</p>
+    <div class="footer-socials">
+      <a href="#">Instagram</a>
+      <a href="#">TikTok</a>
+      <a href="#">X</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Filter chips
+document.querySelectorAll('.news-filter').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tag = btn.dataset.tag;
+    document.querySelectorAll('.news-filter').forEach(b => b.classList.toggle('on', b === btn));
+    document.querySelectorAll('[data-tag]').forEach(card => {
+      if (card.classList.contains('news-filter')) return;
+      const show = tag === 'all' || card.dataset.tag === tag;
+      card.style.display = show ? '' : 'none';
+    });
+  });
+});
+</script>
+
+</body>
+</html>
