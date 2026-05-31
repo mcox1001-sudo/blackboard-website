@@ -227,6 +227,98 @@
   transform: translateY(-2px);
 }
 
+/* Press / In the news */
+.press-section {
+  margin-top: 96px;
+  padding-top: 56px;
+  border-top: 1px solid var(--line-soft);
+}
+.press-eyebrow {
+  font-family: 'Oswald', sans-serif;
+  font-size: var(--text-xs);
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 14px;
+  font-weight: 500;
+}
+.press-section h2 {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+  font-size: clamp(28px, 3.4vw, 38px);
+  line-height: 1.15;
+  color: var(--white);
+  margin-bottom: 14px;
+  letter-spacing: -0.01em;
+}
+.press-section p.lede {
+  font-size: var(--text-md);
+  color: var(--chalk);
+  line-height: 1.7;
+  max-width: 660px;
+  margin-bottom: 40px;
+}
+.press-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+}
+.press-card {
+  display: flex;
+  flex-direction: column;
+  padding: 28px 28px 24px;
+  background: linear-gradient(180deg, var(--surface) 0%, var(--raised) 100%);
+  border: 1px solid var(--line-soft);
+  transition: border-color 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+}
+.press-card:hover {
+  border-color: var(--gold-soft);
+  transform: translateY(-3px);
+}
+.press-pub {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Oswald', sans-serif;
+  font-size: var(--text-xs);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+.press-pub::before {
+  content: '';
+  width: 22px;
+  height: 1px;
+  background: var(--gold-soft);
+}
+.press-card h3 {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+  font-size: 19px;
+  line-height: 1.3;
+  color: var(--white);
+  margin-bottom: 12px;
+  letter-spacing: -0.005em;
+}
+.press-card p {
+  font-size: var(--text-sm);
+  color: var(--smoke);
+  line-height: 1.7;
+  margin-bottom: 22px;
+}
+.press-card .read-on {
+  margin-top: auto;
+  font-family: 'Oswald', sans-serif;
+  font-size: var(--text-xs);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  transition: color 0.2s;
+}
+.press-card:hover .read-on { color: var(--white); }
+
 @media (max-width: 900px) {
   .news-body { padding: 56px 24px 72px; }
   .news-feature {
@@ -239,6 +331,8 @@
   .news-grid { gap: 32px; }
   .news-subscribe { padding: 40px 24px; margin-top: 64px; }
   .news-subscribe h3 { font-size: 22px; }
+  .press-section { margin-top: 64px; padding-top: 40px; }
+  .press-grid { grid-template-columns: 1fr; gap: 16px; }
 }
 @media (max-width: 560px) {
   .card-img-label { font-size: 18px; bottom: 14px; left: 16px; }
@@ -320,6 +414,31 @@
     </a>
 
   </div>
+
+  <!-- Press / In the news -->
+  <section class="press-section">
+    <p class="press-eyebrow">In the news</p>
+    <h2>Press coverage of the launch.</h2>
+    <p class="lede">Independent reporting on BlackBoard's South West London pilot. We don't republish other publications' work here — every card links straight to the source.</p>
+
+    <div class="press-grid">
+
+      <a class="press-card" href="https://kingston.nub.news/news/local-news/locals-to-launch-new-app-advertising-hospitality-deals-across-kingston-and-richmond-boroughs-297411" target="_blank" rel="noopener">
+        <div class="press-pub">Kingston Nub News</div>
+        <h3>Locals to launch new app advertising hospitality deals across Kingston and Richmond boroughs</h3>
+        <p>Kingston Nub News covers the BlackBoard pilot landing across the Kingston borough and what it means for local pubs, bars and restaurants.</p>
+        <span class="read-on">Read on Kingston Nub News →</span>
+      </a>
+
+      <a class="press-card" href="https://teddington.nub.news/news/local-news/locals-to-launch-new-app-advertising-hospitality-deals-across-kingston-and-richmond-boroughs-297414" target="_blank" rel="noopener">
+        <div class="press-pub">Teddington Nub News</div>
+        <h3>Locals to launch new app advertising hospitality deals across Kingston and Richmond boroughs</h3>
+        <p>Teddington Nub News covers the BlackBoard pilot landing across Teddington and the Richmond borough, and how local venues can get involved before launch.</p>
+        <span class="read-on">Read on Teddington Nub News →</span>
+      </a>
+
+    </div>
+  </section>
 
   <div class="news-subscribe">
     <h3>Get field notes in your inbox.</h3>
