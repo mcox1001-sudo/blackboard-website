@@ -10,6 +10,27 @@
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Roboto:wght@300;400;500&family=Cormorant+Garamond:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="legal.css">
 <style>
+/* Hero background image */
+.v-hero { position: relative; overflow: hidden; }
+.v-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=1920&q=88&auto=format&fit=crop&crop=entropy');
+  background-size: cover;
+  background-position: center 40%;
+  filter: brightness(0.42) saturate(0.88);
+  z-index: 0;
+}
+.v-hero::after {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 70% 90% at 50% 100%, rgba(6,6,8,0.85) 0%, transparent 70%),
+    linear-gradient(180deg, rgba(6,6,8,0.5) 0%, transparent 40%, transparent 60%, rgba(6,6,8,0.7) 100%);
+  z-index: 1;
+}
+.v-hero .legal-hero-inner { position: relative; z-index: 2; }
+
 /* Venue page layout */
 .v-body { max-width: 1180px; margin: 0 auto; padding: 80px 60px; }
 
@@ -385,7 +406,7 @@
   <a href="/" class="nav-back">← Back to Home</a>
 </nav>
 
-<section class="legal-hero">
+<section class="legal-hero v-hero">
   <div class="legal-hero-inner">
     <p class="legal-eyebrow">For Venues</p>
     <h1>Get your venue<br>on BlackBoard.</h1>

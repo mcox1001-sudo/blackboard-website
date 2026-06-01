@@ -142,6 +142,65 @@
   color: var(--gold-soft);
   border-bottom-color: var(--gold-soft);
 }
+
+/* Article hero image */
+.article-hero {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line-soft);
+}
+.article-hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: url('https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=1920&q=88&auto=format&fit=crop&crop=entropy');
+  background-size: cover;
+  background-position: center 35%;
+  filter: brightness(0.45) saturate(0.85);
+  z-index: 0;
+}
+.article-hero::after {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 70% 90% at 50% 100%, rgba(6,6,8,0.85) 0%, transparent 70%),
+    linear-gradient(180deg, rgba(6,6,8,0.5) 0%, transparent 40%, transparent 60%, rgba(6,6,8,0.7) 100%);
+  z-index: 1;
+}
+.article-hero .legal-hero-inner { position: relative; z-index: 2; }
+
+/* As covered in callout */
+.press-mention {
+  margin: 40px 0;
+  padding: 28px 32px;
+  background: linear-gradient(180deg, var(--surface) 0%, var(--raised) 100%);
+  border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--gold);
+}
+.press-mention h4 {
+  font-family: 'Oswald', sans-serif;
+  font-size: var(--text-xs);
+  letter-spacing: .26em;
+  text-transform: uppercase;
+  color: var(--gold-soft);
+  font-weight: 500;
+  margin-bottom: 14px;
+}
+.press-mention ul {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+.press-mention a {
+  color: var(--white);
+  border-bottom: 1px solid var(--line-soft);
+  padding-bottom: 8px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.press-mention a:hover {
+  color: var(--gold-soft);
+  border-bottom-color: var(--gold-soft);
+}
 </style>
 </head>
 <body>
@@ -151,7 +210,7 @@
   <a href="/news" class="nav-back">← All News</a>
 </nav>
 
-<section class="legal-hero">
+<section class="legal-hero article-hero">
   <div class="legal-hero-inner">
     <p class="legal-eyebrow">Updates</p>
     <h1>BlackBoard is live across<br>Kingston and Richmond.</h1>
@@ -201,6 +260,14 @@
   <h2>Where we go next</h2>
   <p>Kingston and Richmond are home turf and the perfect test bed: a dense cluster of independents along the river, strong weekday and weekend trade, universities, sports teams and a crowd that loves going out close to home. If it works here, we want to bring BlackBoard to the rest of London and beyond.</p>
   <p>Download BlackBoard today, and never miss a good night out again.</p>
+
+  <div class="press-mention">
+    <h4>As covered in</h4>
+    <ul>
+      <li><a href="https://kingston.nub.news/news/local-news/locals-to-launch-new-app-advertising-hospitality-deals-across-kingston-and-richmond-boroughs-297411" target="_blank" rel="noopener">Kingston Nub News — Locals to launch new app advertising hospitality deals across Kingston and Richmond boroughs →</a></li>
+      <li><a href="https://teddington.nub.news/news/local-news/locals-to-launch-new-app-advertising-hospitality-deals-across-kingston-and-richmond-boroughs-297414" target="_blank" rel="noopener">Teddington Nub News — Locals to launch new app advertising hospitality deals across Kingston and Richmond boroughs →</a></li>
+    </ul>
+  </div>
 
   <div class="callout">
     <p><strong>Run a venue in Kingston or Richmond?</strong> Get listed in minutes via the <a class="inline" href="/venue-signup">venue sign up flow</a>. No commission, no per-cover fees, and you stay in control of every deal you post.</p>
