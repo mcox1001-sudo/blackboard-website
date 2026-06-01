@@ -135,13 +135,25 @@
   letter-spacing: 0;
 }
 
-/* Variants — distinct gradient + pattern per category */
-.tone-updates    { background-color: #1a0a2e; }
-.tone-updates::before { background: linear-gradient(135deg, rgba(75,0,130,0.7) 0%, rgba(6,6,8,0.9) 70%); }
-.tone-venues     { background-color: #2e1a0a; }
-.tone-venues::before { background: linear-gradient(135deg, rgba(218,165,32,0.45) 0%, rgba(6,6,8,0.92) 70%); }
-.tone-community  { background-color: #0a1e2e; }
-.tone-community::before { background: linear-gradient(135deg, rgba(80,120,200,0.45) 0%, rgba(6,6,8,0.9) 70%); }
+/* Variants — distinct image + gradient overlay per category */
+.tone-updates    {
+  background-color: #1a0a2e;
+  background-image: url('https://images.unsplash.com/photo-1566417713940-fe7c737a9ef2?w=1400&q=85&auto=format&fit=crop&crop=entropy');
+  background-size: cover; background-position: center;
+}
+.tone-updates::before { background: linear-gradient(135deg, rgba(75,0,130,0.55) 0%, rgba(6,6,8,0.78) 70%); }
+.tone-venues     {
+  background-color: #2e1a0a;
+  background-image: url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=1400&q=85&auto=format&fit=crop&crop=entropy');
+  background-size: cover; background-position: center;
+}
+.tone-venues::before { background: linear-gradient(135deg, rgba(218,165,32,0.35) 0%, rgba(6,6,8,0.82) 70%); }
+.tone-community  {
+  background-color: #0a1e2e;
+  background-image: url('https://images.unsplash.com/photo-1551024506-0bccd828d307?w=1400&q=85&auto=format&fit=crop&crop=entropy');
+  background-size: cover; background-position: center;
+}
+.tone-community::before { background: linear-gradient(135deg, rgba(80,120,200,0.35) 0%, rgba(6,6,8,0.82) 70%); }
 .tone-product    { background-color: #0a2e1c; }
 .tone-product::before { background: linear-gradient(135deg, rgba(50,160,120,0.4) 0%, rgba(6,6,8,0.92) 70%); }
 
