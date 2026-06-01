@@ -350,6 +350,20 @@ body::after {
   display: flex; justify-content: center;
   animation: fade-up 1s 0.4s var(--ease-out) both;
 }
+/* Top hero badges must sit above the giant H1 — its line-height: 0.88 makes
+   the H1 bounding box bleed up into the bottom edge of the badges, which on
+   mobile and desktop alike causes taps near the badge edge to land on the
+   non-clickable H1 instead of the anchor. */
+.hero-badges-top {
+  position: relative;
+  z-index: 5;
+  margin-top: 0;
+  margin-bottom: 36px;
+}
+.hero-badges-top .app-badge {
+  position: relative;
+  z-index: 5;
+}
 .footer-badges { margin-top: 20px; }
 
 /* ══════════════════════════════════════════════════
