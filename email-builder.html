@@ -138,6 +138,29 @@ a{color:inherit;}
 .instructions .card code{font-family:'SF Mono',Menlo,Consolas,monospace;font-size:11px;color:var(--gold-soft);background:rgba(218,165,32,0.08);padding:2px 5px;border-radius:2px;}
 
 footer{border-top:1px solid var(--line-soft);padding:24px 32px;text-align:center;font-size:11px;letter-spacing:2px;color:#5a5a64;text-transform:uppercase;font-weight:700;}
+
+/* TEMPLATES BAR */
+.templates-bar{background:var(--deep);border:1px solid var(--line-soft);padding:16px 18px;margin-bottom:18px;display:flex;flex-direction:column;gap:12px;}
+.templates-bar .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.templates-bar label.title{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;font-weight:700;color:var(--gold);}
+.templates-bar select{flex:1;min-width:140px;background:var(--surface);border:1px solid var(--line);color:var(--chalk);padding:10px 11px;font-family:'Roboto',sans-serif;font-size:13px;outline:none;}
+.templates-bar select:focus{border-color:var(--gold);background:var(--raised);}
+.btn-mini{padding:9px 14px;font-family:'Roboto',sans-serif;font-weight:700;font-size:10px;letter-spacing:1.6px;text-transform:uppercase;text-align:center;cursor:pointer;background:transparent;color:var(--chalk);border:1px solid var(--line);transition:border-color .15s,color .15s,background .15s;}
+.btn-mini:hover:not(:disabled){border-color:var(--gold);color:var(--gold);}
+.btn-mini.danger:hover:not(:disabled){border-color:#e07070;color:#e07070;}
+.btn-mini:disabled{opacity:.4;cursor:not-allowed;}
+.mode-toggle{display:inline-flex;border:1px solid var(--line);}
+.mode-toggle button{background:transparent;border:none;color:var(--ghost);padding:9px 14px;font-family:'Roboto',sans-serif;font-weight:700;font-size:10px;letter-spacing:1.6px;text-transform:uppercase;cursor:pointer;}
+.mode-toggle button.on{background:var(--gold);color:var(--void);}
+.mode-toggle button + button{border-left:1px solid var(--line);}
+.templates-bar .meta{font-size:11px;color:var(--ghost);line-height:1.5;}
+#paste-pane{display:none;}
+#paste-pane.on{display:block;}
+#form-pane.off{display:none;}
+.paste-textarea{width:100%;min-height:520px;background:var(--void);border:1px solid var(--line);color:#9ea0a4;padding:16px 14px;font-family:'SF Mono',Menlo,Consolas,monospace;font-size:12px;line-height:1.55;outline:none;resize:vertical;}
+.paste-textarea:focus{border-color:var(--gold);}
+.paste-help{font-size:11px;color:#6a6a72;margin-top:8px;line-height:1.55;}
+.paste-help code{color:var(--gold-soft);background:rgba(218,165,32,0.08);padding:1px 5px;font-family:'SF Mono',Menlo,Consolas,monospace;font-size:11px;}
 </style>
 </head>
 <body>
@@ -161,7 +184,42 @@ footer{border-top:1px solid var(--line-soft);padding:24px 32px;text-align:center
   <!-- FORM -->
   <div class="panel">
     <h2>Email contents</h2>
-    <p class="panel-sub">Defaults match the BlackBoard launch party. Edit anything you want.</p>
+    <p class="panel-sub">Defaults match the BlackBoard launch party. Edit anything, save it as a template, or paste your own HTML.</p>
+
+    <!-- Templates bar -->
+    <div class="templates-bar">
+      <div class="row">
+        <label class="title" for="tpl-select">Saved templates</label>
+        <select id="tpl-select">
+          <option value="">— None selected —</option>
+        </select>
+        <button class="btn-mini" id="tpl-save" type="button" title="Save current as a template">Save…</button>
+        <button class="btn-mini" id="tpl-update" type="button" disabled title="Update the selected template">Update</button>
+        <button class="btn-mini danger" id="tpl-delete" type="button" disabled title="Delete the selected template">Delete</button>
+      </div>
+      <div class="row">
+        <label class="title">Editor mode</label>
+        <div class="mode-toggle">
+          <button id="mode-form" class="on" type="button">Form fields</button>
+          <button id="mode-paste" type="button">Paste HTML</button>
+        </div>
+        <span class="meta">Stored locally in this browser.</span>
+      </div>
+    </div>
+
+    <!-- Paste HTML pane (hidden by default) -->
+    <div id="paste-pane">
+      <p class="section-head">Subject line</p>
+      <div class="field">
+        <input id="paste-subject" type="text" placeholder="Subject (used by Copy subject)" value="">
+      </div>
+      <p class="section-head">Raw HTML</p>
+      <textarea class="paste-textarea" id="paste-html" spellcheck="false" placeholder="<!doctype html>&#10;<table>...</table>"></textarea>
+      <p class="paste-help">Paste any email-safe HTML (the table-based kind). The preview on the right updates live. Use <code>{{email}}</code> as a literal merge token in your <code>href</code>s so Apollo/Mailchimp can substitute it at send-time. Yes/No links should still point at <code>/rsvp?email={{email}}&amp;rsvp=yes</code> or <code>=no</code> for clicks to track in Apollo.</p>
+    </div>
+
+    <!-- Form pane (default) -->
+    <div id="form-pane">
 
     <p class="section-head">Header</p>
     <div class="field"><label for="f-subject">Subject line</label><input id="f-subject" type="text" value="You're invited — Blackboard launch party, Fri 19 June"><span class="hint">For your reference. Use the Copy subject button to grab it.</span></div>
@@ -193,6 +251,8 @@ footer{border-top:1px solid var(--line-soft);padding:24px 32px;text-align:center
     <div class="field"><label for="f-foot-tag">Footer tagline (italic)</label><input id="f-foot-tag" type="text" value="Protect the Great British night out."></div>
     <div class="field"><label for="f-foot-addr">Footer address line</label><input id="f-foot-addr" type="text" value="WeBrew · 5 Ram Passage, Kingston upon Thames, KT1 1HH"></div>
     <div class="field"><label for="f-foot-sig">Footer signoff</label><input id="f-foot-sig" type="text" value="You're invited because you helped build Blackboard."></div>
+
+    </div><!-- /form-pane -->
   </div>
 
   <!-- PREVIEW + ACTIONS -->
@@ -268,7 +328,55 @@ footer{border-top:1px solid var(--line-soft);padding:24px 32px;text-align:center
     return esc(s).replace(/\*\*([^*]+)\*\*/g, '<strong style="color:#f2f2ef;font-weight:700;">$1</strong>');
   }
 
+  // ---- Mode + template state ----
+  const STORE_KEY = 'bb_email_templates_v1';
+  let mode = 'form'; // 'form' | 'paste'
+
+  function readStore() {
+    try { return JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); }
+    catch (e) { return {}; }
+  }
+  function writeStore(obj) {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(obj)); return true; }
+    catch (e) { return false; }
+  }
+  function getFormData() {
+    const d = {};
+    fields.forEach(id => { d[id] = $(id).value; });
+    return d;
+  }
+  function setFormData(d) {
+    if (!d) return;
+    fields.forEach(id => { if (d[id] != null) $(id).value = d[id]; });
+  }
+  function refreshTplSelect() {
+    const sel = $('tpl-select');
+    const current = sel.value;
+    const store = readStore();
+    const names = Object.keys(store).sort((a,b) => a.localeCompare(b));
+    sel.innerHTML = '<option value="">— None selected —</option>' +
+      names.map(n => `<option value="${n.replace(/"/g, '&quot;')}">${n.replace(/</g,'&lt;')}</option>`).join('');
+    if (names.includes(current)) sel.value = current;
+    updateBtnState();
+  }
+  function updateBtnState() {
+    const hasSel = !!$('tpl-select').value;
+    $('tpl-update').disabled = !hasSel;
+    $('tpl-delete').disabled = !hasSel;
+  }
+  function setMode(next) {
+    mode = next;
+    $('mode-form').classList.toggle('on', mode === 'form');
+    $('mode-paste').classList.toggle('on', mode === 'paste');
+    $('form-pane').classList.toggle('off', mode !== 'form');
+    $('paste-pane').classList.toggle('on', mode === 'paste');
+    render();
+  }
+
   function buildEmail() {
+    if (mode === 'paste') {
+      return $('paste-html').value || '<!-- paste HTML on the left to see the preview here -->';
+    }
     const subject   = val('f-subject');
     const preheader = val('f-preheader');
     const ebL       = val('f-eyebrow-l');
@@ -295,7 +403,7 @@ footer{border-top:1px solid var(--line-soft);padding:24px 32px;text-align:center
     const camp = encodeURIComponent(campaign);
     const yesHref = `${base}/rsvp?email=${merge}&amp;rsvp=yes&amp;campaign=${camp}`;
     const noHref  = `${base}/rsvp?email=${merge}&amp;rsvp=no&amp;campaign=${camp}`;
-    const openHref= `${base}/?email=${merge}`;
+    const openHref= `${base}/launch-invite?email=${merge}`;
     const logoUrl = `${base}/Blackboard%20Logo%20White%20PNG.png`;
 
     return `<!--[if !mso]><!--><meta http-equiv="X-UA-Compatible" content="IE=edge"><!--<![endif]-->
@@ -373,8 +481,9 @@ footer{border-top:1px solid var(--line-soft);padding:24px 32px;text-align:center
     const html = buildEmail();
     const iframe = $('preview');
     iframe.srcdoc = `<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;background:#08080a;}</style></head><body>${html}</body></html>`;
-    $('preview-subject').textContent = val('f-subject') || '—';
-    $('preview-preheader').textContent = val('f-preheader') || '—';
+    const subject = mode === 'paste' ? ($('paste-subject').value || '—') : (val('f-subject') || '—');
+    $('preview-subject').textContent = subject;
+    $('preview-preheader').textContent = mode === 'paste' ? '(paste HTML mode)' : (val('f-preheader') || '—');
     $('code-out').textContent = html;
   }
 
@@ -388,6 +497,83 @@ footer{border-top:1px solid var(--line-soft);padding:24px 32px;text-align:center
     el.addEventListener('input', scheduleRender);
     el.addEventListener('change', scheduleRender);
   });
+  $('paste-html').addEventListener('input', scheduleRender);
+  $('paste-subject').addEventListener('input', scheduleRender);
+
+  // Mode toggle
+  $('mode-form').addEventListener('click', () => setMode('form'));
+  $('mode-paste').addEventListener('click', () => setMode('paste'));
+
+  // Templates: save / load / update / delete
+  $('tpl-save').addEventListener('click', () => {
+    const name = (prompt('Save current as template — give it a name:') || '').trim();
+    if (!name) return;
+    const store = readStore();
+    if (store[name] && !confirm(`A template called "${name}" already exists. Overwrite?`)) return;
+    const entry = {
+      mode,
+      updatedAt: Date.now(),
+      subject: mode === 'paste' ? $('paste-subject').value : val('f-subject'),
+    };
+    if (mode === 'paste') { entry.html = $('paste-html').value; entry.formData = null; }
+    else                  { entry.html = null;                   entry.formData = getFormData(); }
+    store[name] = entry;
+    if (!writeStore(store)) { alert('Saving failed — localStorage may be full or blocked.'); return; }
+    refreshTplSelect();
+    $('tpl-select').value = name;
+    updateBtnState();
+    showToast('Template saved');
+  });
+
+  $('tpl-update').addEventListener('click', () => {
+    const name = $('tpl-select').value;
+    if (!name) return;
+    const store = readStore();
+    if (!store[name]) return;
+    const entry = {
+      mode,
+      updatedAt: Date.now(),
+      subject: mode === 'paste' ? $('paste-subject').value : val('f-subject'),
+    };
+    if (mode === 'paste') { entry.html = $('paste-html').value; entry.formData = null; }
+    else                  { entry.html = null;                   entry.formData = getFormData(); }
+    store[name] = entry;
+    writeStore(store);
+    showToast(`Updated "${name}"`);
+  });
+
+  $('tpl-delete').addEventListener('click', () => {
+    const name = $('tpl-select').value;
+    if (!name) return;
+    if (!confirm(`Delete template "${name}"? This cannot be undone.`)) return;
+    const store = readStore();
+    delete store[name];
+    writeStore(store);
+    refreshTplSelect();
+    showToast(`Deleted "${name}"`);
+  });
+
+  $('tpl-select').addEventListener('change', (e) => {
+    const name = e.target.value;
+    updateBtnState();
+    if (!name) return;
+    const store = readStore();
+    const entry = store[name];
+    if (!entry) return;
+    if (entry.mode === 'paste') {
+      setMode('paste');
+      $('paste-html').value = entry.html || '';
+      $('paste-subject').value = entry.subject || '';
+    } else {
+      setMode('form');
+      setFormData(entry.formData || {});
+      if (entry.subject != null) $('f-subject').value = entry.subject;
+    }
+    render();
+    showToast(`Loaded "${name}"`);
+  });
+
+  refreshTplSelect();
 
   // Actions
   function showToast(msg, isErr) {

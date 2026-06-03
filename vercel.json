@@ -1,4 +1,12 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/(launch-invite|rsvp|email-builder|signature)",
+      "headers": [
+        { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
+      ]
+    }
+  ]
 }
