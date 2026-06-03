@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML Email Builder — Blackboard</title>
+<meta name="description" content="Generate launch-invite emails for Blackboard. Built for the team. Outlook, Gmail, Apollo and Apple Mail safe.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --void:#060608;--deep:#0d0d10;--surface:#141418;--raised:#1e1e22;
+  --line:#2c2c30;--line-soft:#242428;--ghost:#b8b8c2;--smoke:#cacace;
+  --chalk:#f2f2ef;--white:#ffffff;--gold:#DAA520;--gold-soft:#e8c878;--purple:#4B0082;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--void);color:var(--chalk);
+  font-family:'Roboto',Helvetica,Arial,sans-serif;font-weight:300;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  min-height:100vh;
+}
+a{color:inherit;}
+
+/* HEADER */
+.site-header{
+  border-bottom:1px solid var(--line-soft);padding:18px 32px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--void);
+}
+.site-header .brand{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--chalk);}
+.site-header .brand img{height:22px;width:auto;display:block;}
+.site-header .brand .label{
+  font-family:'Roboto',sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:3px;color:var(--ghost);text-transform:uppercase;
+  padding-left:14px;border-left:1px solid var(--line);
+}
+.site-header .home{
+  font-family:'Roboto',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:2px;color:var(--ghost);text-transform:uppercase;text-decoration:none;
+}
+.site-header .home:hover{color:var(--gold);}
+
+/* HERO */
+.hero{padding:54px 32px 28px;max-width:1280px;margin:0 auto;}
+.hero .eyebrow{font-size:10px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;font-weight:700;margin-bottom:14px;}
+.hero h1{font-family:'Oswald',Impact,sans-serif;font-weight:700;font-size:clamp(32px,4.5vw,52px);line-height:1;letter-spacing:-0.5px;text-transform:uppercase;color:var(--white);margin-bottom:14px;}
+.hero h1 .gold{color:var(--gold);}
+.hero p.lede{font-size:15px;line-height:1.6;color:var(--ghost);max-width:640px;}
+
+/* LAYOUT */
+.builder{
+  max-width:1280px;margin:0 auto;padding:24px 32px 80px;
+  display:grid;grid-template-columns:minmax(340px,420px) 1fr;gap:24px;align-items:start;
+}
+@media (max-width:1020px){.builder{grid-template-columns:1fr;}}
+
+.panel{background:var(--deep);border:1px solid var(--line-soft);padding:24px 24px 18px;}
+.panel h2{font-family:'Oswald',Impact,sans-serif;font-weight:600;font-size:16px;letter-spacing:2px;text-transform:uppercase;color:var(--white);margin-bottom:4px;}
+.panel .panel-sub{font-size:12px;color:var(--ghost);margin-bottom:20px;line-height:1.55;}
+
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:700;color:var(--ghost);margin-bottom:6px;}
+.field input, .field textarea, .field select{
+  width:100%;background:var(--surface);border:1px solid var(--line);
+  color:var(--chalk);padding:11px 12px;font-family:'Roboto',sans-serif;
+  font-size:13px;font-weight:400;outline:none;
+  transition:border-color .2s ease,background .2s ease;
+}
+.field textarea{resize:vertical;min-height:78px;line-height:1.55;}
+.field input:focus, .field textarea:focus, .field select:focus{border-color:var(--gold);background:var(--raised);}
+.field .hint{display:block;font-size:11px;color:#6a6a72;margin-top:6px;line-height:1.5;}
+
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+.section-head{
+  margin:18px 0 12px;padding-top:14px;border-top:1px solid var(--line-soft);
+  font-size:10px;letter-spacing:2.5px;text-transform:uppercase;
+  font-weight:700;color:var(--gold);
+}
+.section-head:first-of-type{margin-top:6px;padding-top:0;border-top:none;}
+
+/* Right column: preview + actions */
+.preview-col{display:flex;flex-direction:column;gap:18px;}
+.preview-wrap{background:var(--deep);border:1px solid var(--line-soft);padding:0;overflow:hidden;}
+.preview-head{
+  padding:14px 18px;border-bottom:1px solid var(--line-soft);
+  display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+}
+.preview-head .title{font-family:'Oswald',sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;font-weight:600;color:var(--white);}
+.preview-head .from{font-size:11px;color:var(--smoke);}
+.preview-head .from b{color:var(--chalk);font-weight:600;}
+.preview-iframe{width:100%;height:760px;border:0;background:#08080a;display:block;}
+
+.actions{display:flex;gap:10px;flex-wrap:wrap;}
+.btn{
+  padding:13px 22px;font-family:'Roboto',sans-serif;font-weight:700;font-size:11px;
+  letter-spacing:2px;text-transform:uppercase;text-align:center;
+  cursor:pointer;border:none;text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+  transition:transform .15s ease,opacity .15s ease,background .15s ease,border-color .15s ease;
+}
+.btn-primary{background:var(--gold);color:var(--void);}
+.btn-primary:hover{background:var(--white);transform:translateY(-1px);}
+.btn-secondary{background:transparent;color:var(--chalk);border:1px solid var(--line);}
+.btn-secondary:hover{border-color:var(--gold);color:var(--gold);}
+
+.code-out{
+  background:var(--deep);border:1px solid var(--line-soft);
+  padding:14px 16px;overflow:auto;max-height:280px;
+  font-family:'SF Mono',Menlo,Consolas,monospace;font-size:11px;line-height:1.55;
+  color:#9ea0a4;
+  white-space:pre;
+}
+
+.toast{
+  position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(120%);
+  background:var(--gold);color:var(--void);padding:14px 24px;
+  font-family:'Roboto',sans-serif;font-weight:700;font-size:11px;
+  letter-spacing:2px;text-transform:uppercase;
+  transition:transform .3s cubic-bezier(0.16,1,0.3,1);
+  z-index:1000;box-shadow:0 8px 32px rgba(0,0,0,.6);
+}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.err{background:#c84444;color:var(--white);}
+
+/* INSTRUCTIONS */
+.instructions{max-width:1280px;margin:0 auto 60px;padding:0 32px;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+@media (max-width:1020px){.instructions{grid-template-columns:repeat(2,1fr);}}
+@media (max-width:560px){.instructions{grid-template-columns:1fr;}}
+.instructions .card{background:var(--deep);border:1px solid var(--line-soft);padding:20px;}
+.instructions .card .num{font-family:'Oswald',Impact,sans-serif;font-weight:700;font-size:24px;color:var(--gold);line-height:1;margin-bottom:10px;}
+.instructions .card h3{font-family:'Oswald',Impact,sans-serif;font-weight:600;font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--white);margin-bottom:8px;}
+.instructions .card p{font-size:12px;line-height:1.6;color:var(--ghost);}
+.instructions .card p strong{color:var(--chalk);font-weight:500;}
+.instructions .card code{font-family:'SF Mono',Menlo,Consolas,monospace;font-size:11px;color:var(--gold-soft);background:rgba(218,165,32,0.08);padding:2px 5px;border-radius:2px;}
+
+footer{border-top:1px solid var(--line-soft);padding:24px 32px;text-align:center;font-size:11px;letter-spacing:2px;color:#5a5a64;text-transform:uppercase;font-weight:700;}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="/" class="brand">
+    <img src="Blackboard Logo White PNG.png" alt="Blackboard">
+    <span class="label">Email Builder</span>
+  </a>
+  <a href="/" class="home">&larr; Back to site</a>
+</header>
+
+<section class="hero">
+  <p class="eyebrow">&#9733; For the Blackboard team</p>
+  <h1>Build a <span class="gold">launch-invite email</span>.</h1>
+  <p class="lede">Edit the fields on the left. Live preview updates as you type. Copy the HTML, paste into Apollo or Mailchimp. Every Yes / Can't-make-it click lands in Apollo automatically via <code style="color:var(--gold-soft);background:rgba(218,165,32,0.08);padding:2px 5px;font-family:monospace;">/api/waitlist</code> and the <code style="color:var(--gold-soft);background:rgba(218,165,32,0.08);padding:2px 5px;font-family:monospace;">/rsvp</code> landing page.</p>
+</section>
+
+<section class="builder">
+
+  <!-- FORM -->
+  <div class="panel">
+    <h2>Email contents</h2>
+    <p class="panel-sub">Defaults match the BlackBoard launch party. Edit anything you want.</p>
+
+    <p class="section-head">Header</p>
+    <div class="field"><label for="f-subject">Subject line</label><input id="f-subject" type="text" value="You're invited — Blackboard launch party, Fri 19 June"><span class="hint">For your reference. Use the Copy subject button to grab it.</span></div>
+    <div class="field"><label for="f-preheader">Preheader (inbox preview)</label><input id="f-preheader" type="text" value="Nearly a year in the making. Come raise a glass with us."></div>
+    <div class="field"><label for="f-eyebrow">Eyebrow (top-right text)</label><input id="f-eyebrow" type="text" value="You're invited"></div>
+    <div class="field"><label for="f-eyebrow-l">Eyebrow (top-left text)</label><input id="f-eyebrow-l" type="text" value="blackboarddeals.com"></div>
+
+    <p class="section-head">Headline</p>
+    <div class="field"><label for="f-h1a">Headline — line 1</label><input id="f-h1a" type="text" value="We're live."></div>
+    <div class="field"><label for="f-h1b">Headline — line 2 (gold accent)</label><input id="f-h1b" type="text" value="Let's celebrate."></div>
+    <div class="field"><label for="f-sub">Subhead (italic)</label><textarea id="f-sub">Nearly a year in the making — come raise a glass with us.</textarea></div>
+
+    <p class="section-head">Event details</p>
+    <div class="field"><label for="f-bar">Detail bar (gold strip)</label><input id="f-bar" type="text" value="Fri 19 June · 7:30pm 'til late · WeBrew Kingston"></div>
+    <div class="field"><label for="f-body">Body copy</label><textarea id="f-body">The Blackboard app is finally live — and we couldn't have got here without you. This is a thank-you to **the venue owners, investors, users, friends, family and supporters** who backed us from the chalk-dust up. Come celebrate launch night with the whole team.</textarea><span class="hint">Wrap a phrase in **double asterisks** to make it bold and white.</span></div>
+
+    <p class="section-head">CTAs</p>
+    <div class="field"><label for="f-prompt">Prompt above buttons</label><input id="f-prompt" type="text" value="Will we see you there?"></div>
+    <div class="field"><label for="f-yes">Yes button label</label><input id="f-yes" type="text" value="Yes — I can't wait to celebrate"></div>
+    <div class="field"><label for="f-no">No button label</label><input id="f-no" type="text" value="Can't make it — but I'll get the app"></div>
+    <div class="field"><label for="f-fwd">Forward line (italic, bottom)</label><input id="f-fwd" type="text" value="Bringing someone? Open your invite to forward it to a +1."></div>
+
+    <p class="section-head">Tracking & links</p>
+    <div class="field"><label for="f-base">Site base URL</label><input id="f-base" type="text" value="https://blackboarddeals.com"><span class="hint">Where the Yes / No / "Open invite" links point. Defaults to blackboarddeals.com.</span></div>
+    <div class="field"><label for="f-merge">Recipient merge token</label><input id="f-merge" type="text" value="{{email}}"><span class="hint">Apollo / Mailchimp / your tool's merge variable. Will be swapped per-recipient at send.</span></div>
+    <div class="field"><label for="f-campaign">Campaign label</label><input id="f-campaign" type="text" value="Launch"><span class="hint">Tags the RSVP row in Apollo (e.g. "Blackboard Launch RSVP — Yes").</span></div>
+
+    <p class="section-head">Footer</p>
+    <div class="field"><label for="f-foot-tag">Footer tagline (italic)</label><input id="f-foot-tag" type="text" value="Protect the Great British night out."></div>
+    <div class="field"><label for="f-foot-addr">Footer address line</label><input id="f-foot-addr" type="text" value="WeBrew · 5 Ram Passage, Kingston upon Thames, KT1 1HH"></div>
+    <div class="field"><label for="f-foot-sig">Footer signoff</label><input id="f-foot-sig" type="text" value="You're invited because you helped build Blackboard."></div>
+  </div>
+
+  <!-- PREVIEW + ACTIONS -->
+  <div class="preview-col">
+    <div class="preview-wrap">
+      <div class="preview-head">
+        <div>
+          <div class="title" id="preview-title">Preview</div>
+          <div class="from"><b id="preview-subject">Subject line goes here</b></div>
+        </div>
+        <div class="from"><span id="preview-preheader" style="opacity:.7">Preheader preview…</span></div>
+      </div>
+      <iframe id="preview" class="preview-iframe" title="Email preview"></iframe>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="copy-html">Copy HTML</button>
+      <button class="btn btn-secondary" id="copy-subject">Copy subject</button>
+      <button class="btn btn-secondary" id="download-html">Download .html</button>
+      <button class="btn btn-secondary" id="toggle-code">Show source</button>
+    </div>
+
+    <pre class="code-out" id="code-out" style="display:none;"></pre>
+  </div>
+
+</section>
+
+<section class="instructions">
+  <div class="card">
+    <div class="num">01</div>
+    <h3>Edit content</h3>
+    <p>Fill in the fields on the left. The preview on the right updates as you type. Defaults are pre-loaded with the launch-party invite.</p>
+  </div>
+  <div class="card">
+    <div class="num">02</div>
+    <h3>Copy HTML</h3>
+    <p>Hit <strong>Copy HTML</strong>. In Apollo / Mailchimp use the <strong>HTML / source</strong> view and paste. In Gmail, open the downloaded file in a browser, select-all, copy, paste into compose.</p>
+  </div>
+  <div class="card">
+    <div class="num">03</div>
+    <h3>Add merge token</h3>
+    <p>The recipient's email is injected via <code>{{email}}</code>. Apollo uses <code>{{contact.email}}</code>, Mailchimp uses <code>*|EMAIL|*</code>. Update <strong>Recipient merge token</strong> if needed.</p>
+  </div>
+  <div class="card">
+    <div class="num">04</div>
+    <h3>Track in Apollo</h3>
+    <p>Each Yes / No click lands at <code>/rsvp</code>, which posts to <code>/api/waitlist</code> and Apollo labels the contact <strong>"Blackboard {Campaign} RSVP — Yes/No"</strong>. Filter by label to see who's coming.</p>
+  </div>
+</section>
+
+<footer>Email Builder · Internal tool · Blackboard</footer>
+
+<div class="toast" id="toast">Copied</div>
+
+<script>
+(function () {
+  const $ = id => document.getElementById(id);
+  const fields = [
+    'f-subject','f-preheader','f-eyebrow','f-eyebrow-l',
+    'f-h1a','f-h1b','f-sub',
+    'f-bar','f-body',
+    'f-prompt','f-yes','f-no','f-fwd',
+    'f-base','f-merge','f-campaign',
+    'f-foot-tag','f-foot-addr','f-foot-sig',
+  ];
+
+  function val(id) { return $(id).value; }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
+  }
+  // Render **bold** to <strong>
+  function inlineBold(s) {
+    return esc(s).replace(/\*\*([^*]+)\*\*/g, '<strong style="color:#f2f2ef;font-weight:700;">$1</strong>');
+  }
+
+  function buildEmail() {
+    const subject   = val('f-subject');
+    const preheader = val('f-preheader');
+    const ebL       = val('f-eyebrow-l');
+    const ebR       = val('f-eyebrow');
+    const h1a       = val('f-h1a');
+    const h1b       = val('f-h1b');
+    const sub       = val('f-sub');
+    const bar       = val('f-bar');
+    const body      = val('f-body');
+    const prompt    = val('f-prompt');
+    const yesL      = val('f-yes');
+    const noL       = val('f-no');
+    const fwd       = val('f-fwd');
+    const base      = val('f-base').replace(/\/+$/, '');
+    const merge     = val('f-merge');
+    const campaign  = val('f-campaign');
+    const footTag   = val('f-foot-tag');
+    const footAddr  = val('f-foot-addr');
+    const footSig   = val('f-foot-sig');
+
+    const mergeEnc  = encodeURIComponent(merge);  // {{email}} -> %7B%7Bemail%7D%7D won't substitute. Keep raw.
+    // We need the raw merge token in the URL so the sending tool can replace it.
+    // Apollo/Mailchimp substitute before sending; the merge token is literal in HTML.
+    const camp = encodeURIComponent(campaign);
+    const yesHref = `${base}/rsvp?email=${merge}&amp;rsvp=yes&amp;campaign=${camp}`;
+    const noHref  = `${base}/rsvp?email=${merge}&amp;rsvp=no&amp;campaign=${camp}`;
+    const openHref= `${base}/?email=${merge}`;
+    const logoUrl = `${base}/Blackboard%20Logo%20White%20PNG.png`;
+
+    return `<!--[if !mso]><!--><meta http-equiv="X-UA-Compatible" content="IE=edge"><!--<![endif]-->
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#08080a;">
+  <tr>
+    <td align="center" style="padding:24px 12px;">
+      <!-- Preheader (hidden inbox preview) -->
+      <div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;color:#08080a;">${esc(preheader)}</div>
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" border="0" style="width:600px;max-width:600px;background:#0d0d10;">
+        <tr>
+          <td style="padding:14px 32px;border-bottom:1px solid #242428;font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#b8b8c2;">
+            ${esc(ebL)}<span style="float:right;color:#DAA520;">${esc(ebR)}</span>
+          </td>
+        </tr>
+        <tr>
+          <td align="center" style="padding:30px 32px 8px;border-bottom:1px solid #242428;">
+            <img src="${esc(logoUrl)}" width="180" alt="Blackboard" style="display:block;width:180px;height:auto;margin:0 auto;" />
+            <div style="font-family:Arial,Helvetica,sans-serif;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#b8b8c2;padding-top:16px;">You're invited to the launch party</div>
+          </td>
+        </tr>
+        <tr>
+          <td align="center" style="padding:44px 32px 8px;">
+            <div style="font-family:'Oswald','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:46px;line-height:0.95;letter-spacing:1px;text-transform:uppercase;color:#f2f2ef;">${esc(h1a)}<br /><span style="color:#DAA520;">${esc(h1b)}</span></div>
+            <div style="font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:18px;line-height:1.5;color:#cacace;padding-top:18px;">${esc(sub)}</div>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:0 32px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+              <td align="center" bgcolor="#DAA520" style="padding:13px 16px;font-family:Arial,Helvetica,sans-serif;font-size:11px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:#08080a;">${esc(bar)}</td>
+            </tr></table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:34px 36px 6px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.7;color:#cacace;">${inlineBold(body)}</td>
+        </tr>
+        <tr>
+          <td align="center" style="padding:30px 32px 4px;font-family:Arial,Helvetica,sans-serif;font-size:11px;font-weight:bold;letter-spacing:3px;text-transform:uppercase;color:#DAA520;">${esc(prompt)}</td>
+        </tr>
+        <tr>
+          <td align="center" style="padding:14px 32px 0;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+              <td bgcolor="#DAA520"><a href="${yesHref}" style="display:inline-block;padding:16px 40px;font-family:Arial,Helvetica,sans-serif;font-size:13px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:#08080a;text-decoration:none;">${esc(yesL)}&nbsp;&nbsp;&rarr;</a></td>
+            </tr></table>
+          </td>
+        </tr>
+        <tr>
+          <td align="center" style="padding:12px 32px 0;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0"><tr>
+              <td style="border:1px solid #4a4a52;"><a href="${noHref}" style="display:inline-block;padding:14px 36px;font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;color:#f2f2ef;text-decoration:none;">${esc(noL)}</a></td>
+            </tr></table>
+          </td>
+        </tr>
+        <tr>
+          <td align="center" style="padding:22px 32px 6px;font-family:Arial,Helvetica,sans-serif;font-size:12px;letter-spacing:1px;"><a href="${openHref}" style="color:#f2f2ef;text-decoration:underline;">Open the full invite &amp; details &rarr;</a></td>
+        </tr>
+        <tr>
+          <td align="center" style="padding:6px 40px 36px;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:14px;color:#b8b8c2;">${esc(fwd)}</td>
+        </tr>
+        <tr>
+          <td align="center" style="padding:28px 32px;border-top:1px solid #242428;background:#08080a;">
+            <img src="${esc(logoUrl)}" width="130" alt="Blackboard" style="display:block;width:130px;height:auto;margin:0 auto 14px;" />
+            <div style="font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:13px;color:#b8b8c2;padding-bottom:12px;">${esc(footTag)}</div>
+            <div style="font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:1.7;color:#5a5a64;">${esc(footAddr)}<br />${esc(footSig)}</div>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+`;
+  }
+
+  function render() {
+    const html = buildEmail();
+    const iframe = $('preview');
+    iframe.srcdoc = `<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;background:#08080a;}</style></head><body>${html}</body></html>`;
+    $('preview-subject').textContent = val('f-subject') || '—';
+    $('preview-preheader').textContent = val('f-preheader') || '—';
+    $('code-out').textContent = html;
+  }
+
+  // Debounced live update
+  let renderT;
+  function scheduleRender() { clearTimeout(renderT); renderT = setTimeout(render, 100); }
+
+  fields.forEach(id => {
+    const el = $(id);
+    if (!el) return;
+    el.addEventListener('input', scheduleRender);
+    el.addEventListener('change', scheduleRender);
+  });
+
+  // Actions
+  function showToast(msg, isErr) {
+    const t = $('toast');
+    t.textContent = msg;
+    t.classList.toggle('err', !!isErr);
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 1800);
+  }
+
+  async function copyText(text) {
+    try {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+        document.body.appendChild(ta); ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      return true;
+    } catch (e) { return false; }
+  }
+
+  $('copy-html').addEventListener('click', async () => {
+    const ok = await copyText(buildEmail());
+    showToast(ok ? 'HTML copied' : 'Copy failed', !ok);
+  });
+  $('copy-subject').addEventListener('click', async () => {
+    const ok = await copyText(val('f-subject'));
+    showToast(ok ? 'Subject copied' : 'Copy failed', !ok);
+  });
+  $('download-html').addEventListener('click', () => {
+    const html = `<!doctype html><html><head><meta charset="utf-8"><title>${esc(val('f-subject'))}</title></head><body style="margin:0;background:#08080a;">${buildEmail()}</body></html>`;
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = (val('f-subject') || 'blackboard-email').replace(/[^a-zA-Z0-9-_ ]/g, '').slice(0, 60) + '.html';
+    document.body.appendChild(a); a.click();
+    setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 200);
+  });
+  $('toggle-code').addEventListener('click', (e) => {
+    const out = $('code-out');
+    const showing = out.style.display !== 'none';
+    out.style.display = showing ? 'none' : 'block';
+    e.target.textContent = showing ? 'Show source' : 'Hide source';
+  });
+
+  // Initial render
+  render();
+})();
+</script>
+
+</body>
+</html>
