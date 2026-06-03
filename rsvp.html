@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RSVP — Blackboard</title>
+<meta name="description" content="RSVP landing page for Blackboard event invitations.">
+<meta name="robots" content="noindex, follow">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=Roboto:wght@300;400;500&family=Cormorant+Garamond:ital,wght@1,400;1,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void:#060608; --deep:#0d0d10; --surface:#14141a; --raised:#1e1e26;
+  --line:#3a3a44; --line-soft:#2c2c34; --ghost:#d4d4dc; --smoke:#e8e8ec;
+  --chalk:#f7f7f5; --white:#ffffff; --gold:#DAA520; --gold-soft:#e8c878;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--void); color: var(--chalk);
+  font-family: 'Roboto', sans-serif; font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+}
+a { color: inherit; text-decoration: none; }
+
+.nav {
+  border-bottom: 1px solid var(--line-soft);
+  padding: 18px 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(6,6,8,0.94);
+}
+.nav-logo img { height: 30px; width: auto; display: block; }
+.nav-back {
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--smoke); transition: color .2s;
+}
+.nav-back:hover { color: var(--white); }
+
+.rsvp-wrap {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center;
+  padding: 60px 32px;
+  background:
+    radial-gradient(ellipse 60% 80% at 50% 0%, rgba(218,165,32,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 60% at 30% 100%, rgba(75,0,130,0.10) 0%, transparent 60%),
+    var(--void);
+}
+.rsvp-card {
+  width: 100%; max-width: 640px;
+  background: linear-gradient(180deg, var(--surface) 0%, var(--raised) 100%);
+  border: 1px solid var(--line-soft);
+  border-top: 3px solid var(--gold);
+  padding: 56px 48px 48px;
+  animation: fade-in 0.5s var(--ease-out) both;
+}
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.rsvp-eyebrow {
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px; letter-spacing: .3em; text-transform: uppercase;
+  color: var(--gold); font-weight: 500;
+  margin-bottom: 16px;
+}
+.rsvp-status { display: none; }
+.rsvp-status.on { display: block; animation: fade-in 0.4s var(--ease-out) both; }
+
+h1 {
+  font-family: 'Oswald', sans-serif;
+  font-weight: 500;
+  font-size: clamp(32px, 4.4vw, 48px);
+  line-height: 1.1; letter-spacing: -0.01em;
+  color: var(--white);
+  margin-bottom: 18px;
+}
+.lede {
+  font-size: 17px; line-height: 1.6;
+  color: var(--chalk);
+  margin-bottom: 28px;
+}
+.muted { color: var(--smoke); }
+
+.event-meta {
+  margin: 28px 0 32px;
+  padding: 22px 24px;
+  background: rgba(6,6,8,0.55);
+  border: 1px solid var(--line-soft);
+  border-left: 3px solid var(--gold);
+}
+.event-meta dl { display: grid; grid-template-columns: max-content 1fr; row-gap: 10px; column-gap: 24px; }
+.event-meta dt {
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px; letter-spacing: .26em; text-transform: uppercase;
+  color: var(--gold-soft); font-weight: 500;
+  align-self: center;
+}
+.event-meta dd { color: var(--chalk); font-size: 14px; }
+
+.btn-row { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 20px; }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 26px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px; letter-spacing: .22em; text-transform: uppercase;
+  font-weight: 500;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--chalk);
+  cursor: pointer;
+  transition: all .2s var(--ease-out);
+}
+.btn:hover { border-color: var(--gold-soft); color: var(--white); transform: translateY(-2px); }
+.btn-primary { background: var(--gold-soft); color: var(--void); border-color: var(--gold-soft); }
+.btn-primary:hover { background: var(--white); border-color: var(--white); }
+
+/* Forward to a +1 */
+.forward-block {
+  margin-top: 36px; padding-top: 28px;
+  border-top: 1px solid var(--line-soft);
+}
+.forward-block h3 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--gold-soft); font-weight: 500;
+  margin-bottom: 8px;
+}
+.forward-block p { font-size: 14px; color: var(--smoke); margin-bottom: 16px; line-height: 1.6; }
+.forward-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.forward-row input {
+  flex: 1; min-width: 200px;
+  background: rgba(6,6,8,0.55);
+  border: 1px solid var(--line-soft);
+  color: var(--chalk);
+  padding: 12px 14px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+}
+.forward-row input:focus { outline: none; border-color: var(--gold-soft); background: rgba(6,6,8,0.85); }
+.forward-msg { font-size: 12px; color: var(--smoke); margin-top: 10px; min-height: 16px; }
+.forward-msg.ok { color: var(--gold-soft); }
+.forward-msg.err { color: #e07070; }
+
+.tiny { font-size: 12px; color: var(--smoke); margin-top: 18px; }
+
+@media (max-width: 600px) {
+  .rsvp-card { padding: 40px 24px 32px; }
+  .event-meta { padding: 18px 18px; }
+  .event-meta dl { grid-template-columns: 1fr; row-gap: 4px; }
+  .event-meta dd { margin-bottom: 8px; }
+  .btn { width: 100%; justify-content: center; }
+  .forward-row { flex-direction: column; }
+  .forward-row .btn { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/" class="nav-logo"><img src="Blackboard Logo White PNG.png" alt="BLACKBOARD"></a>
+  <a href="/" class="nav-back">← Back to site</a>
+</nav>
+
+<main class="rsvp-wrap">
+  <div class="rsvp-card">
+
+    <!-- Yes state -->
+    <div class="rsvp-status" id="state-yes">
+      <p class="rsvp-eyebrow">You're in</p>
+      <h1>See you there.</h1>
+      <p class="lede">Thanks for RSVPing. We've added you to the list and you'll get a calendar invite shortly. <span class="muted">If anything changes you can update us here.</span></p>
+
+      <div class="event-meta">
+        <dl>
+          <dt>Event</dt><dd id="evt-title-y">Blackboard Launch Party</dd>
+          <dt>Date</dt><dd id="evt-date-y">Friday 19 June</dd>
+          <dt>Time</dt><dd id="evt-time-y">7:30pm 'til late</dd>
+          <dt>Where</dt><dd id="evt-loc-y">WeBrew, Kingston</dd>
+        </dl>
+      </div>
+
+      <div class="btn-row">
+        <a class="btn btn-primary" id="cal-link" href="#">+ Add to calendar</a>
+        <a class="btn" href="/">View the site</a>
+      </div>
+
+      <div class="forward-block">
+        <h3>Bringing a +1?</h3>
+        <p>Drop their email and we'll forward them an invite straight from you.</p>
+        <div class="forward-row">
+          <input id="fwd-email" type="email" placeholder="friend@example.com" autocomplete="off">
+          <button class="btn" id="fwd-btn" type="button">Forward invite</button>
+        </div>
+        <p class="forward-msg" id="fwd-msg"></p>
+      </div>
+    </div>
+
+    <!-- No state -->
+    <div class="rsvp-status" id="state-no">
+      <p class="rsvp-eyebrow">Noted</p>
+      <h1>No worries.</h1>
+      <p class="lede">Thanks for letting us know. We'll catch you next time. <span class="muted">The app is live in the meantime — grab it and you'll never miss a good night out.</span></p>
+
+      <div class="btn-row">
+        <a class="btn btn-primary" href="https://apps.apple.com/gb/app/blackboard-deals/id6764248078" rel="noopener">Download on iOS</a>
+        <a class="btn" href="https://play.google.com/store/apps/details?id=com.blackboarddeals.app&hl=en_GB" rel="noopener">Get it on Android</a>
+      </div>
+    </div>
+
+    <!-- Default / no params -->
+    <div class="rsvp-status on" id="state-default">
+      <p class="rsvp-eyebrow">RSVP</p>
+      <h1>This page is for invitees.</h1>
+      <p class="lede">If you got an invite from Blackboard, use the Yes / Can't-make-it button inside that email to RSVP. Lost the email? Reply to whoever sent it and they'll resend.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="/">Back to blackboarddeals.com</a>
+      </div>
+    </div>
+
+    <!-- Error state -->
+    <div class="rsvp-status" id="state-error">
+      <p class="rsvp-eyebrow muted">Hmm</p>
+      <h1>Something went wrong.</h1>
+      <p class="lede">We couldn't record your RSVP just now. Send us a quick reply to your invite email and we'll add you manually.</p>
+    </div>
+
+    <p class="tiny" id="recorded-line"></p>
+
+  </div>
+</main>
+
+<script>
+(function () {
+  // ---- Parse query params ----
+  const params = new URLSearchParams(window.location.search);
+  const email   = (params.get('email') || '').trim();
+  const rsvp    = (params.get('rsvp')  || '').trim().toLowerCase();
+  const campaign = (params.get('campaign') || 'Launch').trim();
+  const referredBy = (params.get('referred_by') || params.get('ref') || '').trim();
+
+  const stateDefault = document.getElementById('state-default');
+  const stateYes     = document.getElementById('state-yes');
+  const stateNo      = document.getElementById('state-no');
+  const stateError   = document.getElementById('state-error');
+  const recordedLine = document.getElementById('recorded-line');
+
+  function show(el) {
+    [stateDefault, stateYes, stateNo, stateError].forEach(n => n.classList.remove('on'));
+    el.classList.add('on');
+  }
+
+  if (!email || (rsvp !== 'yes' && rsvp !== 'no')) {
+    show(stateDefault);
+    return;
+  }
+
+  // Optimistic UI: show the response state immediately, then post
+  show(rsvp === 'yes' ? stateYes : stateNo);
+  recordedLine.textContent = `Recording your response as ${email}…`;
+
+  // POST to /api/waitlist (type=rsvp)
+  fetch('/api/waitlist', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      type: 'rsvp',
+      email,
+      response: rsvp,
+      campaign,
+      referredBy,
+    }),
+  })
+    .then(r => {
+      if (!r.ok) throw new Error('Failed');
+      recordedLine.textContent = `Recorded as ${email} — ${rsvp === 'yes' ? 'attending' : 'declined'}.`;
+    })
+    .catch(() => {
+      show(stateError);
+      recordedLine.textContent = '';
+    });
+
+  // Calendar link for "yes"
+  if (rsvp === 'yes') {
+    // 19 June 2026 19:30 UK -> 18:30 UTC; ends 23:30 local -> 22:30 UTC
+    const start = '20260619T183000Z';
+    const end   = '20260619T223000Z';
+    const title = encodeURIComponent('Blackboard launch party');
+    const details = encodeURIComponent('Blackboard is live — come raise a glass with us.\nRSVP: ' + email);
+    const loc = encodeURIComponent('WeBrew, 5 Ram Passage, Kingston upon Thames, KT1 1HH');
+    const calHref = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&details=${details}&location=${loc}`;
+    document.getElementById('cal-link').href = calHref;
+  }
+
+  // ---- Forward to a +1 ----
+  const fwdBtn = document.getElementById('fwd-btn');
+  const fwdInput = document.getElementById('fwd-email');
+  const fwdMsg = document.getElementById('fwd-msg');
+  if (fwdBtn) {
+    fwdBtn.addEventListener('click', async () => {
+      const friend = (fwdInput.value || '').trim();
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(friend)) {
+        fwdMsg.textContent = 'That doesn\'t look like an email address.';
+        fwdMsg.className = 'forward-msg err';
+        return;
+      }
+      fwdBtn.disabled = true;
+      fwdBtn.textContent = 'Forwarding…';
+      fwdMsg.textContent = '';
+      fwdMsg.className = 'forward-msg';
+      try {
+        const res = await fetch('/api/waitlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'rsvp',
+            email: friend,
+            response: 'forwarded',
+            campaign,
+            referredBy: email,
+          }),
+        });
+        if (!res.ok) throw new Error('Failed');
+        fwdMsg.textContent = `Logged. Send ${friend} the invite link with their email in the URL.`;
+        fwdMsg.className = 'forward-msg ok';
+        fwdInput.value = '';
+      } catch (e) {
+        fwdMsg.textContent = 'Couldn\'t log that one — try again in a moment.';
+        fwdMsg.className = 'forward-msg err';
+      } finally {
+        fwdBtn.disabled = false;
+        fwdBtn.textContent = 'Forward invite';
+      }
+    });
+  }
+})();
+</script>
+
+</body>
+</html>

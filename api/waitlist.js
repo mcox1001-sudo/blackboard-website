@@ -1,15 +1,31 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { type, firstName, lastName, email, city, interest, venueName, companyName, address, venueType, role, phone } = req.body;
+  const {
+    type, firstName, lastName, email, city, interest,
+    venueName, companyName, address, venueType, role, phone,
+    // RSVP-only fields
+    response, campaign, referredBy,
+  } = req.body;
 
   if (!email) return res.status(400).json({ error: 'Email is required' });
 
   const isVenue = type === 'v';
-  const labelName = isVenue ? 'Blackboard Venue Waitlist' : 'Blackboard User Waitlist';
+  const isRsvp  = type === 'rsvp';
+
+  let labelName;
+  if (isVenue) {
+    labelName = 'Blackboard Venue Waitlist';
+  } else if (isRsvp) {
+    const yes = String(response).toLowerCase() === 'yes';
+    const camp = (campaign || 'Launch').replace(/[^a-zA-Z0-9 -]/g, '').slice(0, 40);
+    labelName = `Blackboard ${camp} RSVP — ${yes ? 'Yes' : 'No'}`;
+  } else {
+    labelName = 'Blackboard User Waitlist';
+  }
 
   const payload = {
-    first_name: isVenue ? (firstName || venueName) : firstName,
+    first_name: isVenue ? (firstName || venueName) : (firstName || ''),
     last_name: isVenue ? '' : (lastName || ''),
     email,
     city,
@@ -22,6 +38,14 @@ export default async function handler(req, res) {
   if (isVenue && address) payload.street_address = address;
   if (interest) payload.present_raw_address = interest;
   if (phone) payload.direct_phone = phone;
+
+  // For RSVPs, stash the response + who referred them into Apollo's notes field
+  if (isRsvp) {
+    const parts = [`Response: ${response}`];
+    if (campaign) parts.push(`Campaign: ${campaign}`);
+    if (referredBy) parts.push(`Referred by: ${referredBy}`);
+    payload.present_raw_address = parts.join(' | ');
+  }
 
   try {
     const apolloRes = await fetch('https://api.apollo.io/v1/contacts', {
