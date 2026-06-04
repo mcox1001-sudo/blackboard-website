@@ -1,0 +1,161 @@
+<!--
+  /launch-invite-apollo.html
+
+  Body-fragment version of the launch invite, designed to paste into
+  Apollo's sequence email Source view. No <html>/<head>/<body>, no
+  <style> block, no <meta> tags, no <script>, no classes — everything
+  inline so the Apollo sanitiser can't strip what it doesn't understand.
+
+  Differences vs /launch-invite-email.html (the standalone version):
+  - Single root <table>, no outer dark frame (Apollo wraps it anyway).
+  - No media-query block. Mobile relies on width:100% + max-width on
+    each <img>; the 3-up gallery shows narrower on phones but doesn't
+    stack. (Apollo strips <style>, so @media rules don't survive.)
+  - Preheader span removed — Apollo has its own preview-text field.
+  - RSVP links use {{email}} as the Apollo contact-email merge tag.
+    Swap to whatever your sequence's email variable is named if
+    different (Apollo defaults vary by account).
+-->
+<table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" bgcolor="#0d0d10" style="background:#0d0d10; max-width:600px; width:100%; margin:0 auto; font-family:Arial,Helvetica,sans-serif; color:#f7f7f5;">
+
+  <tr><td style="padding:14px 24px; border-bottom:1px solid #2c2c34;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+      <tr>
+        <td align="left" style="font-family:Arial,Helvetica,sans-serif; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#d4d4dc;">BLACKBOARDDEALS.COM</td>
+        <td align="right" style="font-family:Arial,Helvetica,sans-serif; font-size:10px; letter-spacing:0.18em; text-transform:uppercase; color:#DAA520;">You're invited</td>
+      </tr>
+    </table>
+  </td></tr>
+
+  <tr><td align="center" style="padding:0; font-size:0; line-height:0;">
+    <a href="https://blackboarddeals.com/launch-invite" style="text-decoration:none;">
+      <img src="https://blackboarddeals.com/email-assets/launch-invite/e-hero-b88b3a67.jpg" width="600" alt="Glasses up - we made it" style="display:block; width:100%; max-width:600px; height:auto; border:0; outline:none;" />
+    </a>
+  </td></tr>
+
+  <tr><td align="center" style="padding:36px 32px 0;">
+    <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:10px; letter-spacing:0.3em; text-transform:uppercase; color:#DAA520; font-weight:bold;">NEARLY A YEAR ON &middot; WE'RE LIVE</p>
+  </td></tr>
+
+  <tr><td align="center" style="padding:14px 24px 0;">
+    <h1 style="margin:0; font-family:Georgia,'Times New Roman',serif; font-style:italic; font-weight:normal; font-size:40px; line-height:44px; color:#ffffff;">Glasses up,<br />we made it.</h1>
+  </td></tr>
+
+  <tr><td align="center" style="padding:16px 32px 28px;">
+    <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:16px; line-height:1.55; color:#e8e8ec;">A proper night out for the people who got us here.</p>
+  </td></tr>
+
+  <tr><td style="padding:0 24px;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#DAA520" style="background:#DAA520;">
+      <tr><td align="center" style="padding:14px 12px; font-family:Arial,Helvetica,sans-serif; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#0d0d10; font-weight:bold;">
+        FRI 19 JUNE &middot; 7:30PM 'TIL LATE &middot; WEBREW KINGSTON
+      </td></tr>
+    </table>
+  </td></tr>
+
+  <tr><td style="padding:40px 32px 0;">
+    <p style="margin:0 0 8px; font-family:Arial,Helvetica,sans-serif; font-size:11px; letter-spacing:0.3em; text-transform:uppercase; color:#e8c878; font-weight:bold;">THE INVITE</p>
+    <h2 style="margin:0 0 18px; font-family:Georgia,'Times New Roman',serif; font-style:italic; font-weight:normal; font-size:28px; line-height:32px; color:#ffffff;">Come celebrate launch night.</h2>
+    <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:15px; line-height:1.65; color:#e8e8ec;">It took nearly a year to go from a chalk sketch to a live app - and we didn't do it alone. This night is a thank-you to the venue owners, investors, users, friends, family and supporters who believed in Blackboard.</p>
+  </td></tr>
+
+  <tr><td align="center" style="padding:32px 0 0; font-size:0; line-height:0;">
+    <img src="https://blackboarddeals.com/email-assets/launch-invite/e-b2-ff9d51e3.jpg" width="600" alt="WeBrew, riverside Kingston" style="display:block; width:100%; max-width:600px; height:auto; border:0;" />
+  </td></tr>
+
+  <tr><td style="padding:28px 32px 0;">
+    <p style="margin:0 0 8px; font-family:Arial,Helvetica,sans-serif; font-size:11px; letter-spacing:0.3em; text-transform:uppercase; color:#e8c878; font-weight:bold;">THE SPOT</p>
+    <h2 style="margin:0 0 14px; font-family:Georgia,'Times New Roman',serif; font-style:italic; font-weight:normal; font-size:24px; line-height:28px; color:#ffffff;">WeBrew, Riverside.</h2>
+    <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:15px; line-height:1.65; color:#e8e8ec;">Our local on the Thames, run by Windsor &amp; Eton Brewery. Great beer, homemade pizza, room to spill out by the water.</p>
+  </td></tr>
+
+  <tr><td style="padding:36px 24px 0;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+      <tr>
+        <td align="center" valign="top" width="33%" style="padding:0 4px;">
+          <img src="https://blackboarddeals.com/email-assets/launch-invite/e-t1-f22bbd83.jpg" width="180" alt="Celebrate" style="display:block; width:100%; max-width:180px; height:auto; border:0;" />
+        </td>
+        <td align="center" valign="top" width="33%" style="padding:0 4px;">
+          <img src="https://blackboarddeals.com/email-assets/launch-invite/e-t2-dbd9fa77.jpg" width="180" alt="Cold ones" style="display:block; width:100%; max-width:180px; height:auto; border:0;" />
+        </td>
+        <td align="center" valign="top" width="33%" style="padding:0 4px;">
+          <img src="https://blackboarddeals.com/email-assets/launch-invite/e-t3-10f84d2d.jpg" width="180" alt="Blackboard" style="display:block; width:100%; max-width:180px; height:auto; border:0;" />
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+
+  <tr><td align="center" style="padding:22px 32px 0;">
+    <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:11px; letter-spacing:0.3em; text-transform:uppercase; color:#e8c878; font-weight:bold;">CELEBRATE &middot; COLD ONES &middot; BLACKBOARD</p>
+  </td></tr>
+
+  <tr><td align="center" style="padding:16px 32px 0;">
+    <p style="margin:0; font-family:Georgia,'Times New Roman',serif; font-style:italic; font-weight:normal; font-size:18px; line-height:1.4; color:#ffffff;">"This year's for everyone who backed us."</p>
+  </td></tr>
+
+  <tr><td style="padding:44px 24px 0;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#14141a" style="background:#14141a; border:1px solid #2c2c34; border-left:3px solid #DAA520;">
+      <tr><td style="padding:22px 24px 22px;">
+        <p style="margin:0 0 16px; font-family:Arial,Helvetica,sans-serif; font-size:10px; letter-spacing:0.3em; text-transform:uppercase; color:#e8c878; font-weight:bold;">THE DETAILS</p>
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+          <tr>
+            <td valign="top" width="32%" style="padding:8px 0; font-family:Arial,Helvetica,sans-serif; font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:#e8c878;">Where</td>
+            <td valign="top" style="padding:8px 0; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:1.55; color:#f7f7f5;">WeBrew, 5 Ram Passage, Kingston KT1 1HH</td>
+          </tr>
+          <tr>
+            <td valign="top" style="padding:8px 0; border-top:1px solid #2c2c34; font-family:Arial,Helvetica,sans-serif; font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:#e8c878;">When</td>
+            <td valign="top" style="padding:8px 0; border-top:1px solid #2c2c34; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:1.55; color:#f7f7f5;">Fri 19 June &middot; 7:30pm 'til late</td>
+          </tr>
+          <tr>
+            <td valign="top" style="padding:8px 0; border-top:1px solid #2c2c34; font-family:Arial,Helvetica,sans-serif; font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:#e8c878;">Vibe</td>
+            <td valign="top" style="padding:8px 0; border-top:1px solid #2c2c34; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:1.55; color:#f7f7f5;">Live music &middot; cold ones &middot; friends</td>
+          </tr>
+          <tr>
+            <td valign="top" style="padding:8px 0; border-top:1px solid #2c2c34; font-family:Arial,Helvetica,sans-serif; font-size:10px; letter-spacing:0.22em; text-transform:uppercase; color:#e8c878;">Plus</td>
+            <td valign="top" style="padding:8px 0; border-top:1px solid #2c2c34; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:1.55; color:#f7f7f5;">A +1 is welcome</td>
+          </tr>
+        </table>
+      </td></tr>
+    </table>
+  </td></tr>
+
+  <tr><td align="center" style="padding:44px 32px 0;">
+    <p style="margin:0 0 6px; font-family:Arial,Helvetica,sans-serif; font-size:11px; letter-spacing:0.3em; text-transform:uppercase; color:#e8c878; font-weight:bold;">SO - ARE YOU IN?</p>
+    <h2 style="margin:0 0 24px; font-family:Georgia,'Times New Roman',serif; font-style:italic; font-weight:normal; font-size:26px; line-height:30px; color:#ffffff;">Let us know.</h2>
+  </td></tr>
+
+  <tr><td align="center" style="padding:0 24px;">
+    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+      <tr><td bgcolor="#DAA520" style="background:#DAA520;">
+        <a href="https://blackboarddeals.com/rsvp?email={{email}}&amp;rsvp=yes&amp;campaign=Launch" target="_blank" style="display:inline-block; padding:16px 34px; font-family:Arial,Helvetica,sans-serif; font-size:13px; letter-spacing:0.22em; text-transform:uppercase; color:#0d0d10; text-decoration:none; font-weight:bold;">Yes - I can't wait to celebrate</a>
+      </td></tr>
+    </table>
+  </td></tr>
+
+  <tr><td align="center" style="padding:14px 24px 0;">
+    <a href="https://blackboarddeals.com/rsvp?email={{email}}&amp;rsvp=no&amp;campaign=Launch" target="_blank" style="font-family:Arial,Helvetica,sans-serif; font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:#d4d4dc; text-decoration:underline;">Can't make it - sorry to miss it</a>
+  </td></tr>
+
+  <tr><td style="padding:48px 32px 8px; border-top:1px solid #2c2c34;">
+    <p style="margin:0 0 8px; font-family:Arial,Helvetica,sans-serif; font-size:11px; letter-spacing:0.3em; text-transform:uppercase; color:#e8c878; font-weight:bold;">BRING A +1</p>
+    <h3 style="margin:0 0 12px; font-family:Georgia,'Times New Roman',serif; font-style:italic; font-weight:normal; font-size:20px; line-height:1.3; color:#ffffff;">Know someone who'd love this?</h3>
+    <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:1.65; color:#e8e8ec;">Forward this email, or once you RSVP yes we'll send you a personal share link so they can RSVP under your name.</p>
+  </td></tr>
+
+  <tr><td bgcolor="#060608" align="center" style="background:#060608; padding:40px 24px 32px;">
+    <img src="https://blackboarddeals.com/email-assets/launch-invite/blackboard-44a6e411.png" width="150" alt="BLACKBOARD" style="display:block; margin:0 auto 14px; width:150px; height:auto; border:0;" />
+    <p style="margin:0 0 14px; font-family:Georgia,'Times New Roman',serif; font-style:italic; font-weight:normal; font-size:14px; color:#d4d4dc;">Nearly a year on. Liquid to lips.</p>
+    <p style="margin:0 0 16px; font-family:Arial,Helvetica,sans-serif; font-size:11px; letter-spacing:0.08em; color:#d4d4dc;">
+      <a href="https://instagram.com/blackboard.uk" style="color:#e8c878; text-decoration:none;">Instagram</a>
+      &nbsp;&middot;&nbsp;
+      <a href="https://tiktok.com/@blackboard.uk" style="color:#e8c878; text-decoration:none;">TikTok</a>
+      &nbsp;&middot;&nbsp;
+      <a href="https://linkedin.com/company/blackboard" style="color:#e8c878; text-decoration:none;">LinkedIn</a>
+    </p>
+    <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:11px; line-height:1.55; color:#7a7a82;">
+      You helped build Blackboard - come celebrate it.<br />
+      WeBrew &middot; 5 Ram Passage, Kingston upon Thames, KT1 1HH
+    </p>
+  </td></tr>
+
+</table>
