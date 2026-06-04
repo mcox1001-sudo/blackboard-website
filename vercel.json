@@ -3,7 +3,7 @@
   "trailingSlash": false,
   "headers": [
     {
-      "source": "/(launch-invite|rsvp|email-builder|signature)",
+      "source": "/(launch-invite|launch-invite-email|rsvp|email-builder|signature)",
       "headers": [
         { "key": "X-Robots-Tag", "value": "noindex, nofollow" }
       ]

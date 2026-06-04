@@ -119,32 +119,67 @@ h1 {
 .btn-primary { background: var(--gold-soft); color: var(--void); border-color: var(--gold-soft); }
 .btn-primary:hover { background: var(--white); border-color: var(--white); }
 
-/* Forward to a +1 */
-.forward-block {
+/* Bring +1s — multi-add panel */
+.plus-block {
   margin-top: 36px; padding-top: 28px;
   border-top: 1px solid var(--line-soft);
 }
-.forward-block h3 {
+.plus-block h3 {
   font-family: 'Oswald', sans-serif;
   font-size: 14px; letter-spacing: .22em; text-transform: uppercase;
   color: var(--gold-soft); font-weight: 500;
   margin-bottom: 8px;
 }
-.forward-block p { font-size: 14px; color: var(--smoke); margin-bottom: 16px; line-height: 1.6; }
-.forward-row { display: flex; gap: 10px; flex-wrap: wrap; }
-.forward-row input {
-  flex: 1; min-width: 200px;
+.plus-block p.plus-lede {
+  font-size: 14px; color: var(--smoke); margin-bottom: 18px; line-height: 1.6;
+}
+.plus-form {
+  display: grid; gap: 10px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) auto;
+  align-items: stretch;
+}
+.plus-form input {
   background: rgba(6,6,8,0.55);
   border: 1px solid var(--line-soft);
   color: var(--chalk);
   padding: 12px 14px;
   font-family: 'Roboto', sans-serif;
   font-size: 14px;
+  min-width: 0;
 }
-.forward-row input:focus { outline: none; border-color: var(--gold-soft); background: rgba(6,6,8,0.85); }
-.forward-msg { font-size: 12px; color: var(--smoke); margin-top: 10px; min-height: 16px; }
-.forward-msg.ok { color: var(--gold-soft); }
-.forward-msg.err { color: #e07070; }
+.plus-form input:focus { outline: none; border-color: var(--gold-soft); background: rgba(6,6,8,0.85); }
+.plus-form .btn { padding: 12px 22px; }
+
+.plus-msg { font-size: 12px; color: var(--smoke); margin-top: 12px; min-height: 16px; }
+.plus-msg.ok  { color: var(--gold-soft); }
+.plus-msg.err { color: #e07070; }
+
+.plus-list {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.plus-list li {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px;
+  background: rgba(6,6,8,0.55);
+  border: 1px solid var(--line-soft);
+  border-left: 2px solid var(--gold-soft);
+  font-size: 13px;
+}
+.plus-list .who { color: var(--chalk); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.plus-list .who strong { color: var(--white); }
+.plus-list .tag {
+  font-family: 'Oswald', sans-serif;
+  font-size: 10px; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--gold-soft);
+}
+.plus-list .tag.sent { color: var(--gold-soft); }
+.plus-list .tag.saved { color: var(--smoke); }
+.plus-list .tag.err { color: #e07070; }
+
+.plus-count { font-size: 12px; color: var(--smoke); margin-top: 14px; }
 
 .tiny { font-size: 12px; color: var(--smoke); margin-top: 18px; }
 
@@ -154,8 +189,8 @@ h1 {
   .event-meta dl { grid-template-columns: 1fr; row-gap: 4px; }
   .event-meta dd { margin-bottom: 8px; }
   .btn { width: 100%; justify-content: center; }
-  .forward-row { flex-direction: column; }
-  .forward-row .btn { width: 100%; }
+  .plus-form { grid-template-columns: 1fr; }
+  .plus-form .btn { width: 100%; }
 }
 </style>
 </head>
@@ -189,14 +224,17 @@ h1 {
         <a class="btn" href="/">View the site</a>
       </div>
 
-      <div class="forward-block">
-        <h3>Bringing a +1?</h3>
-        <p>Drop their email and we'll forward them an invite straight from you.</p>
-        <div class="forward-row">
-          <input id="fwd-email" type="email" placeholder="friend@example.com" autocomplete="off">
-          <button class="btn" id="fwd-btn" type="button">Forward invite</button>
-        </div>
-        <p class="forward-msg" id="fwd-msg"></p>
+      <div class="plus-block">
+        <h3>Bring people</h3>
+        <p class="plus-lede">Add their name &amp; email and we'll send them their own invite — same one-tap RSVP as yours. Add as many as you like.</p>
+        <form class="plus-form" id="plus-form" autocomplete="off" novalidate>
+          <input id="plus-name"  type="text"  placeholder="First name" maxlength="40" aria-label="Friend first name">
+          <input id="plus-email" type="email" placeholder="friend@example.com" maxlength="120" aria-label="Friend email" required>
+          <button class="btn btn-primary" id="plus-btn" type="submit">Send invite</button>
+        </form>
+        <p class="plus-msg" id="plus-msg"></p>
+        <ul class="plus-list" id="plus-list" aria-live="polite"></ul>
+        <p class="plus-count" id="plus-count" hidden></p>
       </div>
     </div>
 
@@ -296,44 +334,105 @@ h1 {
     document.getElementById('cal-link').href = calHref;
   }
 
-  // ---- Forward to a +1 ----
-  const fwdBtn = document.getElementById('fwd-btn');
-  const fwdInput = document.getElementById('fwd-email');
-  const fwdMsg = document.getElementById('fwd-msg');
-  if (fwdBtn) {
-    fwdBtn.addEventListener('click', async () => {
-      const friend = (fwdInput.value || '').trim();
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(friend)) {
-        fwdMsg.textContent = 'That doesn\'t look like an email address.';
-        fwdMsg.className = 'forward-msg err';
-        return;
+  // ---- Bring +1s: multi-add ----
+  const plusForm  = document.getElementById('plus-form');
+  const plusName  = document.getElementById('plus-name');
+  const plusEmail = document.getElementById('plus-email');
+  const plusBtn   = document.getElementById('plus-btn');
+  const plusMsg   = document.getElementById('plus-msg');
+  const plusList  = document.getElementById('plus-list');
+  const plusCount = document.getElementById('plus-count');
+  const added = new Set();
+  let sentCount = 0;
+
+  function refreshCount() {
+    if (!added.size) { plusCount.hidden = true; return; }
+    plusCount.hidden = false;
+    const s = added.size === 1 ? '' : 's';
+    plusCount.textContent = `${added.size} friend${s} added · ${sentCount} invite${sentCount === 1 ? '' : 's'} sent.`;
+  }
+
+  function setMsg(text, kind) {
+    plusMsg.textContent = text || '';
+    plusMsg.className = 'plus-msg' + (kind ? ' ' + kind : '');
+  }
+
+  function appendChip({ name, friendEmail, invited }) {
+    const li = document.createElement('li');
+    const who = document.createElement('span');
+    who.className = 'who';
+    if (name) {
+      const s = document.createElement('strong');
+      s.textContent = name;
+      who.appendChild(s);
+      who.appendChild(document.createTextNode(' · ' + friendEmail));
+    } else {
+      who.textContent = friendEmail;
+    }
+    const tag = document.createElement('span');
+    if (invited === true)  { tag.className = 'tag sent';  tag.textContent = 'Invite sent'; }
+    else if (invited === false) { tag.className = 'tag saved'; tag.textContent = 'Added · we\'ll nudge'; }
+    else                   { tag.className = 'tag saved'; tag.textContent = 'Added'; }
+    li.appendChild(who);
+    li.appendChild(tag);
+    plusList.appendChild(li);
+  }
+
+  if (plusForm) {
+    plusForm.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const friendEmail = (plusEmail.value || '').trim();
+      const name = (plusName.value || '').trim();
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(friendEmail)) {
+        setMsg('That doesn\'t look like an email address.', 'err'); return;
       }
-      fwdBtn.disabled = true;
-      fwdBtn.textContent = 'Forwarding…';
-      fwdMsg.textContent = '';
-      fwdMsg.className = 'forward-msg';
+      if (friendEmail.toLowerCase() === (email || '').toLowerCase()) {
+        setMsg('That\'s your address — pop in a friend\'s.', 'err'); return;
+      }
+      if (added.has(friendEmail.toLowerCase())) {
+        setMsg('Already added that one.', 'err'); return;
+      }
+      if (added.size >= 20) {
+        setMsg('That\'s 20 — drop us a line if you need more.', 'err'); return;
+      }
+
+      plusBtn.disabled = true;
+      plusBtn.textContent = 'Sending…';
+      setMsg('');
+
       try {
         const res = await fetch('/api/waitlist', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             type: 'rsvp',
-            email: friend,
+            firstName: name,
+            email: friendEmail,
             response: 'forwarded',
             campaign,
             referredBy: email,
+            inviterFirstName: '',
           }),
         });
-        if (!res.ok) throw new Error('Failed');
-        fwdMsg.textContent = `Logged. Send ${friend} the invite link with their email in the URL.`;
-        fwdMsg.className = 'forward-msg ok';
-        fwdInput.value = '';
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || 'Failed');
+
+        added.add(friendEmail.toLowerCase());
+        if (data.invited === true) sentCount++;
+        appendChip({ name, friendEmail, invited: data.invited });
+        refreshCount();
+        plusName.value = '';
+        plusEmail.value = '';
+        plusName.focus();
+        if (data.invited === true)      setMsg('Sent — add another?', 'ok');
+        else if (data.invited === false) setMsg('Added to the guest list — we\'ll nudge them shortly.', 'ok');
+        else                             setMsg('Added.', 'ok');
       } catch (e) {
-        fwdMsg.textContent = 'Couldn\'t log that one — try again in a moment.';
-        fwdMsg.className = 'forward-msg err';
+        setMsg('Couldn\'t add that one — try again in a moment.', 'err');
       } finally {
-        fwdBtn.disabled = false;
-        fwdBtn.textContent = 'Forward invite';
+        plusBtn.disabled = false;
+        plusBtn.textContent = 'Send invite';
       }
     });
   }
