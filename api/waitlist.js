@@ -43,12 +43,17 @@ export default async function handler(req, res) {
   const isForwarded = isRsvp && rsvpResp === 'forwarded';
 
   const camp = (campaign || 'Launch').replace(/[^a-zA-Z0-9 -]/g, '').slice(0, 40);
-  let labelName;
-  if (isVenue) labelName = 'Blackboard Venue Waitlist';
+  // Labels are Apollo's "Lists". For event RSVPs we always tag with the base
+  // list "BB Launch Party" so filtering that one list shows everyone, plus a
+  // response-specific list for breakdown. Venue/user signups keep their
+  // existing single-label routing.
+  let labelNames;
+  if (isVenue) labelNames = ['Blackboard Venue Waitlist'];
   else if (isRsvp) {
     const tag = isForwarded ? 'Forwarded' : (rsvpResp === 'yes' ? 'Yes' : 'No');
-    labelName = `Blackboard ${camp} RSVP — ${tag}`;
-  } else labelName = 'Blackboard User Waitlist';
+    labelNames = ['BB Launch Party', `BB Launch Party — ${tag}`];
+  } else labelNames = ['Blackboard User Waitlist'];
+  const labelName = labelNames[0];
 
   // Always log first — minimal recoverable record. Filter Vercel runtime
   // logs for "[RSVP]" or "[WAITLIST]" to recover all signups.
@@ -66,7 +71,7 @@ export default async function handler(req, res) {
       last_name: isVenue ? '' : (lastName || ''),
       email,
       city,
-      label_names: [labelName],
+      label_names: labelNames,
     };
     if (isVenue && (companyName || venueName)) payload.organization_name = companyName || venueName;
     if (isVenue && venueType) payload.title = venueType;
