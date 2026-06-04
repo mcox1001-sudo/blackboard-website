@@ -301,9 +301,10 @@ h1 {
   show(rsvp === 'yes' ? stateYes : stateNo);
   recordedLine.textContent = `Recording your response as ${email}…`;
 
-  // POST to /api/waitlist (type=rsvp). The endpoint will return success
-  // whenever the RSVP was captured via Apollo OR the email fallback, so we
-  // only flip to the error state if both paths fail.
+  // POST to /api/waitlist. The endpoint now always returns success once
+  // the email is valid (the RSVP is logged to Vercel runtime logs at minimum,
+  // plus Apollo/Sheet/Resend best-effort), so the only reason to flip to
+  // the error state is a real network failure or a 400 missing-email.
   fetch('/api/waitlist', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -319,7 +320,11 @@ h1 {
       const data = await r.json().catch(() => ({}));
       if (!r.ok || !data.success) throw new Error(data.error || 'Failed');
       recordedLine.textContent = `Recorded as ${email} — ${rsvp === 'yes' ? 'attending' : 'declined'}.`;
-      if (data.apolloError) console.warn('Apollo capture failed, email fallback used:', data.apolloError);
+      const c = data.captured || {};
+      if (data.apolloError) console.warn('Apollo:', data.apolloError);
+      if (data.sheetError)  console.warn('Sheet:',  data.sheetError);
+      if (data.notifyError) console.warn('Notify:', data.notifyError);
+      console.info('RSVP captured via:', Object.keys(c).filter(k => c[k]).join(', '));
     })
     .catch(() => {
       show(stateError);
@@ -420,7 +425,9 @@ h1 {
           }),
         });
         const data = await res.json().catch(() => ({}));
-        if (!res.ok) throw new Error(data.error || 'Failed');
+        if (!res.ok || !data.success) throw new Error(data.error || 'Failed');
+        if (data.apolloError) console.warn('Apollo:', data.apolloError);
+        if (data.sheetError)  console.warn('Sheet:',  data.sheetError);
 
         added.add(friendEmail.toLowerCase());
         if (data.invited === true) sentCount++;

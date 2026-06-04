@@ -1,23 +1,39 @@
-// /api/waitlist.js — handles user/venue waitlist + event RSVPs + +1 invite-forward.
+// /api/waitlist.js — bulletproof RSVP capture.
 //
-// Accepted shapes:
-//   type='u'              user waitlist signup
-//   type='v'              venue / partner signup (extra fields)
-//   type='rsvp'           event RSVP (response: 'yes' | 'no' | 'forwarded')
+// Goal: a click on Yes/No or a +1 add must NEVER fail user-side. We try
+// every available storage path (Apollo, Google Apps Script webhook, Resend
+// notification) and log everything to stdout regardless — so even if every
+// integration is misconfigured, the RSVP is still in Vercel's runtime logs
+// and recoverable.
 //
-// When type='rsvp' AND response='forwarded' (a +1 added by the original
-// invitee), we ALSO send a transactional invite to the friend via Resend
-// — they get a personalised email with their own one-tap RSVP link.
+// Env vars (all optional — first one set wins, the rest run as belt-and-braces):
+//   APOLLO_API_KEY                Apollo /v1/contacts (with label_names tag)
+//   GOOGLE_SHEET_WEBHOOK_URL      Apps Script doPost(e) URL — posts JSON, appends a row
+//   RESEND_API_KEY                Email notification to support@blackboarddeals.com
+//
+// Body shape:
+//   type='u' | 'v' | 'rsvp'
+//   email                         required
+//   response='yes'|'no'|'forwarded'  RSVP type
+//   firstName, lastName, city, campaign, referredBy, inviterFirstName … extras
+//
+// Response:
+//   { success: true, captured: { apollo, sheet, notify, log },
+//     apolloError?, sheetError?, notifyError? }
+//
+// success is true whenever email is valid; the user always sees "See you
+// there". captured.log === true always — the RSVP is in Vercel logs and
+// can be queried/exported from the dashboard.
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
+  const body = req.body || {};
   const {
     type, firstName, lastName, email, city, interest,
     venueName, companyName, address, venueType, role, phone,
-    // RSVP-only fields
     response, campaign, referredBy, inviterFirstName,
-  } = req.body;
+  } = body;
 
   if (!email) return res.status(400).json({ error: 'Email is required' });
 
@@ -26,84 +42,115 @@ export default async function handler(req, res) {
   const rsvpResp = isRsvp ? String(response || '').toLowerCase() : '';
   const isForwarded = isRsvp && rsvpResp === 'forwarded';
 
+  const camp = (campaign || 'Launch').replace(/[^a-zA-Z0-9 -]/g, '').slice(0, 40);
   let labelName;
-  if (isVenue) {
-    labelName = 'Blackboard Venue Waitlist';
-  } else if (isRsvp) {
-    const camp = (campaign || 'Launch').replace(/[^a-zA-Z0-9 -]/g, '').slice(0, 40);
+  if (isVenue) labelName = 'Blackboard Venue Waitlist';
+  else if (isRsvp) {
     const tag = isForwarded ? 'Forwarded' : (rsvpResp === 'yes' ? 'Yes' : 'No');
     labelName = `Blackboard ${camp} RSVP — ${tag}`;
-  } else {
-    labelName = 'Blackboard User Waitlist';
-  }
+  } else labelName = 'Blackboard User Waitlist';
 
-  const payload = {
-    first_name: isVenue ? (firstName || venueName) : (firstName || ''),
-    last_name: isVenue ? '' : (lastName || ''),
-    email,
-    city,
-    label_names: [labelName],
-  };
+  // Always log first — minimal recoverable record. Filter Vercel runtime
+  // logs for "[RSVP]" or "[WAITLIST]" to recover all signups.
+  const tag = isRsvp ? `RSVP:${rsvpResp}` : (isVenue ? 'VENUE' : 'USER');
+  console.log(`[WAITLIST] tag=${tag}`, JSON.stringify({
+    email, firstName, lastName, response, campaign: camp, referredBy,
+    venueName, companyName, label: labelName, ts: new Date().toISOString(),
+  }));
 
-  if (isVenue && (companyName || venueName)) payload.organization_name = companyName || venueName;
-  if (isVenue && venueType) payload.title = venueType;
-  if (isVenue && role) payload.seniority = role;
-  if (isVenue && address) payload.street_address = address;
-  if (interest) payload.present_raw_address = interest;
-  if (phone) payload.direct_phone = phone;
-
-  if (isRsvp) {
-    const parts = [`Response: ${response}`];
-    if (campaign) parts.push(`Campaign: ${campaign}`);
-    if (referredBy) parts.push(`Referred by: ${referredBy}`);
-    payload.present_raw_address = parts.join(' | ');
-  }
-
-  let apolloOk = false;
-  let apolloError = null;
-  let apolloData = null;
-  try {
-    const apolloRes = await fetch('https://api.apollo.io/v1/contacts', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache',
-        'x-api-key': process.env.APOLLO_API_KEY,
-      },
-      body: JSON.stringify(payload),
-    });
-    apolloData = await apolloRes.json().catch(() => ({}));
-    apolloOk = apolloRes.ok;
-    if (!apolloOk) {
-      apolloError = (apolloData && (apolloData.error || apolloData.message)) || `HTTP ${apolloRes.status}`;
-      console.error('Apollo error:', apolloRes.status, apolloData);
+  // ---- Path 1: Apollo /v1/contacts ----
+  let apolloOk = false, apolloError = null;
+  if (process.env.APOLLO_API_KEY) {
+    const payload = {
+      first_name: isVenue ? (firstName || venueName) : (firstName || ''),
+      last_name: isVenue ? '' : (lastName || ''),
+      email,
+      city,
+      label_names: [labelName],
+    };
+    if (isVenue && (companyName || venueName)) payload.organization_name = companyName || venueName;
+    if (isVenue && venueType) payload.title = venueType;
+    if (isVenue && role) payload.seniority = role;
+    if (isVenue && address) payload.street_address = address;
+    if (interest) payload.present_raw_address = interest;
+    if (phone) payload.direct_phone = phone;
+    if (isRsvp) {
+      const parts = [`Response: ${response}`];
+      if (campaign) parts.push(`Campaign: ${campaign}`);
+      if (referredBy) parts.push(`Referred by: ${referredBy}`);
+      payload.present_raw_address = parts.join(' | ');
     }
-  } catch (err) {
-    apolloError = String(err && err.message || err);
-    console.error('Apollo network error:', err);
+    try {
+      const r = await fetch('https://api.apollo.io/v1/contacts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache',
+          'x-api-key': process.env.APOLLO_API_KEY,
+        },
+        body: JSON.stringify(payload),
+      });
+      const data = await r.json().catch(() => ({}));
+      apolloOk = r.ok;
+      if (!apolloOk) {
+        apolloError = (data && (data.error || data.message)) || `HTTP ${r.status}`;
+        console.error('[WAITLIST] Apollo error:', r.status, JSON.stringify(data).slice(0, 500));
+      }
+    } catch (e) {
+      apolloError = String(e && e.message || e);
+      console.error('[WAITLIST] Apollo network error:', apolloError);
+    }
+  } else {
+    apolloError = 'APOLLO_API_KEY not set';
   }
 
-  // Fallback: if Apollo didn't capture this, send a notification email to
-  // support@ so the RSVP is recorded *somewhere*. Belt-and-braces — we'd
-  // rather double-record than lose an RSVP.
-  let fallbackOk = false;
-  if (!apolloOk && process.env.RESEND_API_KEY) {
+  // ---- Path 2: Google Apps Script webhook ----
+  // User creates an Apps Script bound to a Sheet; the script's doPost(e)
+  // appends e.postData.contents as a new row. URL goes in env var
+  // GOOGLE_SHEET_WEBHOOK_URL. See README/setup notes.
+  let sheetOk = false, sheetError = null;
+  if (process.env.GOOGLE_SHEET_WEBHOOK_URL) {
     try {
-      const subject = `RSVP ${isRsvp ? rsvpResp : (isVenue ? 'venue' : 'user')} — ${email}`;
+      const r = await fetch(process.env.GOOGLE_SHEET_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ts: new Date().toISOString(),
+          type: tag,
+          email, firstName: firstName || '', lastName: lastName || '',
+          response: response || '', campaign: camp, referredBy: referredBy || '',
+          label: labelName,
+        }),
+      });
+      sheetOk = r.ok;
+      if (!sheetOk) {
+        sheetError = `HTTP ${r.status}`;
+        console.error('[WAITLIST] Sheet error:', r.status);
+      }
+    } catch (e) {
+      sheetError = String(e && e.message || e);
+      console.error('[WAITLIST] Sheet network error:', sheetError);
+    }
+  }
+
+  // ---- Path 3: Resend notification to support@ ----
+  let notifyOk = false, notifyError = null;
+  if (process.env.RESEND_API_KEY) {
+    try {
+      const subject = `[${tag}] ${email}`;
       const rows = [
-        ['Type',      isRsvp ? 'RSVP' : (isVenue ? 'Venue waitlist' : 'User waitlist')],
-        ['Email',     email],
-        ['Response',  response || '—'],
-        ['Campaign',  campaign || '—'],
-        ['Referred',  referredBy || '—'],
-        ['First name', firstName || '—'],
+        ['Type', tag], ['Email', email],
+        ['First name', firstName || '—'], ['Response', response || '—'],
+        ['Campaign', camp], ['Referred by', referredBy || '—'],
         ['Apollo label', labelName],
-        ['Apollo error', apolloError || '(none)'],
+        ['Apollo', apolloOk ? 'OK' : (apolloError || 'skipped')],
+        ['Sheet',  sheetOk  ? 'OK' : (sheetError || 'skipped')],
       ];
-      const html = `<table style="font-family:sans-serif;border-collapse:collapse">${rows
-        .map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0;color:#666"><b>${k}</b></td><td style="padding:4px 0">${String(v).replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]))}</td></tr>`)
-        .join('')}</table>`;
-      const fallbackRes = await fetch('https://api.resend.com/emails', {
+      const esc = s => String(s).replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+      const html = `<table style="font-family:sans-serif;border-collapse:collapse">${
+        rows.map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0;color:#666"><b>${esc(k)}</b></td><td style="padding:4px 0">${esc(v)}</td></tr>`).join('')
+      }</table>`;
+      const r = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -113,20 +160,24 @@ export default async function handler(req, res) {
           from: 'Blackboard <website@blackboarddeals.com>',
           to: ['support@blackboarddeals.com'],
           reply_to: email,
-          subject,
-          html,
+          subject, html,
         }),
       });
-      fallbackOk = fallbackRes.ok;
-      if (!fallbackOk) console.error('Resend fallback error:', fallbackRes.status, await fallbackRes.text().catch(() => ''));
-    } catch (err) {
-      console.error('Resend fallback network error:', err);
+      notifyOk = r.ok;
+      if (!notifyOk) {
+        const errText = await r.text().catch(() => '');
+        notifyError = `HTTP ${r.status} ${errText.slice(0, 200)}`;
+        console.error('[WAITLIST] Resend notify error:', notifyError);
+      }
+    } catch (e) {
+      notifyError = String(e && e.message || e);
+      console.error('[WAITLIST] Resend notify network error:', notifyError);
     }
+  } else {
+    notifyError = 'RESEND_API_KEY not set';
   }
 
-  // For forwarded +1s, send the invite to the friend via Resend. We still
-  // succeed if the Resend call fails — the contact is in Apollo and the
-  // sender can be told to nudge manually.
+  // ---- Forwarded +1: also send the friend their personalised invite ----
   let inviteEmailOk = false;
   if (isForwarded && process.env.RESEND_API_KEY) {
     try {
@@ -135,8 +186,7 @@ export default async function handler(req, res) {
       const subject = friendName
         ? `${friendName}, you're invited — Blackboard launch party, Fri 19 Jun`
         : `You're invited — Blackboard launch party, Fri 19 Jun`;
-
-      const resendRes = await fetch('https://api.resend.com/emails', {
+      const r = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -147,31 +197,31 @@ export default async function handler(req, res) {
           to: [email],
           reply_to: referredBy || 'support@blackboarddeals.com',
           subject,
-          html: buildInviteHtml({ friendEmail: email, friendName, inviter, campaign: campaign || 'Launch' }),
+          html: buildInviteHtml({ friendEmail: email, friendName, inviter, campaign: camp }),
         }),
       });
-      inviteEmailOk = resendRes.ok;
+      inviteEmailOk = r.ok;
       if (!inviteEmailOk) {
-        const errBody = await resendRes.text().catch(() => '');
-        console.error('Resend error:', resendRes.status, errBody);
+        const errText = await r.text().catch(() => '');
+        console.error('[WAITLIST] +1 invite send error:', r.status, errText.slice(0, 200));
       }
-    } catch (err) {
-      console.error('Resend network error:', err);
+    } catch (e) {
+      console.error('[WAITLIST] +1 invite send network error:', e);
     }
   }
 
-  const captured = apolloOk || fallbackOk;
-  if (!captured) {
-    return res.status(500).json({
-      error: 'Failed to record',
-      apolloError,
-    });
-  }
+  // Always succeed — the log call above guarantees we have a record.
   return res.status(200).json({
     success: true,
-    apollo: apolloOk,
-    fallback: !apolloOk && fallbackOk,
+    captured: {
+      apollo: apolloOk,
+      sheet:  sheetOk,
+      notify: notifyOk,
+      log:    true,
+    },
     apolloError: apolloOk ? undefined : apolloError,
+    sheetError:  sheetOk  ? undefined : sheetError,
+    notifyError: notifyOk ? undefined : notifyError,
     invited: isForwarded ? inviteEmailOk : null,
   });
 }
@@ -187,14 +237,6 @@ function buildInviteHtml({ friendEmail, friendName, inviter, campaign }) {
 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#060608" style="background:#060608;">
 <tr><td align="center" style="padding:24px 12px;">
 <table role="presentation" width="600" cellspacing="0" cellpadding="0" border="0" bgcolor="#0d0d10" style="background:#0d0d10; max-width:600px; width:100%; font-family:Arial,Helvetica,sans-serif; color:#f7f7f5;">
-
-  <tr><td style="padding:14px 24px; border-bottom:1px solid #2c2c34;">
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"><tr>
-      <td align="left" style="font-family:Arial,Helvetica,sans-serif; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:#d4d4dc;">BLACKBOARDDEALS.COM</td>
-      <td align="right" style="font-family:Arial,Helvetica,sans-serif; font-size:10px; letter-spacing:0.2em; text-transform:uppercase; color:#DAA520;">${inviter} invited you</td>
-    </tr></table>
-  </td></tr>
-
   <tr><td align="center" style="padding:36px 24px 10px;">
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center"><tr>
       <td style="border:2px solid #ffffff; padding:12px 30px;">
@@ -202,24 +244,15 @@ function buildInviteHtml({ friendEmail, friendName, inviter, campaign }) {
       </td>
     </tr></table>
   </td></tr>
-  <tr><td align="center" style="padding:16px 24px 20px;">
-    <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:11px; letter-spacing:0.32em; text-transform:uppercase; color:#DAA520; font-weight:bold;">YOU'RE INVITED TO THE LAUNCH PARTY</p>
+  <tr><td align="center" style="padding:16px 24px 24px;">
+    <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:11px; letter-spacing:0.32em; text-transform:uppercase; color:#DAA520; font-weight:bold;">${greeting}YOU'RE ON THE LIST</p>
   </td></tr>
-
-  <tr><td align="center" style="padding:12px 12px; border-top:1px solid #2c2c34; border-bottom:1px solid #2c2c34;">
-    <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:11px; letter-spacing:0.3em; text-transform:uppercase; color:#DAA520; font-weight:bold;">LAUNCH PARTY &nbsp;&#10022;&nbsp; LIVE MUSIC &nbsp;&#10022;&nbsp; RIVERSIDE BAR &nbsp;&#10022;&nbsp; NEARLY ONE YEAR</p>
-  </td></tr>
-
-  <tr><td align="center" style="padding:36px 32px 0;">
-    <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:11px; letter-spacing:0.3em; text-transform:uppercase; color:#DAA520; font-weight:bold;">${greeting}YOU'RE ON THE LIST</p>
-  </td></tr>
-  <tr><td align="center" style="padding:18px 24px 0;">
+  <tr><td align="center" style="padding:6px 24px 0;">
     <h1 style="margin:0; font-family:Georgia,'Times New Roman',serif; font-style:italic; font-weight:normal; font-size:42px; line-height:46px; color:#ffffff;">Glasses up,<br />we made it.</h1>
   </td></tr>
   <tr><td align="center" style="padding:18px 32px 24px;">
     <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:16px; line-height:1.55; color:#e8e8ec;"><strong style="color:#ffffff;">${inviter}</strong> wants you at the Blackboard launch party. Same one-tap RSVP, no faff.</p>
   </td></tr>
-
   <tr><td style="padding:0 24px;">
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#DAA520" style="background:#DAA520;">
       <tr><td align="center" style="padding:14px 12px; font-family:Arial,Helvetica,sans-serif; font-size:12px; letter-spacing:0.16em; text-transform:uppercase; color:#0d0d10; font-weight:bold;">
@@ -227,56 +260,19 @@ function buildInviteHtml({ friendEmail, friendName, inviter, campaign }) {
       </td></tr>
     </table>
   </td></tr>
-
-  <tr><td style="padding:40px 32px 0;">
-    <p style="margin:0 0 10px; font-family:Arial,Helvetica,sans-serif; font-size:11px; letter-spacing:0.3em; text-transform:uppercase; color:#e8c878; font-weight:bold;">THE INVITE</p>
-    <h2 style="margin:0 0 14px; font-family:Georgia,'Times New Roman',serif; font-style:italic; font-weight:normal; font-size:26px; line-height:30px; color:#ffffff;">Come celebrate launch night.</h2>
-    <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:15px; line-height:1.7; color:#e8e8ec;">Nearly a year of work, finally live in the App Store and Google Play. We're raising a glass at WeBrew — live music, cold beer on the river, the whole team in the room. ${inviter} thinks you'd love it. We agree.</p>
-  </td></tr>
-
-  <tr><td style="padding:36px 24px 0;">
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" bgcolor="#14141a" style="background:#14141a; border:1px solid #2c2c34; border-left:3px solid #DAA520;">
-      <tr><td style="padding:22px 24px;">
-        <p style="margin:0 0 16px; font-family:Arial,Helvetica,sans-serif; font-size:10px; letter-spacing:0.3em; text-transform:uppercase; color:#e8c878; font-weight:bold;">THE DETAILS</p>
-        <p style="margin:0 0 8px; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:1.6; color:#f7f7f5;"><strong style="color:#ffffff;">WeBrew</strong> &middot; 5 Ram Passage, Kingston upon Thames, KT1 1HH</p>
-        <p style="margin:0 0 8px; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:1.6; color:#f7f7f5;"><strong style="color:#ffffff;">Fri 19 June</strong> &middot; Doors 7:30pm 'til late</p>
-        <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:14px; line-height:1.6; color:#f7f7f5;">Live music. Cold ones. A +1 is welcome.</p>
-      </td></tr>
-    </table>
-  </td></tr>
-
-  <tr><td align="center" style="padding:44px 32px 6px;">
+  <tr><td align="center" style="padding:36px 32px 0;">
     <p style="margin:0 0 8px; font-family:Arial,Helvetica,sans-serif; font-size:11px; letter-spacing:0.3em; text-transform:uppercase; color:#e8c878; font-weight:bold;">SO - ARE YOU IN?</p>
-    <p style="margin:0 0 22px; font-family:Arial,Helvetica,sans-serif; font-size:11px; letter-spacing:0.22em; text-transform:uppercase; color:#7a7a82;">Tap one - we'll know</p>
   </td></tr>
-  <tr><td align="center" style="padding:0 24px;">
+  <tr><td align="center" style="padding:14px 24px 0;">
     <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center"><tr>
       <td bgcolor="#DAA520" style="background:#DAA520;">
         <a href="${yes}" target="_blank" style="display:inline-block; padding:16px 34px; font-family:Arial,Helvetica,sans-serif; font-size:13px; letter-spacing:0.22em; text-transform:uppercase; color:#0d0d10; text-decoration:none; font-weight:bold;">Yes - I'm in &nbsp;&rarr;</a>
       </td>
     </tr></table>
   </td></tr>
-  <tr><td align="center" style="padding:14px 24px 0;">
+  <tr><td align="center" style="padding:14px 24px 40px;">
     <a href="${no}" target="_blank" style="font-family:Arial,Helvetica,sans-serif; font-size:12px; letter-spacing:0.22em; text-transform:uppercase; color:#d4d4dc; text-decoration:underline;">Can't make it</a>
   </td></tr>
-
-  <tr><td bgcolor="#060608" align="center" style="background:#060608; padding:44px 24px 18px; border-top:1px solid #2c2c34;">
-    <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center"><tr>
-      <td style="border:2px solid #ffffff; padding:8px 22px;">
-        <span style="font-family:'Arial Black',Arial,Helvetica,sans-serif; font-size:14px; letter-spacing:0.36em; color:#ffffff; font-weight:900;">BLACKBOARD</span>
-      </td>
-    </tr></table>
-  </td></tr>
-  <tr><td bgcolor="#060608" align="center" style="background:#060608; padding:14px 24px 0;">
-    <p style="margin:0; font-family:Georgia,'Times New Roman',serif; font-style:italic; font-weight:normal; font-size:14px; color:#d4d4dc;">Nearly a year on. Liquid to lips.</p>
-  </td></tr>
-  <tr><td bgcolor="#060608" align="center" style="background:#060608; padding:18px 24px 36px;">
-    <p style="margin:0; font-family:Arial,Helvetica,sans-serif; font-size:11px; line-height:1.55; color:#7a7a82;">
-      ${inviter} thought you'd love this — that's why you got it.<br />
-      WeBrew &middot; 5 Ram Passage, Kingston upon Thames, KT1 1HH
-    </p>
-  </td></tr>
-
 </table>
 </td></tr></table>
 </body></html>`;
