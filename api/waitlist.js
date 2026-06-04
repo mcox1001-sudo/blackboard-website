@@ -60,6 +60,7 @@ export default async function handler(req, res) {
   }
 
   let apolloOk = false;
+  let apolloError = null;
   let apolloData = null;
   try {
     const apolloRes = await fetch('https://api.apollo.io/v1/contacts', {
@@ -71,11 +72,56 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify(payload),
     });
-    apolloData = await apolloRes.json();
+    apolloData = await apolloRes.json().catch(() => ({}));
     apolloOk = apolloRes.ok;
-    if (!apolloOk) console.error('Apollo error:', apolloData);
+    if (!apolloOk) {
+      apolloError = (apolloData && (apolloData.error || apolloData.message)) || `HTTP ${apolloRes.status}`;
+      console.error('Apollo error:', apolloRes.status, apolloData);
+    }
   } catch (err) {
+    apolloError = String(err && err.message || err);
     console.error('Apollo network error:', err);
+  }
+
+  // Fallback: if Apollo didn't capture this, send a notification email to
+  // support@ so the RSVP is recorded *somewhere*. Belt-and-braces — we'd
+  // rather double-record than lose an RSVP.
+  let fallbackOk = false;
+  if (!apolloOk && process.env.RESEND_API_KEY) {
+    try {
+      const subject = `RSVP ${isRsvp ? rsvpResp : (isVenue ? 'venue' : 'user')} — ${email}`;
+      const rows = [
+        ['Type',      isRsvp ? 'RSVP' : (isVenue ? 'Venue waitlist' : 'User waitlist')],
+        ['Email',     email],
+        ['Response',  response || '—'],
+        ['Campaign',  campaign || '—'],
+        ['Referred',  referredBy || '—'],
+        ['First name', firstName || '—'],
+        ['Apollo label', labelName],
+        ['Apollo error', apolloError || '(none)'],
+      ];
+      const html = `<table style="font-family:sans-serif;border-collapse:collapse">${rows
+        .map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0;color:#666"><b>${k}</b></td><td style="padding:4px 0">${String(v).replace(/[<>&]/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]))}</td></tr>`)
+        .join('')}</table>`;
+      const fallbackRes = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+        },
+        body: JSON.stringify({
+          from: 'Blackboard <website@blackboarddeals.com>',
+          to: ['support@blackboarddeals.com'],
+          reply_to: email,
+          subject,
+          html,
+        }),
+      });
+      fallbackOk = fallbackRes.ok;
+      if (!fallbackOk) console.error('Resend fallback error:', fallbackRes.status, await fallbackRes.text().catch(() => ''));
+    } catch (err) {
+      console.error('Resend fallback network error:', err);
+    }
   }
 
   // For forwarded +1s, send the invite to the friend via Resend. We still
@@ -114,11 +160,18 @@ export default async function handler(req, res) {
     }
   }
 
-  if (!apolloOk) {
-    return res.status(500).json({ error: 'Failed to add to Apollo' });
+  const captured = apolloOk || fallbackOk;
+  if (!captured) {
+    return res.status(500).json({
+      error: 'Failed to record',
+      apolloError,
+    });
   }
   return res.status(200).json({
     success: true,
+    apollo: apolloOk,
+    fallback: !apolloOk && fallbackOk,
+    apolloError: apolloOk ? undefined : apolloError,
     invited: isForwarded ? inviteEmailOk : null,
   });
 }
