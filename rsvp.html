@@ -181,6 +181,33 @@ h1 {
 
 .plus-count { font-size: 12px; color: var(--smoke); margin-top: 14px; }
 
+/* Forwarded-to-you capture form */
+.fwd-block { margin-top: 36px; padding-top: 28px; border-top: 1px solid var(--line-soft); }
+.fwd-block h3 {
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--gold-soft); font-weight: 500;
+  margin-bottom: 8px;
+}
+.fwd-block .fwd-lede { font-size: 14px; color: var(--smoke); margin-bottom: 18px; line-height: 1.6; }
+.fwd-block .fwd-lede strong { color: var(--chalk); font-weight: 500; }
+.fwd-form { display: grid; gap: 10px; grid-template-columns: minmax(0,1fr) minmax(0,1.4fr); }
+.fwd-form input {
+  background: rgba(6,6,8,0.55);
+  border: 1px solid var(--line-soft);
+  color: var(--chalk);
+  padding: 12px 14px;
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  min-width: 0;
+}
+.fwd-form input:focus { outline: none; border-color: var(--gold-soft); background: rgba(6,6,8,0.85); }
+.fwd-btn-row { grid-column: 1 / -1; display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+.fwd-btn-row .btn { padding: 12px 22px; }
+.fwd-msg { font-size: 12px; color: var(--smoke); margin-top: 12px; min-height: 16px; }
+.fwd-msg.ok { color: var(--gold-soft); }
+.fwd-msg.err { color: #e07070; }
+
 .tiny { font-size: 12px; color: var(--smoke); margin-top: 18px; }
 
 @media (max-width: 600px) {
@@ -191,6 +218,8 @@ h1 {
   .btn { width: 100%; justify-content: center; }
   .plus-form { grid-template-columns: 1fr; }
   .plus-form .btn { width: 100%; }
+  .fwd-form { grid-template-columns: 1fr; }
+  .fwd-btn-row .btn { width: 100%; }
 }
 </style>
 </head>
@@ -269,6 +298,21 @@ h1 {
 
     <p class="tiny" id="recorded-line"></p>
 
+    <!-- Forwarded-to-you capture (shown on yes/no states) -->
+    <div class="fwd-block" id="fwd-block" hidden>
+      <h3>Not <span id="fwd-orig">you</span>?</h3>
+      <p class="fwd-lede">This invite was forwarded — pop your name &amp; email in and we'll RSVP you under your own details. We'll note that <strong id="fwd-orig-2">your friend</strong> brought you.</p>
+      <form class="fwd-form" id="fwd-rsvp-form" autocomplete="off" novalidate>
+        <input id="fwd-first" type="text"  placeholder="First name" maxlength="40" aria-label="Your first name" required>
+        <input id="fwd-mine"  type="email" placeholder="your@email.com" maxlength="120" aria-label="Your email" required>
+        <div class="fwd-btn-row">
+          <button class="btn btn-primary" type="submit" value="yes">Yes, I'm in</button>
+          <button class="btn"            type="submit" value="no">Can't make it</button>
+        </div>
+      </form>
+      <p class="fwd-msg" id="fwd-rsvp-msg"></p>
+    </div>
+
   </div>
 </main>
 
@@ -300,6 +344,14 @@ h1 {
   // Optimistic UI: show the response state immediately, then post
   show(rsvp === 'yes' ? stateYes : stateNo);
   recordedLine.textContent = `Recording your response as ${email}…`;
+
+  // Reveal the "not you?" forwarded-capture panel
+  const fwdBlock = document.getElementById('fwd-block');
+  const fwdOrig  = document.getElementById('fwd-orig');
+  const fwdOrig2 = document.getElementById('fwd-orig-2');
+  fwdOrig.textContent  = email;
+  fwdOrig2.textContent = email;
+  fwdBlock.hidden = false;
 
   // POST to /api/waitlist. The endpoint now always returns success once
   // the email is valid (the RSVP is logged to Vercel runtime logs at minimum,
@@ -444,6 +496,73 @@ h1 {
       } finally {
         plusBtn.disabled = false;
         plusBtn.textContent = 'Send invite';
+      }
+    });
+  }
+
+  // ---- Forwarded-to-you capture ----
+  // Friend who got the email forwarded fills this in to RSVP under their own
+  // details. We tag them with referredBy = the URL email so Apollo records
+  // who passed them the invite (tracks both forwarder and forwardee).
+  const fwdForm = document.getElementById('fwd-rsvp-form');
+  const fwdFirst = document.getElementById('fwd-first');
+  const fwdMine  = document.getElementById('fwd-mine');
+  const fwdRsvpMsg = document.getElementById('fwd-rsvp-msg');
+
+  function setFwdMsg(t, kind) {
+    fwdRsvpMsg.textContent = t || '';
+    fwdRsvpMsg.className = 'fwd-msg' + (kind ? ' ' + kind : '');
+  }
+
+  if (fwdForm) {
+    fwdForm.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const resp = (ev.submitter && ev.submitter.value) || 'yes';
+      const myEmail = (fwdMine.value || '').trim();
+      const myName  = (fwdFirst.value || '').trim();
+
+      if (!myName) { setFwdMsg('Pop your first name in too.', 'err'); fwdFirst.focus(); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(myEmail)) {
+        setFwdMsg('That doesn\'t look like an email address.', 'err'); fwdMine.focus(); return;
+      }
+      if (myEmail.toLowerCase() === (email || '').toLowerCase()) {
+        setFwdMsg('That\'s the same address — if it\'s yours you\'re already in.', 'err'); return;
+      }
+
+      const btns = fwdForm.querySelectorAll('button[type=submit]');
+      btns.forEach(b => { b.disabled = true; });
+      const origLabel = ev.submitter && ev.submitter.textContent;
+      if (ev.submitter) ev.submitter.textContent = 'Saving…';
+      setFwdMsg('');
+
+      try {
+        const res = await fetch('/api/waitlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'rsvp',
+            firstName: myName,
+            email: myEmail,
+            response: resp,
+            campaign,
+            referredBy: email,
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.success) throw new Error(data.error || 'Failed');
+        if (data.apolloError) console.warn('Apollo:', data.apolloError);
+        if (data.sheetError)  console.warn('Sheet:',  data.sheetError);
+
+        // Success: replace the form area with a confirmation line, keep block visible
+        const word = resp === 'yes' ? 'in' : 'noted';
+        fwdForm.style.display = 'none';
+        setFwdMsg(`${myName}, you're ${word}. Recorded as ${myEmail} — forwarded by ${email}.`, 'ok');
+        recordedLine.textContent = `Originally to ${email}; you (${myEmail}) RSVP'd ${resp}.`;
+      } catch (e) {
+        setFwdMsg('Couldn\'t save that — try again in a moment.', 'err');
+      } finally {
+        btns.forEach(b => { b.disabled = false; });
+        if (ev.submitter && origLabel) ev.submitter.textContent = origLabel;
       }
     });
   }
