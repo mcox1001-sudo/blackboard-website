@@ -279,13 +279,33 @@ h1 {
       </div>
     </div>
 
-    <!-- Default / no params -->
+    <!-- Default / no params — share-link landing (WhatsApp, LinkedIn, etc.) -->
     <div class="rsvp-status on" id="state-default">
-      <p class="rsvp-eyebrow">RSVP</p>
-      <h1>This page is for invitees.</h1>
-      <p class="lede">If you got an invite from Blackboard, use the Yes / Can't-make-it button inside that email to RSVP. Lost the email? Reply to whoever sent it and they'll resend.</p>
-      <div class="btn-row">
-        <a class="btn btn-primary" href="/">Back to blackboarddeals.com</a>
+      <p class="rsvp-eyebrow">You're invited</p>
+      <h1>Blackboard launch party.</h1>
+      <p class="lede">Fri 19 June &middot; 7:30pm 'til late at WeBrew Kingston. Drop your name &amp; email and tap one &mdash; we'll see you there.</p>
+
+      <div class="event-meta">
+        <dl>
+          <dt>Event</dt><dd>Blackboard Launch Party</dd>
+          <dt>Date</dt><dd>Friday 19 June</dd>
+          <dt>Time</dt><dd>7:30pm 'til late</dd>
+          <dt>Where</dt><dd>WeBrew, Kingston</dd>
+        </dl>
+      </div>
+
+      <div class="fwd-block" id="open-block" style="margin-top:28px;">
+        <h3>Tell us you're in</h3>
+        <p class="fwd-lede">Add yourself to the list &mdash; we'll record your RSVP and you'll get a calendar invite shortly.</p>
+        <form class="fwd-form" id="open-rsvp-form" autocomplete="off" novalidate>
+          <input id="open-first" type="text"  placeholder="First name" maxlength="40" aria-label="Your first name" required>
+          <input id="open-mine"  type="email" placeholder="your@email.com" maxlength="120" aria-label="Your email" required>
+          <div class="fwd-btn-row">
+            <button class="btn btn-primary" type="submit" value="yes">Yes, I'm in</button>
+            <button class="btn"            type="submit" value="no">Can't make it</button>
+          </div>
+        </form>
+        <p class="fwd-msg" id="open-rsvp-msg"></p>
       </div>
     </div>
 
@@ -338,7 +358,70 @@ h1 {
 
   if (!email || (rsvp !== 'yes' && rsvp !== 'no')) {
     show(stateDefault);
+    wireOpenRsvpForm();
     return;
+  }
+
+  function wireOpenRsvpForm() {
+    const f      = document.getElementById('open-rsvp-form');
+    const fName  = document.getElementById('open-first');
+    const fMail  = document.getElementById('open-mine');
+    const fMsg   = document.getElementById('open-rsvp-msg');
+    if (!f) return;
+
+    function setMsg(t, kind) {
+      fMsg.textContent = t || '';
+      fMsg.className = 'fwd-msg' + (kind ? ' ' + kind : '');
+    }
+
+    f.addEventListener('submit', async (ev) => {
+      ev.preventDefault();
+      const resp = (ev.submitter && ev.submitter.value) || 'yes';
+      const myEmail = (fMail.value || '').trim();
+      const myName  = (fName.value || '').trim();
+      if (!myName) { setMsg('Pop your first name in too.', 'err'); fName.focus(); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(myEmail)) {
+        setMsg('That doesn\'t look like an email address.', 'err'); fMail.focus(); return;
+      }
+      const btns = f.querySelectorAll('button[type=submit]');
+      btns.forEach(b => { b.disabled = true; });
+      const labelBefore = ev.submitter && ev.submitter.textContent;
+      if (ev.submitter) ev.submitter.textContent = 'Saving…';
+      setMsg('');
+
+      try {
+        const res = await fetch('/api/waitlist', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'rsvp',
+            firstName: myName,
+            email: myEmail,
+            response: resp,
+            campaign,
+            referredBy,    // empty unless &ref=…&referred_by=… is in URL
+          }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok || !data.success) throw new Error(data.error || 'Failed');
+        if (data.apolloError) console.warn('Apollo:', data.apolloError);
+        if (data.sheetError)  console.warn('Sheet:',  data.sheetError);
+
+        if (resp === 'yes') {
+          // Surface the same "See you there" confirmation as the URL-driven flow
+          show(stateYes);
+          recordedLine.textContent = `Recorded as ${myEmail} — attending.`;
+        } else {
+          show(stateNo);
+          recordedLine.textContent = `Recorded as ${myEmail} — declined.`;
+        }
+      } catch (e) {
+        setMsg('Couldn\'t save that — try again in a moment.', 'err');
+      } finally {
+        btns.forEach(b => { b.disabled = false; });
+        if (ev.submitter && labelBefore) ev.submitter.textContent = labelBefore;
+      }
+    });
   }
 
   // Optimistic UI: show the response state immediately, then post
