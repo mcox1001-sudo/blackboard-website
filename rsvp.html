@@ -208,6 +208,36 @@ h1 {
 .fwd-msg.ok { color: var(--gold-soft); }
 .fwd-msg.err { color: #e07070; }
 
+/* Share-link landing: photo + marquee + ribbon inside the default-state card */
+.share-hero {
+  margin: -56px -48px 22px;
+  position: relative;
+  line-height: 0;
+}
+.share-hero img { display: block; width: 100%; height: auto; }
+.share-marquee {
+  margin: 0 -48px 8px;
+  background: var(--gold);
+  color: var(--void);
+  padding: 12px 24px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase;
+  text-align: center;
+}
+.share-ribbon {
+  margin: 24px 0 28px;
+  background: var(--gold);
+  color: var(--void);
+  padding: 14px 16px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 12px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase;
+  text-align: center;
+}
+@media (max-width: 600px) {
+  .share-hero { margin: -40px -24px 18px; }
+  .share-marquee { margin: 0 -24px 8px; padding: 10px 14px; font-size: 10px; letter-spacing: .14em; }
+}
+
 .tiny { font-size: 12px; color: var(--smoke); margin-top: 18px; }
 
 @media (max-width: 600px) {
@@ -281,25 +311,34 @@ h1 {
 
     <!-- Default / no params — share-link landing (WhatsApp, LinkedIn, etc.) -->
     <div class="rsvp-status on" id="state-default">
+
+      <div class="share-hero">
+        <img src="https://blackboarddeals.com/email-assets/launch-invite/email-hero.png?v=3" alt="Glasses up, we made it. Nearly a year on, we're live." />
+      </div>
+      <div class="share-marquee">Launch Party &nbsp;&#10022;&nbsp; Live Music &nbsp;&#10022;&nbsp; Riverside Bar &nbsp;&#10022;&nbsp; WeBrew Kingston</div>
+
       <p class="rsvp-eyebrow">You're invited</p>
       <h1>Blackboard launch party.</h1>
-      <p class="lede">Fri 19 June &middot; 7:30pm 'til late at WeBrew Kingston. Drop your name &amp; email and tap one &mdash; we'll see you there.</p>
+      <p class="lede">A proper night out for the people who got us here &mdash; nearly a year on, we're live. Drop your details and tap one &mdash; we'll see you there.</p>
+
+      <div class="share-ribbon">Fri 19 June &nbsp;&middot;&nbsp; 7:30pm 'til late &nbsp;&middot;&nbsp; WeBrew Kingston</div>
 
       <div class="event-meta">
         <dl>
-          <dt>Event</dt><dd>Blackboard Launch Party</dd>
-          <dt>Date</dt><dd>Friday 19 June</dd>
-          <dt>Time</dt><dd>7:30pm 'til late</dd>
-          <dt>Where</dt><dd>WeBrew, Kingston</dd>
+          <dt>Venue</dt><dd>WeBrew &middot; 5 Ram Passage, Kingston KT1 1HH</dd>
+          <dt>When</dt><dd>Fri 19 June &middot; doors 7:30pm 'til late</dd>
+          <dt>On the night</dt><dd>Live music, cold beer, the whole team</dd>
+          <dt>Bring</dt><dd>A +1 if you like</dd>
         </dl>
       </div>
 
-      <div class="fwd-block" id="open-block" style="margin-top:28px;">
+      <div class="fwd-block" id="open-block" style="margin-top:28px;border-top:none;padding-top:0;">
         <h3>Tell us you're in</h3>
-        <p class="fwd-lede">Add yourself to the list &mdash; we'll record your RSVP and you'll get a calendar invite shortly.</p>
+        <p class="fwd-lede">First name &amp; email at minimum &mdash; phone if you want a text reminder on the day.</p>
         <form class="fwd-form" id="open-rsvp-form" autocomplete="off" novalidate>
-          <input id="open-first" type="text"  placeholder="First name" maxlength="40" aria-label="Your first name" required>
-          <input id="open-mine"  type="email" placeholder="your@email.com" maxlength="120" aria-label="Your email" required>
+          <input id="open-first" type="text"  placeholder="First name *" maxlength="40" aria-label="Your first name" required>
+          <input id="open-mine"  type="email" placeholder="your@email.com *" maxlength="120" aria-label="Your email" required>
+          <input id="open-phone" type="tel"   placeholder="Mobile (optional)" maxlength="24" aria-label="Your mobile number" style="grid-column:1 / -1;">
           <div class="fwd-btn-row">
             <button class="btn btn-primary" type="submit" value="yes">Yes, I'm in</button>
             <button class="btn"            type="submit" value="no">Can't make it</button>
@@ -366,6 +405,7 @@ h1 {
     const f      = document.getElementById('open-rsvp-form');
     const fName  = document.getElementById('open-first');
     const fMail  = document.getElementById('open-mine');
+    const fPhone = document.getElementById('open-phone');
     const fMsg   = document.getElementById('open-rsvp-msg');
     if (!f) return;
 
@@ -379,6 +419,7 @@ h1 {
       const resp = (ev.submitter && ev.submitter.value) || 'yes';
       const myEmail = (fMail.value || '').trim();
       const myName  = (fName.value || '').trim();
+      const myPhone = (fPhone.value || '').trim();
       if (!myName) { setMsg('Pop your first name in too.', 'err'); fName.focus(); return; }
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(myEmail)) {
         setMsg('That doesn\'t look like an email address.', 'err'); fMail.focus(); return;
@@ -397,6 +438,7 @@ h1 {
             type: 'rsvp',
             firstName: myName,
             email: myEmail,
+            phone: myPhone || undefined,
             response: resp,
             campaign,
             referredBy,    // empty unless &ref=…&referred_by=… is in URL
